@@ -38,7 +38,7 @@ function CCSprite:setSprite(spriteNameOrImage)
     
     local w,h = spriteSize(spriteNameOrImage)
     
-    -- for some reason images have to be scaled down
+    -- for some reason images have to be scaled down by the scale factor
     if type(spriteNameOrImage) ~= "string" then
         w = w / ContentScaleFactor
         h = h / ContentScaleFactor

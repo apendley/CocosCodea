@@ -1,12 +1,15 @@
 -- Main
 
 -- TODO
--- * add prioritized updates to CCScheduler and CCNode classes
--- * use suffixed underscore to indicate "private" class variables
--- * test child removal and cleanup
--- * allow CCSprite to use an image()
+-- * touch dispatcher
+-- * replace cocos2d usage of codea's color class with CCColor table
 -- * labels
--- * implements SpriteBatchNodes
+-- * CCMenu, CCMenuItem, etc
+-- * add prioritized updates to CCScheduler and CCNode classes
+-- * test child removal and cleanup
+-- * implements batched sprites (using mesh)
+-- * implement bitmapped fonts
+-- * implement tilemaps (using mesh)-- * labels
 -- * lazily create children table
 -- * do fast children sort in visit(?)
 -- * implmement transitions
@@ -28,8 +31,13 @@ function assert(cond, ...)
     oldAssert(cond, ...)    
 end
 
+function printPair(k, v)
+    print("["..tostring(k).."]: "..tostring(v))
+end
+
 function setup()
-    --displayMode(FULLSCREEN)
+    --for k,v in pairs(_G) do print("["..tostring(k).."]: "..tostring(v)) end
+    --displayMode(FULLSCREEN)        
     
     -- create director singleton
     local director = CCDirector:instance()
@@ -59,6 +67,10 @@ function draw()
     CCDirector:instance():drawScene()
 
     fps:draw()
+end
+
+function touched(touch)
+    CCTouchDispatcher:instance():touched(touch)
 end
 
 --[[

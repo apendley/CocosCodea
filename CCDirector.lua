@@ -3,8 +3,7 @@ CCDirector = CCClass()
 -- singleton
 local directorInstance = nil
 function CCDirector:instance(_)
-    if directorInstance then return directorInstance end
-    directorInstance = CCDirector()
+    if not directorInstance then directorInstance = CCDirector() end
     return directorInstance
 end
 
@@ -20,6 +19,9 @@ function CCDirector:init()
     self.sendCleanupToScene_ = false
     
     self.sceneStack_ = {}
+    
+    -- make sure touch dispatcher is created and ready to go
+    CCTouchDispatcher:instance()
 end
 
 function CCDirector:winSize()
@@ -114,6 +116,8 @@ end
 function CCDirector:drawScene()
     if self.isAnimating_ == false then return end
     
+    CCTouchDispatcher:instance():updatePreDraw()
+    
     if not self.isPaused_ then
         -- uh where do i get delta time...
         self.actionManager:update(DeltaTime)
@@ -127,4 +131,14 @@ function CCDirector:drawScene()
     if self.runningScene_ then
         self.runningScene_:visit()
     end
+    
+    CCTouchDispatcher:instance():updatePostDraw()
+end
+
+function CCDirector:convertToUI(p)
+    return p
+end
+
+function CCDirector:convertToGL(p)
+    return p
 end

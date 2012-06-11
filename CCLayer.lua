@@ -1,4 +1,4 @@
-CCLayer = CCClass(CCNode)
+CCLayer = CCClass(CCNode):include(CCTargetedTouchProtocol)
 
 -- convenience function to wrap a layer up in scene
 function CCLayer:scene(...)
@@ -9,9 +9,20 @@ end
 
 function CCLayer:init(w, h)
     CCNode.init(self)
+    CCTargetedTouchProtocol.init(self)
     self:setAnchorPoint(0.5, 0.5)
     self:setContentSize(w or WIDTH, h or HEIGHT)
     self:setIgnoreAnchorPointForPosition(true)
+end
+
+function CCLayer:onEnter()
+    CCNode.onEnter(self)
+    CCTargetedTouchProtocol.onEnter(self)
+end
+
+function CCLayer:onExit()
+    CCTargetedTouchProtocol.onExit(self)    
+    CCNode.onExit(self)
 end
 
 ---------------

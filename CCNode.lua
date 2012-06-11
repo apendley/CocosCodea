@@ -30,8 +30,11 @@ function CCNode:init()
     self.scaleX_ = 1
     self.scaleY_ = 1
     self.zOrder_ = 0
-    self.transform_ = matrix()
+    local xform = matrix()
+    self.transform_ = xform
+    self.inverse = xform:inverse()
     self.isTransformDirty_ = true
+    self.isInverseDirty_ = true
     self.isRunning_ = false    
     self.visible_ = true
     
@@ -128,7 +131,7 @@ end
 function CCNode:cleanup()
     print("cleanup: " .. tostring(self))
     self:stopAllActions()
-    --self:unscheduleAllSelectors()
+    self:unscheduleAllSelectors()
     arrayPerformSelectorOnObjects(self.children, "cleanup")
 end
 
@@ -206,6 +209,63 @@ function CCNode:nodeToParentTransform()
     return xform
 end
 
+function CCNode:parentToNodeTransform()
+    if self.isInverseDirty_ then
+        self.inverse = self:nodeToParentTransform():inverse()
+        self.inverseDirty_ = false
+    end
+    return self.inverse
+end
+
+function CCNode:nodeToWorldTransform()
+    local t = self:nodeToParentTransform()
+    
+    local p = self.parent    
+    while p do
+        t = t * p:nodeToParentTransform()
+        p = p.parent 
+    end
+    
+    return t
+end
+
+function CCNode:worldToNodeTransform()
+    return self:nodeToWorldTransform():inverse()
+end
+
+local function affineTransform(pt, m)
+    return vec2(m[1]*pt.x+m[5]*pt.y + m[13], m[2]*pt.x+m[6]*pt.y+m[14])
+end
+
+function CCNode:convertToNodeSpace(worldPt)
+    return affineTransform(worldPt, self:worldToNodeTransform())
+end
+
+function CCNode:convertToWorldSpace(nodePt)
+    return affineTransform(nodePt, self:nodeToWorldTransform())
+end
+
+function CCNode:convertToNodeSpaceAR(worldPt)
+    return self:convertToNodeSpace(worldPt) - self.anchorPointInPoints_
+end
+
+function CCNode:convertToWorldSpaceAR(nodePt)
+    return self:convertToWorldSpace(nodePt + self.anchorPointInPoints_)
+end
+
+function CCNode:convertToWindowSpace(nodePt)
+    local worldPt = self:convertToWorldSpace(nodePt)
+    return CCDirector:instance():convertToUI(worldPt)
+end
+
+function CCNode:convertTouchToNodeSpace(tp)
+    return self:convertToNodeSpace(CCDirector:instance():convertToGL(tp))
+end
+
+function CCNode:convertTouchToNodeSpaceAR(tp)
+    return self:convertToNodeSpaceAR(CCDirector:instance():convertToGL(tp))
+end
+
 --------------------
 -- properties
 --------------------
@@ -226,7 +286,7 @@ end
 
 function CCNode:setRotation(angle)
     self.rotation_ = angle
-    self.isTransformDirty_ = true
+    self.isTransformDirty_, self.isInverseDirty_ = true, true
 end
 
 function CCNode:scaleX(_)
@@ -236,7 +296,7 @@ end
 
 function CCNode:setScaleX(s)
     self.scaleX_ = s
-    self.isTransformDirty_ = true    
+    self.isTransformDirty_, self.isInverseDirty_ = true, true
 end
 
 function CCNode:scaleY(_)
@@ -246,7 +306,7 @@ end
 
 function CCNode:setScaleY(s)
     self.scaleY_ = s
-    self.isTransformDirty_ = true    
+    self.isTransformDirty_, self.isInverseDirty_ = true, true
 end
 
 function CCNode:scale(_)
@@ -263,7 +323,7 @@ function CCNode:setScale(...)
         self.scaleX_, self.scaleY_ = arg[1], arg[2]
     end
         
-    self.isTransformDirty_ = true    
+    self.isTransformDirty_, self.isInverseDirty_ = true, true
 end
 
 function CCNode:position(_)
@@ -282,7 +342,7 @@ function CCNode:setPosition(...)
         pos.x, pos.y = arg[1], arg[2]
     end
     
-    self.isTransformDirty_ = true
+    self.isTransformDirty_, self.isInverseDirty_ = true, true
 end
 
 function CCNode:ignoreAnchorPointForPosition(_)
@@ -293,7 +353,7 @@ end
 function CCNode:setIgnoreAnchorPointForPosition(ignore)
     if ignore ~= self.ignoreAnchorPointForPosition_ then
         self.ignoreAnchorPointForPosition_ = ignore
-        self.isTransformDirty_ = true
+        self.isTransformDirty_, self.isInverseDirty_ = true, true
     end    
 end
 
@@ -315,7 +375,7 @@ function CCNode:setAnchorPoint(...)
         
     local cs, app = self.contentSize_, self.anchorPointInPoints_
     app.x, app.y = cs.x * ap.x, cs.y * ap.y
-    self.isTransformDirty_ = true
+    self.isTransformDirty_, self.isInverseDirty_ = true, true
 end
 
 function CCNode:contentSize(_)
@@ -336,7 +396,7 @@ function CCNode:setContentSize(...)
         
     local ap, app = self.anchorPoint_, self.anchorPointInPoints_
     app.x, app.y = cs.x * ap.x, cs.y * ap.y
-    self.isTransformDirty_ = true        
+    self.isTransformDirty_, self.isInverseDirty_ = true, true
 end
 
 ---------------------

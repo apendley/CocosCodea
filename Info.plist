@@ -11,9 +11,11 @@
 		<string>CCClass</string>
 		<string>ccUtil</string>
 		<string>ArrayUtil</string>
+		<string>ccRect</string>
 		<string>CCProtocol</string>
 		<string>CCScheduler</string>
 		<string>CCDirector</string>
+		<string>CCTouchDispatcher</string>
 		<string>CCActionManager</string>
 		<string>CCAction</string>
 		<string>CCActionInstant</string>

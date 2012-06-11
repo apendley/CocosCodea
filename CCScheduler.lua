@@ -235,8 +235,6 @@ function CCScheduler:update(dt)
     
     local timeScale = self.timeScale or 1
     if timeScale ~= 1 then dt = dt * timeScale end
-    
-    --local entries = self.selectorEntries
 
     for k, ce in pairs(self.selectorEntries) do
         self.currentEntry = entry
