@@ -25,15 +25,14 @@ function CCLayer:onExit()
     CCNode.onExit(self)
 end
 
----------------
+----------------------
 -- LayerColor class
----------------
+----------------------
 CCLayerColor = CCClass(CCLayer):include(CCRGBAProtocol)
 
-function CCLayerColor:init(c, w, h)
+function CCLayerColor:init(w, h, ...)
     CCLayer.init(self, w, h)
-    CCRGBAProtocol.init(self)
-    if c ~= nil then self:setColor(c) end
+    CCRGBAProtocol.init(self, ...)
 end
 
 function CCLayerColor:draw()

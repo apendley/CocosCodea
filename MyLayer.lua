@@ -4,29 +4,52 @@ MyLayer = CCClass(CCLayer)
 function MyLayer:init()
     CCLayer.init(self)
     
-    self:setTouchEnabled(true)
+    --self:setTouchEnabled(true)
     
     local orig = "Playing Cards:A_S"
     --local orig = "Small World:Mine Large"
     --local orig = "Planet Cute:Chest Closed"    
     --local orig = "Tyrian Remastered:Boss B"
-    local img = readImage(orig)
+    --local img = readImage(orig)
+   
+    --[[
+    local n = CCSprite(orig)
+    n:setPosition(self:contentSize()/2)
+    self:addChild(n, 0, 1)
+    --]]
+    
 
-    for i = 1, 1 do
-        --local s = CCSprite(orig)
-        local s = CCSprite(img)
-        
-        s:setPosition(self.contentSize_ / 2)
-        self:addChild(s, 0, i)
-        --[[    
-        local seq = CCSequence:actions
-        {
-            CCDelayTime(0.1 * i),
-            CCRotateBy(10, 720)
-        }
-        s:runAction(seq)
-        --]]
-    end
+    ---[[ 
+    local menu = CCMenu()
+    menu:setContentSize(self:contentSize())
+    menu:setPosition(self:position())
+    menu:setAnchorPoint(self:anchorPoint())
+    self:addChild(menu)
+    
+    
+    local normal = CCSprite("Playing Cards:A_S")
+    local selected = CCSprite("Playing Cards:A_S")
+    selected:setColor(255, 128, 128)
+    local fn = function(item) self:itemSelected(item) end
+    local item = CCMenuItemSprite(normal, selected, nil, fn)
+    local pos = self:contentSize()/2
+    pos.x = pos.x - 100
+    item:setPosition(pos)
+    item.tag = 1
+    item.userData = "Left Button"
+    menu:addChild(item)
+    
+    -- button made of rect nodes
+    normal = CCNodeRect(200, 200, color(255, 255, 255))
+    selected = CCNodeRect(200, 200, color(0, 255, 0))
+    item = CCMenuItemSprite(normal, selected, nil, fn)
+    pos = self:contentSize()/2
+    pos.x = pos.x + 100
+    item:setPosition(pos)
+    item.tag = 2
+    item.userData = "Right Button"
+    menu:addChild(item)    
+    --]]
     
     --[[
     local card1 = CCSprite("Small World:Court")
@@ -42,6 +65,10 @@ function MyLayer:init()
     self:schedule("doSomethingElse", 0.75, 2, 1.5)
     self:schedule("update")
     --]]
+end
+
+function MyLayer:itemSelected(item)
+    print(item.userData .. " selected!")
 end
 
 function MyLayer:doSomething(dt)

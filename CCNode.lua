@@ -133,6 +133,7 @@ function CCNode:cleanup()
     self:stopAllActions()
     self:unscheduleAllSelectors()
     arrayPerformSelectorOnObjects(self.children, "cleanup")
+    self.userData = nil
 end
 
 function CCNode:transform()
@@ -504,3 +505,24 @@ function CCNode:pauseSchedulerAndActions()
     self.actionManager_:pauseTarget(self)    
 end
 
+
+----------------------
+-- CCNodeRect
+----------------------
+CCNodeRect = CCClass(CCNode):include(CCRGBAProtocol)
+
+function CCNodeRect:init(w, h, ...)
+    CCNode.init(self)
+    CCRGBAProtocol.init(self, ...)
+    self:setContentSize(w,h)
+end
+
+function CCNodeRect:draw()
+    local c = self.color_    
+    fill(c.r, c.g, c.b, c.a)    
+    rectMode(CORNER)
+    noStroke()
+
+    local s = self.contentSize_ 
+    rect(0, 0, s.x, s.y)
+end

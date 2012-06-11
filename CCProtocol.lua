@@ -7,8 +7,17 @@
 -----------------------------------------------------------
 CCRGBAProtocol = {}
 
-function CCRGBAProtocol.init(inst)
-    inst.color_ = inst.color_ or color(255, 255, 255, 255)
+function CCRGBAProtocol:init(...)
+    if #arg == 0 then
+        self.color_ = color(255, 255, 255, 255)
+    elseif #arg == 1 then    
+        local c = arg[1]
+        self.color_ = color(c.r, c.g, c.b, c.a)
+    elseif #arg >= 3 then
+        self.color_ = color(unpack(arg))
+    else
+        assert(false, "CCRGBAProtocol:init -> invalid parameters")
+    end
 end
     
 function CCRGBAProtocol:setColor(...)

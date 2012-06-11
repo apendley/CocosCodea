@@ -2,7 +2,7 @@ CCSprite = CCClass(CCNode):include(CCRGBAProtocol)
 
 function CCSprite:init(spriteNameOrImage)
     CCNode.init(self)
-    CCRGBAProtocol.init(self)    
+    CCRGBAProtocol.init(self)
     self:setSprite(spriteNameOrImage)
     self:setAnchorPoint(0.5, 0.5)
 end

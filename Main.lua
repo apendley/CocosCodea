@@ -1,10 +1,10 @@
 -- Main
 
 -- TODO
--- * touch dispatcher
--- * replace cocos2d usage of codea's color class with CCColor table
 -- * labels
--- * CCMenu, CCMenuItem, etc
+-- * add remaining menu items
+-- * add CCMenu alignment functions
+-- * alias color constructor as CCColor, and make all cocos code use CCColor
 -- * add prioritized updates to CCScheduler and CCNode classes
 -- * test child removal and cleanup
 -- * implements batched sprites (using mesh)

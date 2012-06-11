@@ -8,14 +8,14 @@
 	<array>
 		<string>Main</string>
 		<string>FPSCounter</string>
-		<string>CCClass</string>
 		<string>ccUtil</string>
 		<string>ArrayUtil</string>
 		<string>ccRect</string>
 		<string>CCProtocol</string>
-		<string>CCScheduler</string>
+		<string>CCClass</string>
 		<string>CCDirector</string>
 		<string>CCTouchDispatcher</string>
+		<string>CCScheduler</string>
 		<string>CCActionManager</string>
 		<string>CCAction</string>
 		<string>CCActionInstant</string>
@@ -25,6 +25,8 @@
 		<string>CCScene</string>
 		<string>CCLayer</string>
 		<string>CCSprite</string>
+		<string>CCMenu</string>
+		<string>CCMenuItem</string>
 		<string>MyLayer</string>
 	</array>
 	<key>Created</key>
