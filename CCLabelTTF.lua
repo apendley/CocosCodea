@@ -1,10 +1,10 @@
 --CCLabelTTF
 CCLabelTTF = CCClass(CCNode):include(CCRGBAProtocol):include(CCLabelProtocol)
 
-ccSynthesize{CCLabelTTF, "fontName", "font_", mode="r"}
-ccSynthesize{CCLabelTTF, "fontSize", mode="r"}
-ccSynthesize{CCLabelTTF, "alignment", mode="r"}
-ccSynthesize{CCLabelTTF, "wrapWidth", mode="r"}
+ccProp{CCLabelTTF, "fontName", "font_", mode="r"}
+ccProp{CCLabelTTF, "fontSize", mode="r"}
+ccProp{CCLabelTTF, "alignment", mode="r"}
+ccProp{CCLabelTTF, "wrapWidth", mode="r"}
 
 function CCLabelTTF:init(str, fnt, fntSize, alignment, wrapWidth)
     CCNode.init(self)

@@ -1,15 +1,15 @@
 --CCNode
 CCNode = CCClass()
 
-ccSynthesize{CCNode, "visible"}
-ccSynthesize{CCNode, "rotation", mode = "r"}
-ccSynthesize{CCNode, "scaleX", mode = "r"}
-ccSynthesize{CCNode, "scaleY", mode = "r"}
-ccSynthesize{CCNode, "scale", "scaleX_", mode = "r"}
-ccSynthesize{CCNode, "ignoreAnchorPointForPosition", mode = "r"}
-ccSynthesizeVec2{CCNode, "position", mode = "r"}
-ccSynthesizeVec2{CCNode, "anchorPoint", mode = "r"}
-ccSynthesizeVec2{CCNode, "contentSize", mode = "r"}
+ccProp{CCNode, "visible"}
+ccProp{CCNode, "rotation", mode = "r"}
+ccProp{CCNode, "scaleX", mode = "r"}
+ccProp{CCNode, "scaleY", mode = "r"}
+ccProp{CCNode, "scale", "scaleX_", mode = "r"}
+ccProp{CCNode, "ignoreAnchorPointForPosition", mode = "r"}
+ccPropVec2{CCNode, "position", mode = "r"}
+ccPropVec2{CCNode, "anchorPoint", mode = "r"}
+ccPropVec2{CCNode, "contentSize", mode = "r"}
 
 function CCNode:init()
     self.position_ = vec2(0,0)
@@ -32,9 +32,10 @@ function CCNode:init()
     self.tag = -1    
     self.children = {}
     
-    local dir = CCDirector:instance()
+    local dir = CCSharedDirector()
     self.actionManager_ = dir:actionManager()
     self.scheduler_ = dir:scheduler()
+    --self.touchDispatcher_ = dir:touchDispatcher()
 end
 
 local function insertChild(node, child, z)
@@ -266,15 +267,15 @@ end
 
 function CCNode:convertToWindowSpace(nodePt)
     local worldPt = self:convertToWorldSpace(nodePt)
-    return CCDirector:instance():convertToUI(worldPt)
+    return CCSharedDirector():convertToUI(worldPt)
 end
 
 function CCNode:convertTouchToNodeSpace(tp)
-    return self:convertToNodeSpace(CCDirector:instance():convertToGL(tp))
+    return self:convertToNodeSpace(CCSharedDirector():convertToGL(tp))
 end
 
 function CCNode:convertTouchToNodeSpaceAR(tp)
-    return self:convertToNodeSpaceAR(CCDirector:instance():convertToGL(tp))
+    return self:convertToNodeSpaceAR(CCSharedDirector():convertToGL(tp))
 end
 
 --------------------
@@ -404,7 +405,7 @@ end
 ---------------------
 -- scheduler
 ---------------------
-ccSynthesize{CCNode, "scheduler", mode="r"}
+ccProp{CCNode, "scheduler", mode="r"}
 
 function CCNode:schedule(selector, interval, times, delay)
     interval = interval or 0

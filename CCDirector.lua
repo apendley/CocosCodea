@@ -1,27 +1,31 @@
 CCDirector = CCClass()
 
-ccSynthesize{CCDirector, "scheduler"}
-ccSynthesize{CCDirector, "actionManager"}
-ccSynthesize{CCDirector, "touchDispatcher"}
+ccProp{CCDirector, "scheduler"}
+ccProp{CCDirector, "actionManager"}
+ccProp{CCDirector, "touchDispatcher", mode="r"}
+ccProp{CCDirector, "showFPS", mode="w", setter="showFPS"}
 
 -- singleton
-local directorInstance = nil
-function CCDirector:instance(_)
-    if not directorInstance then directorInstance = CCDirector() end
-    return directorInstance
+local di_ = nil
+function CCSharedDirector()
+    if not di_ then di_ = CCDirector() end
+    return di_
 end
 
 function CCDirector:init()
-    self.actionManager_ = CCActionManager()
     self.scheduler_ = CCScheduler()
+    self.actionManager_ = CCActionManager()    
+    --self.scheduler_:scheduleSelector("update", self.actionManager_)
     self.touchDispatcher_ = CCTouchDispatcher()
-    --self.scheduler:scheduleSelector("update", self.actionManager)
-    --self.runningScene_ = nil
-    --self.nextScene_ = nil
     self.nextDeltaTimeZero_ = false
     self.isPaused_ = false
     self.isAnimating_ = false
     self.sendCleanupToScene_ = false
+    
+    self.showFPS_ = false
+    self.FPS_ = 60
+    self.frames_ = 0
+    self.time_ = 0    
     
     self.sceneStack_ = {}
 end
@@ -118,8 +122,25 @@ function CCDirector:startAnimation()
     self.isAnimating_ = true
 end
 
+function CCDirector:drawFPS(dt)
+    if self.showFPS_ then 
+        self.time_ = self.time_ + dt
+        self.frames_ = self.frames_ + 1
+    
+        if self.time_ > 1 then
+            self.FPS_ = self.frames_
+            self.time_ = self.time_ - 1
+            self.frames_ = 0
+        end
+    
+        fill(255)
+        fontSize(20)
+        text("FPS:" .. self.FPS_, WIDTH - 50, 20)
+    end    
+end
+
 function CCDirector:drawScene(dt)
-    if self.isAnimating_ == false then return end
+    if self.isAnimating_ == false then self:drawFPS(dt) return end
     
     self.touchDispatcher_:updatePreDraw()
     
@@ -138,6 +159,8 @@ function CCDirector:drawScene(dt)
     end
     
     self.touchDispatcher_:updatePostDraw()
+    
+    self:drawFPS(dt)
 end
 
 function CCDirector:convertToUI(p)
@@ -147,3 +170,4 @@ end
 function CCDirector:convertToGL(p)
     return p
 end
+

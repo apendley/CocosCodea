@@ -2,7 +2,7 @@ CCMenu = CCClass(CCLayer):include(CCRGBAProtocol)
 
 kCCMenuHandlerPriority = -128
 
-ccSynthesize{CCMenu, "isEnabled", setter="setEnabled"}
+ccProp{CCMenu, "isEnabled", setter="setEnabled"}
 
 local kCCMenuStateWaiting = 0
 local kCCMenuStateTrackingTouch = 1
@@ -51,17 +51,17 @@ function CCMenu:onExit()
 end
 
 function CCMenu:setHandlerPriority(newPri)
-    CCTouchDispatcher:instance():setPriority(self, newPri)
+    CCSharedDirector():touchDispatcher():setPriority(self, newPri)
 end
 
 function CCMenu:registerWithTouchDispatcher()
-    local d = CCDirector:instance():touchDispatcher()
+    local d = CCSharedDirector():touchDispatcher()
     d:addTargetedDelegate(self, kCCMenuHandlerPriority, true)
 end
 
 function CCMenu:itemForTouch(touch)
     local p = vec2(touch.x, touch.y)
-    p = CCDirector:instance():convertToGL(p)
+    p = CCSharedDirector():convertToGL(p)
     
     for i,item in ipairs(self.children) do
         if item:visible() and item:isEnabled() then

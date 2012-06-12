@@ -7,8 +7,8 @@
 -----------------------------------------------------------
 CCRGBAProtocol = {}
 
-ccSynthesizeColor{CCRGBAProtocol, "color"}
-ccSynthesizeColor{CCRGBAProtocol, "colorRaw", "color_"}
+ccPropColor{CCRGBAProtocol, "color"}
+ccPropColor{CCRGBAProtocol, "colorRaw", "color_"}
 
 function CCRGBAProtocol:init(...)
     self.color_ = color(ccColorVA(...))
@@ -35,7 +35,7 @@ end
 -----------------------------------------------------------------------
 CCTargetedTouchProtocol = {}
 
-ccSynthesize{CCTargetedTouchProtocol, "isTouchEnabled", mode="r"}
+ccProp{CCTargetedTouchProtocol, "isTouchEnabled", mode="r"}
 
 function CCTargetedTouchProtocol:init()
     self.isTouchEnabled_ = false
@@ -49,12 +49,12 @@ end
 
 function CCTargetedTouchProtocol:onExit()
     if self.isTouchEnabled_ then
-        CCDirector:instance():touchDispatcher():removeDelgate(self)
+        CCSharedDirector():touchDispatcher():removeDelgate(self)
     end
 end
 
 function CCTargetedTouchProtocol:registerWithTouchDispatcher()
-    CCDirector:instance():touchDispatcher():addTargetedDelegate(self, 0, true)
+    CCSharedDirector():touchDispatcher():addTargetedDelegate(self, 0, true)
 end
 
 function CCTargetedTouchProtocol:setTouchEnabled(enabled)
@@ -64,7 +64,7 @@ function CCTargetedTouchProtocol:setTouchEnabled(enabled)
             if enabled then 
                 self:registerWithTouchDispatcher()
             else 
-                CCDirector:instance():touchDispatcher():removeDelegate(self)
+                CCSharedDirector():touchDispatcher():removeDelegate(self)
             end
         end
     end
@@ -79,7 +79,7 @@ end
 -----------------------------------------------------------------------
 CCLabelProtocol = {}
 
-ccSynthesize{CCLabelProtocol, "string", "labelString_"}
+ccProp{CCLabelProtocol, "string", "labelString_"}
 
 function CCLabelProtocol:init(str)
     self:setString(str)

@@ -1,9 +1,9 @@
 --CCMenuItem
 CCMenuItem = CCClass(CCNode)
 
-ccSynthesize{CCMenuItem, "isEnabled", setter="setEnabled"}
-ccSynthesize{CCMenuItem, "isSelected", mode="r"}
-ccSynthesize{CCMenuItem, "handler"}
+ccProp{CCMenuItem, "isEnabled", setter="setEnabled"}
+ccProp{CCMenuItem, "isSelected", mode="r"}
+ccProp{CCMenuItem, "handler"}
 
 function CCMenuItem:init()
     CCNode.init(self)
@@ -222,8 +222,8 @@ CCMenuItemLabel = CCClass(CCMenuItem):include(CCRGBAProtocol)
 
 local kCCZoomActionTag = 19191919
 
-ccSynthesize{CCMenuItemLabel, "label", mode="r"}
-ccSynthesize{CCMenuItemLabel, "disabledColor"}
+ccProp{CCMenuItemLabel, "label", mode="r"}
+ccProp{CCMenuItemLabel, "disabledColor"}
 
 function CCMenuItemLabel:init(label)
     CCMenuItem.init(self, fn)
@@ -333,10 +333,10 @@ end
 --------------------
 CCMenuItemFont = CCClass(CCMenuItemLabel)
 
-ccSynthesize{CCMenuItemFont, "fontSize", mode="r"}
-ccSynthesize{CCMenuItemFont, "fontName", mode="r"}
-ccSynthesize{CCMenuItemFont, "alignment", mode="r"}
-ccSynthesize{CCMenuItemFont, "wrapWidth", mode="r"}
+ccProp{CCMenuItemFont, "fontSize", mode="r"}
+ccProp{CCMenuItemFont, "fontName", mode="r"}
+ccProp{CCMenuItemFont, "alignment", mode="r"}
+ccProp{CCMenuItemFont, "wrapWidth", mode="r"}
 
 function CCMenuItemFont:init(str, fontName, pointSize, align, wrapWidth)
     local label = CCLabelTTF(str, fontName, pointSize, align, wrapWidth)

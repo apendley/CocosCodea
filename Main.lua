@@ -46,38 +46,42 @@ function setup()
     --displayMode(FULLSCREEN)        
     
     -- create director singleton
-    local director = CCDirector:instance()
+    local director = CCSharedDirector()
+    director:showFPS(true)
     director:runWithScene(MyLayer:scene())
-    
-    fps = FPSCounter()
         
     local startFrames = 30
     startWait = startFrames/60
     waitCounter = startWait
+    director:stopAnimation()
 end
 
 function draw()    
     background(128, 128, 128, 0)
     
-    --[[
-    waitCounter = waitCounter - DeltaTime
-    if waitCounter > 0 then 
-        fill(0)
-        fontSize(40)
-        local str = string.format("Please Wait: %.02f%%", (startWait - waitCounter) / startWait)
-        text(str, WIDTH/2, HEIGHT/2)
-        fps:draw()        
-        return
+    local dt = DeltaTime    
+    
+    ---[[
+    if waitCounter ~= nil then
+        waitCounter = waitCounter - dt
+        if waitCounter > 0 then 
+            fill(0)
+            fontSize(40)
+            local fmt = "Please Wait: %.02f%%"
+            local str = string.format(fmt, (startWait-waitCounter)/startWait)
+            text(str, WIDTH/2, HEIGHT/2)
+        else
+            waitCounter = nil
+            CCSharedDirector():startAnimation()
+        end        
     end
     --]]
     
-    CCDirector:instance():drawScene(DeltaTime)
-
-    fps:draw()
+    CCSharedDirector():drawScene(dt)
 end
 
 function touched(touch)
-    CCDirector:instance():touchDispatcher():touched(touch)
+    CCSharedDirector():touchDispatcher():touched(touch)
 end
 
 --[[

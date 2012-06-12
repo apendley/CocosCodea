@@ -7,9 +7,8 @@
 	<key>Buffer Order</key>
 	<array>
 		<string>Main</string>
-		<string>FPSCounter</string>
 		<string>ccUtil</string>
-		<string>ccSynthesize</string>
+		<string>ccProp</string>
 		<string>ArrayUtil</string>
 		<string>ccRect</string>
 		<string>CCProtocol</string>
