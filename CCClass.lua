@@ -45,7 +45,7 @@ end
 local function _createLookupMetamethod(klass, name)
   return function(...)
     local method = klass.super[name]
-    assert( type(method)=='function', tostring(klass) .. " doesn't implement metamethod '" .. name .. "'" )
+    ccAssert( type(method)=='function', tostring(klass) .. " doesn't implement metamethod '" .. name .. "'" )
     return method(...)
   end
 end
@@ -63,7 +63,7 @@ local function _setDefaultInitializeMethod(klass, super)
 end
 
 local function _includeMixin(klass, mixin)
-  assert(type(mixin)=='table', "mixin must be a table")
+  ccAssert(type(mixin)=='table', "mixin must be a table")
   for name,method in pairs(mixin) do
     if name ~= "included" and name ~= "static" then klass[name] = method end
   end
@@ -99,7 +99,7 @@ Object.static.__metamethods = { '__add', '__call', '__concat', '__div', '__le', 
                                 '__mod', '__mul', '__pow', '__sub', '__tostring', '__unm' }
 
 function Object.static:allocate()
-  assert(_classes[self], "Make sure that you are using 'Class:allocate' instead of 'Class.allocate'")
+  ccAssert(_classes[self], "Make sure that you are using 'Class:allocate' instead of 'Class.allocate'")
   return setmetatable({ class = self }, self.__instanceDict)
 end
 
@@ -110,7 +110,7 @@ function Object.static:new(...)
 end
 
 function Object.static:subclass()
-  assert(_classes[self], "Make sure that you are using 'Class:subclass' instead of 'Class.subclass'")
+  ccAssert(_classes[self], "Make sure that you are using 'Class:subclass' instead of 'Class.subclass'")
 
   local subclass = _createClass(self)
   _setClassMetamethods(subclass)
@@ -124,7 +124,7 @@ end
 function Object.static:subclassed(other) end
 
 function Object.static:include( ... )
-  assert(_classes[self], "Make sure you that you are using 'Class:include' instead of 'Class.include'")
+  ccAssert(_classes[self], "Make sure you that you are using 'Class:include' instead of 'Class.include'")
   for _,mixin in ipairs({...}) do _includeMixin(self, mixin) end
   return self
 end

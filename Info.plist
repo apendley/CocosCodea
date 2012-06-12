@@ -7,6 +7,7 @@
 	<key>Buffer Order</key>
 	<array>
 		<string>Main</string>
+		<string>ccConfig</string>
 		<string>ccUtil</string>
 		<string>ccProp</string>
 		<string>ArrayUtil</string>

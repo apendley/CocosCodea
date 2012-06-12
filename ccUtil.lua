@@ -26,7 +26,7 @@ function ccColorRawVA(...)
     elseif #arg == 4 then
         return unpack(arg)
     else
-        assert(false, "ccColorVA -> invalid parameters")
+        ccAssert(false, "ccColorVA -> invalid parameters")
     end    
 end
 
@@ -44,7 +44,7 @@ function ccColorVA(...)
     elseif #arg >= 3 then
         return arg[1], arg[2], arg[3], 255
     else
-        assert(false, "ccColorVA -> invalid parameters")
+        ccAssert(false, "ccColorVA -> invalid parameters")
     end    
 end
 
@@ -60,7 +60,7 @@ function ccVec2VA(...)
     elseif #arg == 2 then
         return arg[1], arg[2]
     else
-        assert(false, "ccVec2VA -> invalid parameters")
+        ccAssert(false, "ccVec2VA -> invalid parameters")
     end
 end
 

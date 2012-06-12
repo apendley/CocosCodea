@@ -1,7 +1,7 @@
 CCActionEase = CCClass(CCActionInterval)
 
 function CCActionEase:init(action)
-    --print("ActionEase: duration is " .. action.duration)
+    --ccPrint("ActionEase: duration is " .. action.duration)
     CCActionInterval.init(self, action.duration_)
     self.action = action
 end
@@ -155,6 +155,6 @@ CCEaseSineInOut = CCClass(CCActionEase)
 function CCEaseSineInOut:update(t)
     local pret = t
     t = -0.5 * (math.cos(math.pi*t) - 1)
-    --print(tostring(self) .. " - EaseSineInOut: " .. pret .. " -> " .. t)
+    --ccPrint(tostring(self) .. " - EaseSineInOut: " .. pret .. " -> " .. t)
     self.action:update(t)
 end

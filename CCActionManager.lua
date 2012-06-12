@@ -57,7 +57,7 @@ function CCActionManager:removeAllActionsFromTarget(target)
 end
 
 function CCActionManager:removeAction(action)
-    --print("ActionManager:removeAction " .. tostring(action))    
+    --ccPrint("ActionManager:removeAction " .. tostring(action))    
     if action == nil then return end
     
     local entry = self.targets[action.originalTarget]
@@ -74,10 +74,10 @@ end
 function CCActionManager:removeActionAtIndex(index, entry)
     local action = entry.actions[index]
     
-    --print("CCActionManager:removeActionAtIndex (" .. tostring(action) .. ") [" .. index .. "]  " .. tostring(entry) .. "\n")  
+    --ccPrint("CCActionManager:removeActionAtIndex (" .. tostring(action) .. ") [" .. index .. "]  " .. tostring(entry) .. "\n")  
     
     if action == entry.currentAction and (entry.salvagedAction == nil) then
-        --print("ActionManager:removeActionAtIndex salvaging action " .. tostring(entry.currentAction) .. "\n")
+        --ccPrint("ActionManager:removeActionAtIndex salvaging action " .. tostring(entry.currentAction) .. "\n")
         entry.salvagedAction = entry.currentAction
     end
     
@@ -99,8 +99,8 @@ function CCActionManager:removeActionAtIndex(index, entry)
 end
 
 function CCActionManager:removeActionByTag(tag, target)
-    assert(tag ~= -1, "ActionManager.removeActionByTag: invalid tag")
-    assert(target ~= nil, "ActionManager.removeActionByTag: target should not be nil")
+    ccAssert(tag ~= -1, "ActionManager.removeActionByTag: invalid tag")
+    ccAssert(target ~= nil, "ActionManager.removeActionByTag: target should not be nil")
     
     local entry = self.targets[target]
     
@@ -179,7 +179,7 @@ function CCActionManager:update(dt)
                 cte.currentAction = cte.actions[cte.actionIndex]                    
                 cte.salvagedAction = nil
                 
-                --print("Stepping [" .. tostring(cte.currentAction) .. "]")
+                --ccPrint("Stepping [" .. tostring(cte.currentAction) .. "]")
                 cte.currentAction:step(dt)
                 
                 if cte.salvagedAction ~= nil then
@@ -189,7 +189,7 @@ function CCActionManager:update(dt)
                     -- now that the step is done, it's safe to release it
                     cte.salvagedAction = nil
                 elseif cte.currentAction:isDone() then
-                    --print("CCActionManager: stopping " .. tostring(cte.currentAction))
+                    --ccPrint("CCActionManager: stopping " .. tostring(cte.currentAction))
                     cte.currentAction:stop()
                     --make currentAction nil to prevent removeAction from salvaging it
                     local a = cte.currentAction

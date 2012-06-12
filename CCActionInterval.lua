@@ -32,7 +32,7 @@ function CCActionInterval:startWithTarget(target)
 end
 
 function CCActionInterval:reverse()
-    assert(false, "IntervalAction: reverse not implemented")
+    ccAssert(false, "IntervalAction: reverse not implemented")
 end
 
 ----------------------
@@ -42,7 +42,7 @@ CCSequence = CCClass(CCActionInterval)
 
 -- convenience function, NOT a class method
 function CCSequence.actions(klass, ...)    
-    assert(klass == CCSequence, "Use CCSequence:actions(...) to sequence 2 or more actions")
+    ccAssert(klass == CCSequence, "Use CCSequence:actions(...) to sequence 2 or more actions")
     
     local list = (#arg == 1) and arg[1] or arg
     local prev, next = list[1], nil
@@ -56,8 +56,8 @@ function CCSequence.actions(klass, ...)
 end
 
 function CCSequence:init(one, two, ...)
-    --print("Adding Sequence: (" .. tostring(one) .. ") -> (" .. tostring(two) ..")\n")
-    assert( #arg == 0, "Use CCSequence:actions(...) to sequence 2 or more actions")
+    --ccPrint("Adding Sequence: (" .. tostring(one) .. ") -> (" .. tostring(two) ..")\n")
+    ccAssert( #arg == 0, "Use CCSequence:actions(...) to sequence 2 or more actions")
     local duration = one.duration_ + two.duration_
     CCActionInterval.init(self, duration)
     self.actions_ = {one, two}        
@@ -127,7 +127,7 @@ end
 CCRepeat = CCClass(CCActionInterval)
 
 function CCRepeat:init(action, times)
-    assert(action ~= nil and times ~= nil)
+    ccAssert(action ~= nil and times ~= nil)
     
     local dur = action.duration_ * times
     CCActionInterval.init(self, dur)
@@ -205,7 +205,7 @@ CCSpawn = CCClass(CCActionInterval)
 -- convenience function, NOT a class method
 function CCSpawn.actions(klass, ...)    
     -- todo: skip self to enable . or : syntax
-    assert(klass == CCSpawn, "use CCSpawn:actions(...) to spawn 2 or more actions")
+    ccAssert(klass == CCSpawn, "use CCSpawn:actions(...) to spawn 2 or more actions")
     
     local list = (#arg == 1) and arg[1] or arg
     local prev, next = list[1], nil
@@ -219,8 +219,8 @@ function CCSpawn.actions(klass, ...)
 end
 
 function CCSpawn:init(one, two, ...)
-    --print("Adding Sequence: (" .. tostring(one) .. ") -> (" .. tostring(two) ..")\n")
-    assert( #arg == 0, "use CCSpawn:actions(...) to spawn 2 or more actions")
+    --ccPrint("Adding Sequence: (" .. tostring(one) .. ") -> (" .. tostring(two) ..")\n")
+    ccAssert( #arg == 0, "use CCSpawn:actions(...) to spawn 2 or more actions")
     
     local d1, d2 = one.duration_, two.duration_    
     CCActionInterval.init(self, math.max(d1, d2))
@@ -487,7 +487,7 @@ function CCTintTo:init(duration, ...)
     elseif #arg == 1 then
         self.to_ = ccColorCopy(arg[1])
     else
-        assert(false, "CCTintTo usage: CCTintTo(duration, r, g, b) or CCTintTo(duration, color)")
+        ccAssert(false, "CCTintTo usage: CCTintTo(duration, r, g, b) or CCTintTo(duration, color)")
     end
 end
 
@@ -523,7 +523,7 @@ function CCTintBy:init(duration, ...)
     elseif #arg == 1 then
         self.delta_ = ccColorCopy(arg[1])
     else
-        assert(false, "CCTintBy usage: CCTintBy(duration, r, g, b) or CCTintBy(duration, color)")
+        ccAssert(false, "CCTintBy usage: CCTintBy(duration, r, g, b) or CCTintBy(duration, color)")
     end    
 end
 

@@ -23,25 +23,6 @@
     -- * add textureRect to CCSprite
     -- * add flipX and flipY to CCSprite
 
--- provide a stack traceback for failed assertionsasserts
-local oldAssert = assert
-function assert(cond, ...)
-    if not cond then print(debug.traceback()) end
-    oldAssert(cond, ...)    
-end
-
-function printPair(k, v)
-    print("["..tostring(k).."]: "..tostring(v))
-end
-
-function printArray(array)
-    for i,v in ipairs(array) do printPair(i,v) end
-end
-
-function printTable(table)
-    for k,v in pairs(table) do printPair(k,v) end
-end
-
 function setup()
     --displayMode(FULLSCREEN)        
     
@@ -49,40 +30,18 @@ function setup()
     local director = CCSharedDirector()
     director:showFPS(true)
     director:runWithScene(MyLayer:scene())
-        
-    local startFrames = 30
-    startWait = startFrames/60
-    waitCounter = startWait
-    director:stopAnimation()
-end
-
-function draw()    
-    background(128, 128, 128, 0)
-    
-    local dt = DeltaTime    
-    
-    ---[[
-    if waitCounter ~= nil then
-        waitCounter = waitCounter - dt
-        if waitCounter > 0 then 
-            fill(0)
-            fontSize(40)
-            local fmt = "Please Wait: %.02f%%"
-            local str = string.format(fmt, (startWait-waitCounter)/startWait)
-            text(str, WIDTH/2, HEIGHT/2)
-        else
-            waitCounter = nil
-            CCSharedDirector():startAnimation()
-        end        
-    end
-    --]]
-    
-    CCSharedDirector():drawScene(dt)
 end
 
 function touched(touch)
     CCSharedDirector():touchDispatcher():touched(touch)
 end
+
+function draw()    
+    background(128, 128, 128, 0)
+    CCSharedDirector():drawScene(DeltaTime)
+end
+
+
 
 --[[
 function drawManySprites(num)

@@ -39,7 +39,7 @@ end
 --------------------
 
 function CCSprite:sprite(_)
-    assert(_ == nil)
+    ccAssert(_ == nil)
     return self.sprite_
 end
 

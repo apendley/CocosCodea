@@ -73,7 +73,7 @@ end
 
 function CCMenuItemSprite:setNormalImage(img)
     if img ~= self.normalImage then
-        assert(img)        
+        ccAssert(img)        
         img:setAnchorPoint(0, 0)
         self:removeChild(self.normalImage, true)
         self:addChild(img)
@@ -234,7 +234,7 @@ function CCMenuItemLabel:init(label)
 end
 
 function CCMenuItemLabel:setLabel(label)
-    assert(label ~= nil)
+    ccAssert(label ~= nil)
     
     if self.label_ ~= label then
         if self.label_ then self:removeChild(self.label_, true) end

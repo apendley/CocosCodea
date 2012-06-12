@@ -88,8 +88,8 @@ CCToggleVisibility = CCCallT:MakeCallerClass(function(t) t:setVisible(not t:visi
 
 CCPlace = CCCallT:MakeCallerClass(function(t, x, y) t:setPosition(x, y) end)
 
-CCPrint = CCCall:MakeCallerClass(function(str) print(str) end)
-CCPrintT = CCCallT:MakeCallerClass(function(target, str) print(tostring(target)..": "..str) end)
+CCPrint = CCCall:MakeCallerClass(function(str) ccPrint(str) end)
+CCPrintT = CCCallT:MakeCallerClass(function(target, str) ccPrint(tostring(target)..": "..str) end)
 
 -- todo: flipX, flipY
     

@@ -81,7 +81,7 @@ function CCNode:reorderChild(child, z)
 end
 
 function CCNode:detachChild(child, cleanup)
-    print("Detach")
+    ccPrint("Detach")
     if self.isRunning_ then
         child:onExitTransitionDidStart()
         child:onExit()
@@ -140,7 +140,7 @@ function CCNode:removeFromParent(cleanup_)
 end
 
 function CCNode:cleanup()
-    print("cleanup: " .. tostring(self))
+    ccPrint("cleanup: " .. tostring(self))
     self:stopAllActions()
     self:unscheduleAllSelectors()
     arrayPerformSelectorOnObjects(self.children, "cleanup")
@@ -409,7 +409,7 @@ ccProp{CCNode, "scheduler", mode="r"}
 
 function CCNode:schedule(selector, interval, times, delay)
     interval = interval or 0
-    assert(selector and (interval >= 0))
+    ccAssert(selector and (interval >= 0))
     return self.scheduler_:scheduleSelector(selector, self, interval, not self.isRunning_, times, delay)
 end
 

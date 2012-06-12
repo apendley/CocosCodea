@@ -106,10 +106,10 @@ function CCScheduler:scheduleSelector(sel, target, interval, paused, times, dela
     --[[
     local msg = "Sel: " .. sel .. " for target: " .. tostring(target) .. "  int:" .. interval
     msg = msg .. "   times:" .. times .. "   delay:" .. delay
-    print(msg)
+    ccPrint(msg)
     --]]
     
-    assert(sel and target)
+    ccAssert(sel and target)
     
     local entry = self.selectorEntries[target]
     
@@ -119,7 +119,7 @@ function CCScheduler:scheduleSelector(sel, target, interval, paused, times, dela
         entry.paused = paused
     else 
         -- can't schedule a selector with pause value different than target
-        assert(entry.paused == paused)
+        ccAssert(entry.paused == paused)
     end
         
     for i = 1, #entry.timers do
@@ -196,19 +196,19 @@ function CCScheduler:unscheduleAllSelectorsForTarget(target)
 end
 
 function CCScheduler:resumeTarget(target)
-    assert(target)
+    ccAssert(target)
     local entry = self.selectorEntries[target]
     if entry then entry.paused = false end
 end
 
 function CCScheduler:pauseTarget(target)
-    assert(target)
+    ccAssert(target)
     local entry = self.selectorEntries[target]
     if entry then entry.paused = true end
 end
 
 function CCScheduler:isTargetPaused(target)
-    assert(target)
+    ccAssert(target)
     local entry = self.selectorEntries[target]
     if entry then return entry.paused end
     return false    

@@ -84,5 +84,5 @@ function MyLayer:init()
 end
 
 function MyLayer:itemSelected(item)
-    print(item.userData .. " selected!")
+    ccPrint(item.userData .. " selected!")
 end

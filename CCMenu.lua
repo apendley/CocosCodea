@@ -37,7 +37,7 @@ function CCMenu:init(...)
 end
 
 function CCMenu:addChild(child, z, tag)
-    assert(child:instanceOf(CCMenuItem))
+    ccAssert(child:instanceOf(CCMenuItem))
     CCMenuItem.addChild(self, child, z, tag)
 end
 
@@ -97,7 +97,7 @@ function CCMenu:ccTouchBegan(touch)
 end
 
 function CCMenu:ccTouchMoved(touch)
-    assert(self.state_ == kCCMenuStateTrackingTouch)
+    ccAssert(self.state_ == kCCMenuStateTrackingTouch)
     
     local currentItem = self:itemForTouch(touch)
     
@@ -109,7 +109,7 @@ function CCMenu:ccTouchMoved(touch)
 end
 
 function CCMenu:ccTouchEnded(touch)
-    assert(self.state_ == kCCMenuStateTrackingTouch)
+    ccAssert(self.state_ == kCCMenuStateTrackingTouch)
     
     if self.selectedItem_ then 
         self.selectedItem_:unselected() 

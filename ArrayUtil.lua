@@ -61,7 +61,7 @@ function arrayGreaterThan(first, second)
 end
 
 function arrayBubbleSort(array, comparator, property)
-    assert(array and comparator)
+    ccAssert(array and comparator)
     local swapped = true
     local j = 0
     

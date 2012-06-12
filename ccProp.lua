@@ -9,7 +9,7 @@ local function ccSynth(t, genGetFn, genSetFn)
     local propName = t[2]
     local ivarName = t[3] or propName .. "_"
     
-    assert(klass and propName)
+    ccAssert(klass and propName)
     
     local mode = t["mode"] or "rw"    
     local read = string.find(mode, "r") ~= nil
@@ -28,7 +28,7 @@ end
 
 function ccProp(t)
     local function genGet(ivarName)
-        return function(inst) assert(inst) return inst[ivarName] end
+        return function(inst) ccAssert(inst) return inst[ivarName] end
     end
 
     local function genSet(ivarName)

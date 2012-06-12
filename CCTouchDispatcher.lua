@@ -104,7 +104,7 @@ function CCTouchDispatcher:forceAddHandler(handler, array)
         if h.priority < handler.priority then count = count + 1 end
         
         -- already added touch handler
-        assert(h.delegate ~= handler.delegate)
+        ccAssert(h.delegate ~= handler.delegate)
     end
     
     table.insert(array, count, handler)
@@ -113,7 +113,7 @@ end
 function CCTouchDispatcher:addTargetedDelegate(delegate, priority, swallowsTouches)
     -- a delegate must implement one of these functions
     -- if both are exist, ccTouched has priority
-    assert(delegate.ccTouched or delegate.ccTouchBegan)
+    ccAssert(delegate.ccTouched or delegate.ccTouchBegan)
     
     local handler = createTargetedTouchHandler(delegate, priority, swallowsTouches)
     
@@ -178,9 +178,9 @@ function CCTouchDispatcher:rearrangeHandlers(array)
 end
 
 function CCTouchDispatcher:setPriority(delegate, priority)
-    assert(delegate)    
+    ccAssert(delegate)    
     local handler = self:findHandler(delegate)    
-    assert(handler)
+    ccAssert(handler)
     handler.priority = priority
     arrayBubbleSort(self.targetedHandlers, arrayLessThan, "priority")
 end
