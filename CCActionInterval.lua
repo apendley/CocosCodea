@@ -483,7 +483,7 @@ function CCTintTo:init(duration, ...)
 
     if #arg == 3 then
         local r, g, b = unpack(arg)
-        self.to_ = color(r, g, b, 255)
+        self.to_ = ccColor(r, g, b, 255)
     elseif #arg == 1 then
         self.to_ = ccColorCopy(arg[1])
     else
@@ -519,7 +519,7 @@ function CCTintBy:init(duration, ...)
 
     if #arg == 3 then
         local r, g, b = unpack(arg)
-        self.delta_ = color(r, g, b, 255)
+        self.delta_ = ccColor(r, g, b, 255)
     elseif #arg == 1 then
         self.delta_ = ccColorCopy(arg[1])
     else
@@ -533,7 +533,7 @@ end
 
 function CCTintBy:reverse()
     local c = self.delta_
-    return self.class(self.duration_, color(-c.r, -c.g, -c.b))
+    return self.class(self.duration_, ccColor(-c.r, -c.g, -c.b))
 end
 
 function CCTintBy:startWithTarget(target)

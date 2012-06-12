@@ -28,8 +28,8 @@ function MyLayer:init()
     
     local item2
     do
-        local normal = CCNodeRect(200, 200, color(255, 255, 255))
-        local selected = CCNodeRect(200, 200, color(0, 255, 0))
+        local normal = CCNodeRect(200, 200, ccColor(255, 255, 255))
+        local selected = CCNodeRect(200, 200, ccColor(0, 255, 0))
         local item = CCMenuItemSprite(normal, selected)
         item:setHandler(ccDelegate(self, "itemSelected"))
         local pos = self:contentSize()/2

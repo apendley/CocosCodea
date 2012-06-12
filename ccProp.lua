@@ -47,7 +47,7 @@ function ccPropColor(t)
 
     local function genSet(ivarName)
         return function(inst, ...)
-            inst[ivarName] = color(ccColorVA(...))
+            inst[ivarName] = ccColor(ccColorVA(...))
         end
     end        
     
@@ -63,7 +63,7 @@ function ccPropColorRaw(t)
 
     local function genSet(ivarName)
         return function(inst, ...)
-            inst[ivarName] = color(ccColorRawVA(...))
+            inst[ivarName] = ccColor(ccColorRawVA(...))
         end
     end
     

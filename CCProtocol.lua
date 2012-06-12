@@ -11,7 +11,7 @@ ccPropColor{CCRGBAProtocol, "color"}
 ccPropColor{CCRGBAProtocol, "colorRaw", "color_"}
 
 function CCRGBAProtocol:init(...)
-    self.color_ = color(ccColorVA(...))
+    self.color_ = ccColor(ccColorVA(...))
 end
 
 function CCRGBAProtocol:setOpacity(o)

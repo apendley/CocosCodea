@@ -229,8 +229,8 @@ function CCMenuItemLabel:init(label)
     CCMenuItem.init(self, fn)
     self:setLabel(label)    
     self.originalScale = 1
-    self.colorBackup = color(255, 255, 255)
-    self.disabledColor_ = color(126, 126, 126)
+    self.colorBackup = ccColor(255, 255, 255)
+    self.disabledColor_ = ccColor(126, 126, 126)
 end
 
 function CCMenuItemLabel:setLabel(label)

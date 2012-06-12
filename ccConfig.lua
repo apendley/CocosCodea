@@ -24,3 +24,4 @@ ccPrint = print
 ccPrintPair = printPair_
 ccPrintArray = printArray_
 ccPrintTable = printTable_
+ccColor = color

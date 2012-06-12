@@ -5,8 +5,8 @@
 ------------------------
 function ccColorUnpack(c) return c.r, c.g, c.b end
 function ccColorRawUnpack(c) return c.r, c.g, c.b, c.a end
-function ccColorCopy(c) local r,g,b = ccColorUnpack(c) return color(r, g, b, 255) end
-function ccColorCopyRaw(c) return color(ccColorRawUnpack(c)) end
+function ccColorCopy(c) local r,g,b = ccColorUnpack(c) return ccColor(r, g, b, 255) end
+function ccColorCopyRaw(c) return ccColor(ccColorRawUnpack(c)) end
 
 function ccColorRawVA(...)
     if #arg == 0 then
