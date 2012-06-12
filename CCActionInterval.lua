@@ -497,7 +497,7 @@ end
 
 function CCTintTo:startWithTarget(target)
     CCActionInterval.startWithTarget(self, target)
-    self.from_ = target:color3()
+    self.from_ = target:color()
 end
 
 function CCTintTo:update(t)
@@ -506,7 +506,7 @@ function CCTintTo:update(t)
     local r = from.r + (to.r - from.r) * t
     local g = from.g + (to.g - from.g) * t
     local b = from.b + (to.b - from.b) * t
-    self.target:setColor3(r, g, b)
+    self.target:setColor(r, g, b)
 end
 
 ----------------------
@@ -538,7 +538,7 @@ end
 
 function CCTintBy:startWithTarget(target)
     CCActionInterval.startWithTarget(self, target)
-    self.from_ = target:color3()
+    self.from_ = target:color()
 end
 
 function CCTintBy:update(t)
@@ -547,7 +547,7 @@ function CCTintBy:update(t)
     local r = from.r + delta.r * t
     local g = from.g + delta.g * t
     local b = from.b + delta.b * t
-    self.target:setColor3(r, g, b)
+    self.target:setColor(r, g, b)
 end
 
 ----------------------

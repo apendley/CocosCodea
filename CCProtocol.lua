@@ -8,10 +8,10 @@
 CCRGBAProtocol = {}
 
 ccPropColor{CCRGBAProtocol, "color"}
-ccPropColor3{CCRGBAProtocol, "color3", "color_"}
+ccPropColor{CCRGBAProtocol, "color", "color_"}
 
 function CCRGBAProtocol:init(...)
-    self.color_ = ccColor(ccc4VA(...))
+    self.color_ = ccColor4(ccc4VA(...))
 end
 
 function CCRGBAProtocol:setOpacity(o)

@@ -125,16 +125,6 @@ function CCMenuItemSprite:setOpacity(o)
     if di then di:setOpacity(o) end
 end
 
-function CCMenuItemSprite:setColor3(...)
-    local ni = self.normalImage
-    local si = self.selectedImage
-    local di = self.disabledImage
-    
-    if ni then ni:setColor3(...) end
-    if si then si:setColor3(...) end
-    if di then di:setColor3(...) end
-end
-
 function CCMenuItemSprite:setColor(...)
     local ni = self.normalImage
     local si = self.selectedImage
@@ -142,19 +132,29 @@ function CCMenuItemSprite:setColor(...)
     
     if ni then ni:setColor(...) end
     if si then si:setColor(...) end
-    if di then di:setColor(...) end    
+    if di then di:setColor(...) end
 end
 
-function CCMenuItemSprite:color3()
-    return self.normalImage:color3()
+function CCMenuItemSprite:setColor4(...)
+    local ni = self.normalImage
+    local si = self.selectedImage
+    local di = self.disabledImage
+    
+    if ni then ni:setColor4(...) end
+    if si then si:setColor4(...) end
+    if di then di:setColor4(...) end    
+end
+
+function CCMenuItemSprite:color()
+    return self.normalImage:color()
 end
 
 function CCMenuItemSprite:opacity()
     return self.normalImage:opacity()
 end
 
-function CCMenuItemSprite:color()
-    return self.normalImage:color()
+function CCMenuItemSprite:color4()
+    return self.normalImage:color4()
 end
 
 function CCMenuItemSprite:selected()
@@ -289,10 +289,10 @@ function CCMenuItemLabel:setEnabled(enabled)
     if self.isEnabled_ ~= enabled then
         local label = self.label
         if enabled == false then
-            self.colorBackup = label:color3()
-            label:setColor3(self.disabledColor_)
+            self.colorBackup = label:color()
+            label:setColor(self.disabledColor_)
         else
-            label:setColor3(self.colorBackup)
+            label:setColor(self.colorBackup)
         end
     end
     
@@ -307,20 +307,20 @@ function CCMenuItemLabel:opacity()
     return self.label_:opacity()
 end
 
-function CCMenuItemLabel:setColor3(...)
-    self.label_:setColor3(...)
-end
-
-function CCMenuItemLabel:color3(c)
-    return self.label_:color3()
-end
-
 function CCMenuItemLabel:setColor(...)
     self.label_:setColor(...)
 end
 
-function CCMenuItemLabel:color()
+function CCMenuItemLabel:color(c)
     return self.label_:color()
+end
+
+function CCMenuItemLabel:setColor4(...)
+    self.label_:setColor4(...)
+end
+
+function CCMenuItemLabel:color4()
+    return self.label_:color4()
 end
 
 function CCMenuItemLabel:cleanup()

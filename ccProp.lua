@@ -38,6 +38,22 @@ function ccProp(t)
     ccSynth(t, genGet, genSet)
 end
 
+function ccPropColor4(t)
+    local function genGet(ivarName)
+        return function(inst)
+            return ccColor4Copy(inst[ivarName])
+        end
+    end
+
+    local function genSet(ivarName)
+        return function(inst, ...)
+            inst[ivarName] = ccColor4(ccc4VA(...))
+        end
+    end        
+    
+   ccSynth(t, genGet, genSet)
+end
+
 function ccPropColor(t)
     local function genGet(ivarName)
         return function(inst)
@@ -45,25 +61,15 @@ function ccPropColor(t)
         end
     end
 
+    -- might need to change to preserve the original's alpha value
     local function genSet(ivarName)
         return function(inst, ...)
-            inst[ivarName] = ccColor(ccc4VA(...))
-        end
-    end        
-    
-   ccSynth(t, genGet, genSet)
-end
-
-function ccPropColor3(t)
-    local function genGet(ivarName)
-        return function(inst)
-            return ccColor3Copy(inst[ivarName])
-        end
-    end
-
-    local function genSet(ivarName)
-        return function(inst, ...)
-            inst[ivarName] = ccColor3(ccc3VA(...))
+            local c = inst[ivarName]
+            if c then
+                c.r, c.g, c.b = cccVA(...)
+            else
+                inst[ivarName] = ccColor(...)
+            end
         end
     end        
     

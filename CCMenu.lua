@@ -127,19 +127,19 @@ function CCMenu:setOpacity(o)
     end
 end
 
-function CCMenu:setColor3(c)
-    CCCRGBAProtocol.setColor3(c)
-    
-    for i, item in ipairs(self.children) do
-        item:setColor3(c)
-    end    
-end
-
 function CCMenu:setColor(c)
     CCCRGBAProtocol.setColor(c)
     
     for i, item in ipairs(self.children) do
         item:setColor(c)
+    end    
+end
+
+function CCMenu:setColor4(c)
+    CCCRGBAProtocol.setColor4(c)
+    
+    for i, item in ipairs(self.children) do
+        item:setColor4(c)
     end        
 end
 

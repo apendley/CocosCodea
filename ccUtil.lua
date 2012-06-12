@@ -25,7 +25,7 @@ function ccc4VA(...)
     end    
 end
 
-function ccc3VA(...)
+function cccVA(...)
     if #arg == 0 then
         return 255, 255, 255, 255
     elseif #arg == 1 then
@@ -33,21 +33,21 @@ function ccc3VA(...)
             local g = arg[1]
             return g, g, g, 255
         else
-            local r, g, b = ccColor3Unpack(arg[1])
+            local r, g, b = ccColorUnpack(arg[1])
             return r, g, b, 255
         end
     elseif #arg >= 3 then
         return arg[1], arg[2], arg[3], 255
     else
-        ccAssert(false, "ccc3VA -> invalid parameters")
+        ccAssert(false, "cccVA -> invalid parameters")
     end    
 end
 
-function ccColor3(...) return ccColor(ccc3VA(...)) end
+function ccColor4(...) return ccColor(ccc4VA(...)) end
 
-function ccColor3Unpack(c) return c.r, c.g, c.b end
+function ccColorUnpack(c) return c.r, c.g, c.b end
 function ccColorUnpack(c) return c.r, c.g, c.b, c.a end
-function ccColor3Copy(c) local r,g,b = ccColor3Unpack(c) return ccColor(r, g, b, 255) end
+function ccColorCopy(c) local r,g,b = ccColorUnpack(c) return ccColor(r, g, b, 255) end
 function ccColorCopy(c) return ccColor(ccColorUnpack(c)) end
 
 ------------------------
@@ -72,6 +72,3 @@ end
 function ccDelegate(obj, funcName, ...)
     return function(...) obj[funcName](obj, ...) end
 end
-
--- probably doesn't belong here, but there's not a better place for it at the moment
-ccFLT_EPSILON = 0.00000011920929
