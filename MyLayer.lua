@@ -15,7 +15,7 @@ function MyLayer:init()
     do
         local normal = CCSprite("Playing Cards:7_S")
         local selected = CCSprite("Playing Cards:7_S")
-        selected:setColor(255, 128, 128)
+        selected:setColor3(255, 128, 128)
         local item = CCMenuItemSprite(normal, selected)
         item:setHandler(ccDelegate(self, "itemSelected"))
         local pos = self:contentSize()/2
@@ -39,7 +39,7 @@ function MyLayer:init()
         item.userData = "Right Button"
         local label = CCLabelTTF("Hello!", "Helvetica", 30)
         label:setPosition(item:contentSize()/2)
-        label:setColor(0, 0, 0)
+        label:setColor3(0, 0, 0)
         label:setAnchorPoint(.5, .5)
         item:addChild(label) 
         item2 = item
@@ -60,12 +60,12 @@ function MyLayer:init()
         local changeFont = function(item_)
             item_:setFontName("Helvetica")
             item_:setFontSize(40)
-            item_:setColor(128, 255, 128)
+            item_:setColor3(128, 255, 128)
         end
     
         local item = CCMenuItemFont("Another Button", "Georgia", 30, CENTER)
         item:setHandler(changeFont)
-        item:setColor(64, 64, 255)
+        item:setColor3(64, 64, 255)
         local pos = self:contentSize() / 2
         pos.y = pos.y + 200
         item:setPosition(pos)

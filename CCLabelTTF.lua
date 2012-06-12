@@ -67,7 +67,7 @@ end
 
 function CCLabelTTF:draw()
     textMode(CORNER)
-    fill(self:color())
+    fill(self:color3())
     
     self:applyStyle()
     text(self:string(), 0, 0)
