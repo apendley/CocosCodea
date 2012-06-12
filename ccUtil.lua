@@ -12,19 +12,19 @@ function ccColorRawVA(...)
     if #arg == 0 then
         return 255, 255, 255, 255
     elseif #arg == 1 then
-		if type(arg[1]) == "number" then
-			local g = arg[1]
-			return g, g, g, 255
-		else
-			return ccColorRawUnpack(arg[1])
-		end
-	elseif #arg == 2 then
-		local g = arg[1]
-		return g, g, g, arg[2]
+        if type(arg[1]) == "number" then
+            local g = arg[1]
+            return g, g, g, 255
+        else
+            return ccColorRawUnpack(arg[1])
+        end
+    elseif #arg == 2 then
+        local g = arg[1]
+        return g, g, g, arg[2]
     elseif #arg == 3 then
-		return arg[1], arg[2], arg[3], 255
-	elseif #arg == 4 then
-		return unpack(arg)
+        return arg[1], arg[2], arg[3], 255
+    elseif #arg == 4 then
+        return unpack(arg)
     else
         assert(false, "ccColorVA -> invalid parameters")
     end    
@@ -34,15 +34,15 @@ function ccColorVA(...)
     if #arg == 0 then
         return 255, 255, 255, 255
     elseif #arg == 1 then
-		if type(arg[1]) == "number" then
-			local g = arg[1]
-			return g, g, g, 255
-		else
-			local r, g, b = ccColorUnpack(arg[1])
-			return r, g, b, 255
-		end
+        if type(arg[1]) == "number" then
+            local g = arg[1]
+            return g, g, g, 255
+        else
+            local r, g, b = ccColorUnpack(arg[1])
+            return r, g, b, 255
+        end
     elseif #arg >= 3 then
-		return arg[1], arg[2], arg[3], 255
+        return arg[1], arg[2], arg[3], 255
     else
         assert(false, "ccColorVA -> invalid parameters")
     end    
