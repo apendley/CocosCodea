@@ -9,6 +9,7 @@
 		<string>Main</string>
 		<string>FPSCounter</string>
 		<string>ccUtil</string>
+		<string>ccSynthesize</string>
 		<string>ArrayUtil</string>
 		<string>ccRect</string>
 		<string>CCProtocol</string>
@@ -25,6 +26,7 @@
 		<string>CCScene</string>
 		<string>CCLayer</string>
 		<string>CCSprite</string>
+		<string>CCLabelTTF</string>
 		<string>CCMenu</string>
 		<string>CCMenuItem</string>
 		<string>MyLayer</string>

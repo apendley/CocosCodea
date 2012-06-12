@@ -2,7 +2,7 @@
 CCActionInterval = CCClass(CCFiniteTimeAction)
 
 function CCActionInterval:init(duration)
-    CCFiniteTimeAction.init(self, duration or FLT_EPSILON)
+    CCFiniteTimeAction.init(self, duration or ccFLT_EPSILON)
     self.elapsed = 0
     self.firstTick = true
 end
@@ -21,7 +21,7 @@ function CCActionInterval:step(dt)
     
     local min = math.min
     local max = math.max
-    local t = max(0, min(1, self.elapsed / max(self.duration_, FLT_EPSILON)))
+    local t = max(0, min(1, self.elapsed / max(self.duration_, ccFLT_EPSILON)))
     self:update(t)
 end
 
@@ -75,7 +75,7 @@ end
 
 function CCSequence:startWithTarget(target)
     CCActionInterval.startWithTarget(self, target)
-    self.split = self.actions_[1].duration_ / math.max(self.duration_, FLT_EPSILON)
+    self.split = self.actions_[1].duration_ / math.max(self.duration_, ccFLT_EPSILON)
     self.last = -1
 end
 
@@ -485,14 +485,14 @@ function CCTintTo:init(duration, ...)
         local r, g, b = unpack(arg)
         self.to_ = color(r, g, b, 255)
     elseif #arg == 1 then
-        self.to_ = ccCopyColor(arg[1])
+        self.to_ = ccColorCopy(arg[1])
     else
         assert(false, "CCTintTo usage: CCTintTo(duration, r, g, b) or CCTintTo(duration, color)")
     end
 end
 
 function CCTintTo:copy()
-    return self.class(self.duration_, ccCopyColor(self.to_))
+    return self.class(self.duration_, ccColorCopy(self.to_))
 end
 
 function CCTintTo:startWithTarget(target)
@@ -521,14 +521,14 @@ function CCTintBy:init(duration, ...)
         local r, g, b = unpack(arg)
         self.delta_ = color(r, g, b, 255)
     elseif #arg == 1 then
-        self.delta_ = ccCopyColor(arg[1])
+        self.delta_ = ccColorCopy(arg[1])
     else
         assert(false, "CCTintBy usage: CCTintBy(duration, r, g, b) or CCTintBy(duration, color)")
     end    
 end
 
 function CCTintBy:copy()
-    return self.class(self.duration_, ccCopyColor(self.delta_))
+    return self.class(self.duration_, ccColorCopy(self.delta_))
 end
 
 function CCTintBy:reverse()

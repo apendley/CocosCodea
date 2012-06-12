@@ -2,10 +2,16 @@ CCMenu = CCClass(CCLayer):include(CCRGBAProtocol)
 
 kCCMenuHandlerPriority = -128
 
+ccSynthesize{CCMenu, "isEnabled", setter="setEnabled"}
+
 local kCCMenuStateWaiting = 0
 local kCCMenuStateTrackingTouch = 1
 
-function CCMenu:init(itemTable)
+-- todo: also allow variable args
+--function CCMenu:init(itemTable)
+function CCMenu:init(...)
+    local itemTable = (#arg == 1) and arg[1] or arg
+    
     CCLayer.init(self)
     CCRGBAProtocol.init(self)
     
@@ -49,25 +55,9 @@ function CCMenu:setHandlerPriority(newPri)
 end
 
 function CCMenu:registerWithTouchDispatcher()
-    CCTouchDispatcher:instance():addTargetedDelegate(self, kCCMenuHandlerPriority, true)
+    local d = CCDirector:instance():touchDispatcher()
+    d:addTargetedDelegate(self, kCCMenuHandlerPriority, true)
 end
-
---[[
-    local p = vec2(touch.x, touch.y)
-    p = CCDirector:instance():convertToGL(p)
-    
-    local obj = self:getChildByTag(1)
-    if not obj then return false end
-    
-    local cs = obj:contentSize()
-    local r = ccRect(0, 0, cs.x, cs.y)
-        
-    if r:containsPoint(obj:convertToNodeSpace(p)) then
-        return true
-    end
-    
-    return false
---]]
 
 function CCMenu:itemForTouch(touch)
     local p = vec2(touch.x, touch.y)
@@ -83,7 +73,6 @@ function CCMenu:itemForTouch(touch)
         end
     end
 end
-
 
 function CCMenu:ccTouchBegan(touch)
     if self.state_ ~= kCCMenuStateWaiting or not self:visible() or not self.isEnabled_ then
@@ -128,15 +117,6 @@ function CCMenu:ccTouchEnded(touch)
     end
     
     self.state_ = kCCMenuStateWaiting    
-end
-
-
-function CCMenu:setEnabled(enabled)
-    self.isEnabled_ = enabled
-end
-
-function CCMenu:isEnabled()
-    return self.isEnabled_
 end
 
 function CCMenu:setOpacity(o)

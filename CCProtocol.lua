@@ -7,33 +7,11 @@
 -----------------------------------------------------------
 CCRGBAProtocol = {}
 
-function CCRGBAProtocol:init(...)
-    if #arg == 0 then
-        self.color_ = color(255, 255, 255, 255)
-    elseif #arg == 1 then    
-        local c = arg[1]
-        self.color_ = color(c.r, c.g, c.b, c.a)
-    elseif #arg >= 3 then
-        self.color_ = color(unpack(arg))
-    else
-        assert(false, "CCRGBAProtocol:init -> invalid parameters")
-    end
-end
-    
-function CCRGBAProtocol:setColor(...)
-    local mine = self.color_
-    
-    if #arg >= 3 then
-        mine.r, mine.g, mine.b = unpack(arg)
-    elseif #arg == 1 then
-        mine.r, mine.g, mine.b = ccUnpackColor(arg[1])
-    else
-        assert(false, "setColor usage: setColor(r, g, b) or setColor(color)")
-    end
-end
+ccSynthesizeColor{CCRGBAProtocol, "color"}
+ccSynthesizeColor{CCRGBAProtocol, "colorRaw", "color_"}
 
-function CCRGBAProtocol:color()
-    return ccCopyColor(self.color_)
+function CCRGBAProtocol:init(...)
+    self.color_ = color(ccColorVA(...))
 end
 
 function CCRGBAProtocol:setOpacity(o)
@@ -42,23 +20,6 @@ end
 
 function CCRGBAProtocol:opacity()
     return self.color_.a
-end
-
-function CCRGBAProtocol:setColorRaw(...)
-    local mine = self.color_
-    
-    if #arg >= 3 then
-        mine.r, mine.g, mine.b, mine.a = unpack(arg)
-        mine.a = mine.a ~= nil and mine.a or 255
-    elseif #arg == 1 then
-        mine.r, mine.g, mine.b, mine.a = ccUnpackColorRaw(arg[1])
-    else
-        assert(false, "setColor usage: setColorRaw(r, g, b, [a]) or setColorRaw(color)")
-    end
-end
-
-function CCRGBAProtocol:colorRaw()
-    return ccCopyColorRaw(self.color_)
 end
 
 -----------------------------------------------------------------------
@@ -74,6 +35,8 @@ end
 -----------------------------------------------------------------------
 CCTargetedTouchProtocol = {}
 
+ccSynthesize{CCTargetedTouchProtocol, "isTouchEnabled", mode="r"}
+
 function CCTargetedTouchProtocol:init()
     self.isTouchEnabled_ = false
 end
@@ -86,16 +49,12 @@ end
 
 function CCTargetedTouchProtocol:onExit()
     if self.isTouchEnabled_ then
-        CCTouchDispatcher:instance():removeDelgate(self)
+        CCDirector:instance():touchDispatcher():removeDelgate(self)
     end
 end
 
-function CCTargetedTouchProtocol:isTouchEnabled()
-    return self.isTouchEnabled_
-end
-
 function CCTargetedTouchProtocol:registerWithTouchDispatcher()
-    CCTouchDispatcher:instance():addTargetedDelegate(self, 0, true)
+    CCDirector:instance():touchDispatcher():addTargetedDelegate(self, 0, true)
 end
 
 function CCTargetedTouchProtocol:setTouchEnabled(enabled)
@@ -105,7 +64,7 @@ function CCTargetedTouchProtocol:setTouchEnabled(enabled)
             if enabled then 
                 self:registerWithTouchDispatcher()
             else 
-                CCTouchDispatcher:instance():removeDelegate(self)
+                CCDirector:instance():touchDispatcher():removeDelegate(self)
             end
         end
     end
@@ -113,4 +72,15 @@ end
 
 function CCTargetedTouchProtocol:ccTouchBegan(touch)
     return false
+end
+
+-----------------------------------------------------------------------
+-- CCLabelProtocol
+-----------------------------------------------------------------------
+CCLabelProtocol = {}
+
+ccSynthesize{CCLabelProtocol, "string", "labelString_"}
+
+function CCLabelProtocol:init(str)
+    self:setString(str)
 end

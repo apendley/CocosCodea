@@ -1,5 +1,9 @@
 CCDirector = CCClass()
 
+ccSynthesize{CCDirector, "scheduler"}
+ccSynthesize{CCDirector, "actionManager"}
+ccSynthesize{CCDirector, "touchDispatcher"}
+
 -- singleton
 local directorInstance = nil
 function CCDirector:instance(_)
@@ -8,20 +12,18 @@ function CCDirector:instance(_)
 end
 
 function CCDirector:init()
-    self.actionManager = CCActionManager()
-    self.scheduler = CCScheduler()
+    self.actionManager_ = CCActionManager()
+    self.scheduler_ = CCScheduler()
+    self.touchDispatcher_ = CCTouchDispatcher()
     --self.scheduler:scheduleSelector("update", self.actionManager)
-    self.runningScene_ = nil
-    self.nextScene_ = nil
+    --self.runningScene_ = nil
+    --self.nextScene_ = nil
     self.nextDeltaTimeZero_ = false
     self.isPaused_ = false
     self.isAnimating_ = false
     self.sendCleanupToScene_ = false
     
     self.sceneStack_ = {}
-    
-    -- make sure touch dispatcher is created and ready to go
-    CCTouchDispatcher:instance()
 end
 
 function CCDirector:winSize()
@@ -66,6 +68,9 @@ function CCDirector:finish()
     self.runningScene_:onExit()
     self.runningScene_:cleanup()
     self.runningScene_ = nil
+    self.actionManager_ = nil
+    self.scheduler_ = nil
+    self.touchDispatcher_ = nil
     
     self.sceneStack_ = {}
     
@@ -113,15 +118,15 @@ function CCDirector:startAnimation()
     self.isAnimating_ = true
 end
 
-function CCDirector:drawScene()
+function CCDirector:drawScene(dt)
     if self.isAnimating_ == false then return end
     
-    CCTouchDispatcher:instance():updatePreDraw()
+    self.touchDispatcher_:updatePreDraw()
     
     if not self.isPaused_ then
         -- uh where do i get delta time...
-        self.actionManager:update(DeltaTime)
-        self.scheduler:update(DeltaTime)
+        self.actionManager_:update(dt)
+        self.scheduler_:update(dt)
     end
     
     if self.nextScene_ then
@@ -132,7 +137,7 @@ function CCDirector:drawScene()
         self.runningScene_:visit()
     end
     
-    CCTouchDispatcher:instance():updatePostDraw()
+    self.touchDispatcher_:updatePostDraw()
 end
 
 function CCDirector:convertToUI(p)

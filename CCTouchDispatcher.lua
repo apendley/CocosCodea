@@ -16,13 +16,6 @@ local function invalidateTargetedTouchHandler(t)
     t.delegate = nil
 end
 
--- singleton
-local dispatcherInstance = nil
-function CCTouchDispatcher:instance(_)
-    if not dispatcherInstance then dispatcherInstance = CCTouchDispatcher() end
-    return dispatcherInstance
-end
-
 function CCTouchDispatcher:init()
     self.targetedHandlers = {}
     self.handlersToAdd = {}

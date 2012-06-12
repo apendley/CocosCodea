@@ -1,25 +1,16 @@
+--CCNode
 CCNode = CCClass()
 
--- private methods
-local function insertChild(node, child, z)
-    local children = node.children
-    local last = children[#children]
-    
-    if last == nil or last.zOrder <= z then
-        table.insert(children, child)
-    else
-        for i,v in ipairs(children) do
-            if last.zOrder > z then
-                table.insert(children, child, i)
-                break
-            end
-        end
-    end
-    
-    child.zOrder = z
-end
+ccSynthesize{CCNode, "visible"}
+ccSynthesize{CCNode, "rotation", mode = "r"}
+ccSynthesize{CCNode, "scaleX", mode = "r"}
+ccSynthesize{CCNode, "scaleY", mode = "r"}
+ccSynthesize{CCNode, "scale", "scaleX_", mode = "r"}
+ccSynthesize{CCNode, "ignoreAnchorPointForPosition", mode = "r"}
+ccSynthesizeVec2{CCNode, "position", mode = "r"}
+ccSynthesizeVec2{CCNode, "anchorPoint", mode = "r"}
+ccSynthesizeVec2{CCNode, "contentSize", mode = "r"}
 
--- Node methods
 function CCNode:init()
     self.position_ = vec2(0,0)
     self.anchorPoint_ = vec2(0,0)
@@ -42,8 +33,26 @@ function CCNode:init()
     self.children = {}
     
     local dir = CCDirector:instance()
-    self.actionManager_ = dir.actionManager
-    self.scheduler_ = dir.scheduler
+    self.actionManager_ = dir:actionManager()
+    self.scheduler_ = dir:scheduler()
+end
+
+local function insertChild(node, child, z)
+    local children = node.children
+    local last = children[#children]
+    
+    if last == nil or last.zOrder <= z then
+        table.insert(children, child)
+    else
+        for i,v in ipairs(children) do
+            if last.zOrder > z then
+                table.insert(children, child, i)
+                break
+            end
+        end
+    end
+    
+    child.zOrder = z
 end
 
 function CCNode:addChild(child, z, tag)
@@ -71,6 +80,7 @@ function CCNode:reorderChild(child, z)
 end
 
 function CCNode:detachChild(child, cleanup)
+    print("Detach")
     if self.isRunning_ then
         child:onExitTransitionDidStart()
         child:onExit()
@@ -88,7 +98,7 @@ function CCNode:removeChild(child, cleanup)
     --default cleanup = true
     if cleanup == nil then cleanup = true end
     
-    if arrayContainsObject(child) then
+    if arrayContainsObject(self.children, child) then
         self:detachChild(child, cleanup)
     end
 end
@@ -103,9 +113,9 @@ function CCNode:removeChildByTag(tag, cleanup)
     end
 end
 
-function CCNode:removeAllChildren(cleanup)
+function CCNode:removeAllChildren(cleanup_)
     -- default cleanup to true
-    if cleanup == nil then cleanup = true end
+    if cleanup_ == nil then cleanup_ = true end
     
     for i, child in ipairs(self.children) do
         if self.isRunning_ then
@@ -113,18 +123,18 @@ function CCNode:removeAllChildren(cleanup)
             child:onExit()
         end
         
-        if cleanup then child:cleanup() end
+        if cleanup_ then child:cleanup() end
         child.parent = nil
     end
     
-    self.children = {}
+    arrayRemoveAllObjects(self.children)
 end
 
-function CCNode:removeFromParent(cleanup)
+function CCNode:removeFromParent(cleanup_)
     if self.parent then
         -- default cleanup = true
-        if cleanup == nil then cleanup = true end
-        self.parent:removeChild(self, cleanup)
+        if cleanup_ == nil then cleanup_ = true end
+        self.parent:removeChild(self, cleanup_)
     end
 end
 
@@ -271,28 +281,9 @@ end
 -- properties
 --------------------
 
-function CCNode:visible(_)
-    assert(_ == nil)
-    return self.visible_
-end
-
-function CCNode:setVisible(visible)
-    self.visible_ = (visible ~= nil ) and visible or false
-end
-
-function CCNode:rotation(_)
-    assert(_ == nil)    
-    return self.rotation_
-end
-
 function CCNode:setRotation(angle)
     self.rotation_ = angle
     self.isTransformDirty_, self.isInverseDirty_ = true, true
-end
-
-function CCNode:scaleX(_)
-    assert(_ == nil)
-    return self.scaleX_    
 end
 
 function CCNode:setScaleX(s)
@@ -300,55 +291,20 @@ function CCNode:setScaleX(s)
     self.isTransformDirty_, self.isInverseDirty_ = true, true
 end
 
-function CCNode:scaleY(_)
-    assert(_ == nil)
-    return self.scaleY_
-end
-
 function CCNode:setScaleY(s)
     self.scaleY_ = s
     self.isTransformDirty_, self.isInverseDirty_ = true, true
 end
 
-function CCNode:scale(_)
-    assert(_ == nil)
-    -- this won't behave the way you expect if scaleX and scaleY arent' the same
-    return self.scaleX_        
-end
-
-function CCNode:setScale(...)
-    if #arg == 1 then
-        local s = arg[1]
-        self.scaleX_, self.scaleY_ = s, s
-    else
-        self.scaleX_, self.scaleY_ = arg[1], arg[2]
-    end
-        
+function CCNode:setScale(s)
+    self.scaleX_, self.scaleY_ = s, s
     self.isTransformDirty_, self.isInverseDirty_ = true, true
-end
-
-function CCNode:position(_)
-    assert(_ == nil)
-    local pos = self.position_
-    return vec2(pos.x, pos.y)
 end
 
 function CCNode:setPosition(...)
     local pos = self.position_
-    
-    if #arg == 1 then
-        local p = arg[1]
-        pos.x, pos.y = p.x, p.y
-    else
-        pos.x, pos.y = arg[1], arg[2]
-    end
-    
+    pos.x, pos.y = ccVec2VA(...)
     self.isTransformDirty_, self.isInverseDirty_ = true, true
-end
-
-function CCNode:ignoreAnchorPointForPosition(_)
-    assert(_ == nil)
-    return self.ignoreAnchorPointForPosition_
 end
 
 function CCNode:setIgnoreAnchorPointForPosition(ignore)
@@ -358,42 +314,19 @@ function CCNode:setIgnoreAnchorPointForPosition(ignore)
     end    
 end
 
-function CCNode:anchorPoint(_)
-    assert(_ == nil)
-    local ap = self.anchorPoint_
-    return vec2(ap.x, ap.y)
-end
-
 function CCNode:setAnchorPoint(...)
     local ap = self.anchorPoint_
-    
-    if #arg == 1 then
-        local p = arg[1]
-        ap.x, ap.y = p.x, p.y 
-    else
-        ap.x, ap.y = arg[1], arg[2]
-    end
+    ap.x, ap.y = ccVec2VA(...)
         
     local cs, app = self.contentSize_, self.anchorPointInPoints_
     app.x, app.y = cs.x * ap.x, cs.y * ap.y
     self.isTransformDirty_, self.isInverseDirty_ = true, true
 end
 
-function CCNode:contentSize(_)
-    assert(_ == nil)
-    local cs = self.contentSize_    
-    return vec2(cs.x, cs.y)
-end
 
 function CCNode:setContentSize(...)
     local cs = self.contentSize_
-    
-    if #arg == 1 then
-        local s = arg[1]
-        cs.x, cs.y = s.x, s.y
-    else
-        cs.x, cs.y = arg[1], arg[2]
-    end
+    cs.x, cs.y = ccVec2VA(...)
         
     local ap, app = self.anchorPoint_, self.anchorPointInPoints_
     app.x, app.y = cs.x * ap.x, cs.y * ap.y
@@ -403,12 +336,10 @@ end
 ---------------------
 -- scene management
 ---------------------
-
 function CCNode:draw()
 end
 
 function CCNode:onEnter()
-    --print("onEnter: " .. tostring(self)) 
     arrayPerformSelectorOnObjects(self.children, "onEnter")
     self:resumeSchedulerAndActions()
     
@@ -416,17 +347,14 @@ function CCNode:onEnter()
 end
 
 function CCNode:onEnterTransitionDidFinish()
-    --print("onEnterTransitionDidFinish: " .. tostring(self)) 
     arrayPerformSelectorOnObjects(self.children, "onEnterTransitionDidFinish")
 end
 
 function CCNode:onExitTransitionDidStart()
-    --print("onExitTransitionDidStart: " .. tostring(self))     
     arrayPerformSelectorOnObjects(self.children, "onExitTransitionDidStart")
 end
 
 function CCNode:onExit()
-    --print("onExit: " .. tostring(self))     
     self:pauseSchedulerAndActions()
     self.isRunning_ = false
     
@@ -476,9 +404,7 @@ end
 ---------------------
 -- scheduler
 ---------------------
-function CCNode:scheduler()
-    return self.scheduler_
-end
+ccSynthesize{CCNode, "scheduler", mode="r"}
 
 function CCNode:schedule(selector, interval, times, delay)
     interval = interval or 0

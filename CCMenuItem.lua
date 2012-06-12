@@ -1,28 +1,19 @@
 --CCMenuItem
 CCMenuItem = CCClass(CCNode)
 
-function CCMenuItem:init(fn)
+ccSynthesize{CCMenuItem, "isEnabled", setter="setEnabled"}
+ccSynthesize{CCMenuItem, "isSelected", mode="r"}
+ccSynthesize{CCMenuItem, "handler"}
+
+function CCMenuItem:init()
     CCNode.init(self)
     self:setAnchorPoint(0.5, 0.5)
-    self.fn_ = fn
     self.isEnabled_ = true
     self.isSelected_ = false
 end
 function CCMenuItem:cleanup()
-    self.fn_ = nil
+    self.handler_ = nil
     CCNode.cleanup(self)
-end
-
-function CCMenuItem:isEnabled()
-    return self.isEnabled_
-end
-
-function CCMenuItem:setEnabled(enabled)
-    self.isEnabled_ = enabled
-end
-
-function CCMenuItem:isSelected()
-    return self.isSelected_
 end
 
 function CCMenuItem:selected()
@@ -34,8 +25,8 @@ function CCMenuItem:unselected()
 end
 
 function CCMenuItem:activate()
-    if self.isEnabled_ and self.fn_ then
-        self:fn_()
+    if self.isEnabled_ and self.handler_ then
+        self:handler_()
     end
 end
 
@@ -46,19 +37,27 @@ function CCMenuItem:rect()
     return ccRect(pos.x-cs.x*ap.x, pos.y-cs.y*ap.y, cs.x, cs.y)
 end
 
-function CCMenuItem:setFunction(fn)
-    self.fn_ = fn
+-- debug draw sprite rect
+--[[ 
+function CCMenuItem:draw()
+    CCNode.draw(self)
+    
+    noFill()
+    strokeWidth(2)
+    stroke(255,128,128)
+    local s = self:contentSize()
+    rect(0, 0, s.x, s.y)
 end
-
+--]]    
 
 -------------------
 -- CCMenuItemSprite
 -------------------
 CCMenuItemSprite = CCClass(CCMenuItem):include(CCRGBAProtocol)
 
-function CCMenuItemSprite:init(normalSprite, selectedSprite, disabledSprite, fn)
-    CCMenuItem.init(self, fn)
-    CCRGBAProtocol.init(self)
+function CCMenuItemSprite:init(normalSprite, selectedSprite, disabledSprite)
+    CCMenuItem.init(self)
+    --CCRGBAProtocol.init(self)
     self:setNormalImage(normalSprite)
     self:setSelectedImage(selectedSprite)
     self:setDisabledImage(disabledSprite)
@@ -126,24 +125,24 @@ function CCMenuItemSprite:setOpacity(o)
     if di then di:setOpacity(o) end
 end
 
-function CCMenuItemSprite:setColor(c)
+function CCMenuItemSprite:setColor(...)
     local ni = self.normalImage
     local si = self.selectedImage
     local di = self.disabledImage
     
-    if ni then ni:setColor(c) end
-    if si then si:setColor(c) end
-    if di then di:setColor(c) end
+    if ni then ni:setColor(...) end
+    if si then si:setColor(...) end
+    if di then di:setColor(...) end
 end
 
-function CCMenuItemSprite:setColorRaw(c)
+function CCMenuItemSprite:setColorRaw(...)
     local ni = self.normalImage
     local si = self.selectedImage
     local di = self.disabledImage
     
-    if ni then ni:setColorRaw(c) end
-    if si then si:setColorRaw(c) end
-    if di then di:setColorRaw(c) end    
+    if ni then ni:setColorRaw(...) end
+    if si then si:setColorRaw(...) end
+    if di then di:setColorRaw(...) end    
 end
 
 function CCMenuItemSprite:color()
@@ -212,4 +211,168 @@ function CCMenuItemSprite:updateImagesVisibility()
             if di then di:setVisible(false) end        
         end
     end
+end
+
+-- todo: allow changing the function
+
+--------------------
+-- CCMenuItemLabel
+--------------------
+CCMenuItemLabel = CCClass(CCMenuItem):include(CCRGBAProtocol)
+
+local kCCZoomActionTag = 19191919
+
+ccSynthesize{CCMenuItemLabel, "label", mode="r"}
+ccSynthesize{CCMenuItemLabel, "disabledColor"}
+
+function CCMenuItemLabel:init(label)
+    CCMenuItem.init(self, fn)
+    self:setLabel(label)    
+    self.originalScale = 1
+    self.colorBackup = color(255, 255, 255)
+    self.disabledColor_ = color(126, 126, 126)
+end
+
+function CCMenuItemLabel:setLabel(label)
+    assert(label ~= nil)
+    
+    if self.label_ ~= label then
+        if self.label_ then self:removeChild(self.label_, true) end
+        self:addChild(label)
+        self.label_ = label
+        label:setAnchorPoint(0, 0)
+        self:setContentSize(label:contentSize())
+    end
+end
+
+function CCMenuItemLabel:setString(str)
+    self.label_:setString(str)
+    self:setContentSize(self.label_:contentSize())
+end
+
+function CCMenuItemLabel:activate()
+    if self.isEnabled_ then
+        self:stopAllActions()
+        self:setScale(self.originalScale)
+        CCMenuItem.activate(self)
+    end
+end
+
+function CCMenuItemLabel:selected()
+    if self.isEnabled_ then
+        CCMenuItem.selected(self)
+        
+        local action = self:getActionByTag(kCCZoomActionTag)
+        if action then
+            self:stopAction(action)
+        else
+            self.originalScale = self:scale()
+        end
+        
+        local zoomAction = CCScaleTo(0.1, self.originalScale * 1.2)
+        zoomAction.tag = kCCZoomActionTag
+        self:runAction(zoomAction)
+    end
+end
+
+function CCMenuItemLabel:unselected()
+    if self.isEnabled_ then
+        CCMenuItem.unselected(self)
+        self:stopActionByTag(kCCZoomActionTag)
+        local zoomAction = CCScaleTo(0.1, self.originalScale)
+        zoomAction.tag = kCCZoomActionTag
+        self:runAction(zoomAction)
+    end
+end
+
+function CCMenuItemLabel:setEnabled(enabled)
+    if self.isEnabled_ ~= enabled then
+        local label = self.label
+        if enabled == false then
+            self.colorBackup = label:color()
+            label:setColor(self.disabledColor_)
+        else
+            label:setColor(self.colorBackup)
+        end
+    end
+    
+    CCMenuItem.setEnabled(self, enabled)
+end
+
+function CCMenuItemLabel:setOpacity(o)
+    self.label_:setOpacity(o)
+end
+
+function CCMenuItemLabel:opacity()
+    return self.label_:opacity()
+end
+
+function CCMenuItemLabel:setColor(...)
+    self.label_:setColor(...)
+end
+
+function CCMenuItemLabel:color(c)
+    return self.label_:color()
+end
+
+function CCMenuItemLabel:setColorRaw(...)
+    self.label_:setColorRaw(...)
+end
+
+function CCMenuItemLabel:colorRaw()
+    return self.label_:colorRaw()
+end
+
+function CCMenuItemLabel:cleanup()
+    CCMenuItem.cleanup(self)
+    self.label_ = nil
+end
+
+--------------------
+-- CCMenuItemFont
+--------------------
+CCMenuItemFont = CCClass(CCMenuItemLabel)
+
+ccSynthesize{CCMenuItemFont, "fontSize", mode="r"}
+ccSynthesize{CCMenuItemFont, "fontName", mode="r"}
+ccSynthesize{CCMenuItemFont, "alignment", mode="r"}
+ccSynthesize{CCMenuItemFont, "wrapWidth", mode="r"}
+
+function CCMenuItemFont:init(str, fontName, pointSize, align, wrapWidth)
+    local label = CCLabelTTF(str, fontName, pointSize, align, wrapWidth)
+    CCMenuItemLabel.init(self, label, fn)
+    
+    self.fontName_ = label:fontName()
+    self.fontSize_ = label:fontSize()
+    self.alignment_ = label:alignment()
+    self.wrapWidth_ = label:wrapWidth()
+end
+
+function CCMenuItemFont:updateLabel()
+    local label = self:label()
+    label:setFontName(self.fontName_)
+    label:setFontSize(self.fontSize_)
+    label:setAlignment(self.alignment_)
+    label:setWrapWidth(self.wrapWidth_)
+    self:setContentSize(label:contentSize())
+end
+
+function CCMenuItemFont:setFontSize(size)
+    self.fontSize_ = size
+    self:updateLabel()
+end
+
+function CCMenuItemFont:setFontName(fontName)
+    self.fontName_ = fontName
+    self:updateLabel()
+end
+
+function CCMenuItemFont:setAlignment(align)
+    self.alignment_ = align
+    self:updateLabel()
+end
+
+function CCMenuItemFont:setWrapWidth(width)
+    self.wrapWidth_ = width
+    self:updateLabel()
 end

@@ -1,19 +1,29 @@
 CCSprite = CCClass(CCNode):include(CCRGBAProtocol)
 
+ccSynthesize{CCSprite, "flipX"}
+ccSynthesize{CCSprite, "flipY"}
+
 function CCSprite:init(spriteNameOrImage)
     CCNode.init(self)
     CCRGBAProtocol.init(self)
     self:setSprite(spriteNameOrImage)
     self:setAnchorPoint(0.5, 0.5)
+    self.flipX_ = false
+    self.flipY_ = false
 end
 
 function CCSprite:draw()
     local c = self.color_
-    tint(c.r, c.g, c.b, c.a)
-    spriteMode(CORNER)
+    tint(ccColorUnpack(self.color_))
     
+    --spriteMode(CORNER)
+    --if self.sprite_ then sprite(self.sprite_, 0, 0, s.x, s.y) end
+    
+    spriteMode(CENTER)
     local s = self.contentSize_    
-    if self.sprite_ then sprite(self.sprite_, 0, 0, s.x, s.y) end
+    local w = self.flipX_ and -s.x or s.x
+    local h = self.flipY_ and -s.y or s.y
+    if self.sprite_ then sprite(self.sprite_, s.x/2, s.y/2, w, h) end
     
     -- debug draw sprite rect
     --[[ 

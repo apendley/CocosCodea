@@ -1,8 +1,7 @@
 -- Main
 
 -- TODO
--- * labels
--- * add remaining menu items
+-- * CCMenuItemToggle
 -- * add CCMenu alignment functions
 -- * alias color constructor as CCColor, and make all cocos code use CCColor
 -- * add prioritized updates to CCScheduler and CCNode classes
@@ -35,14 +34,20 @@ function printPair(k, v)
     print("["..tostring(k).."]: "..tostring(v))
 end
 
+function printArray(array)
+    for i,v in ipairs(array) do printPair(i,v) end
+end
+
+function printTable(table)
+    for k,v in pairs(table) do printPair(k,v) end
+end
+
 function setup()
-    --for k,v in pairs(_G) do print("["..tostring(k).."]: "..tostring(v)) end
     --displayMode(FULLSCREEN)        
     
     -- create director singleton
     local director = CCDirector:instance()
     director:runWithScene(MyLayer:scene())
-      
     
     fps = FPSCounter()
         
@@ -51,9 +56,10 @@ function setup()
     waitCounter = startWait
 end
 
-function draw()
+function draw()    
     background(128, 128, 128, 0)
     
+    --[[
     waitCounter = waitCounter - DeltaTime
     if waitCounter > 0 then 
         fill(0)
@@ -63,14 +69,15 @@ function draw()
         fps:draw()        
         return
     end
+    --]]
     
-    CCDirector:instance():drawScene()
+    CCDirector:instance():drawScene(DeltaTime)
 
     fps:draw()
 end
 
 function touched(touch)
-    CCTouchDispatcher:instance():touched(touch)
+    CCDirector:instance():touchDispatcher():touched(touch)
 end
 
 --[[
