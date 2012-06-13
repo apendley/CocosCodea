@@ -30,9 +30,10 @@ end
 ----------------------
 CCLayerColor = CCClass(CCLayer):include(CCRGBAProtocol)
 
-function CCLayerColor:init(w, h, ...)
-    CCLayer.init(self, w, h)
-    CCRGBAProtocol.init(self, ...)
+-- can't take vararg color here, must pass a ccColor4() object
+function CCLayerColor:init(color4, w, h)
+    CCLayer.init(self)
+    CCRGBAProtocol.init(self, color4)
 end
 
 function CCLayerColor:draw()

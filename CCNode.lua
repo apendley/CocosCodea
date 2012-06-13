@@ -139,7 +139,7 @@ function CCNode:removeFromParent(cleanup_)
 end
 
 function CCNode:cleanup()
-    ccPrint("cleanup: " .. tostring(self))
+    --ccPrint("cleanup: " .. tostring(self))
     self:stopAllActions()
     self:unscheduleAllSelectors()
     arrayPerformSelectorOnObjects(self.children, "cleanup")

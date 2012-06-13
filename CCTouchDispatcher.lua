@@ -1,6 +1,19 @@
 CCTouchDispatcher = CCClass()
 
+ccProp{CCTouchDispatcher, "dispatchEvents"}
+
 kCCTouchPriorityMin = -10000
+
+function CCTouchDispatcher:init()
+    self.targetedHandlers = {}
+    self.handlersToAdd = {}
+    self.handlersToRemove = {}
+    self.locked = false
+    self.toAdd = false
+    self.toRemove = false
+    self.toQuit = false
+    self.dispatchEvents_ = true
+end
 
 local function createTargetedTouchHandler(delegate, priority, swallowsTouches)
     local t = {}
@@ -16,17 +29,9 @@ local function invalidateTargetedTouchHandler(t)
     t.delegate = nil
 end
 
-function CCTouchDispatcher:init()
-    self.targetedHandlers = {}
-    self.handlersToAdd = {}
-    self.handlersToRemove = {}
-    self.locked = false
-    self.toAdd = false
-    self.toRemove = false
-    self.toQuit = false
-end
-
 function CCTouchDispatcher:touched(touch)
+    if not self.dispatchEvents_ then return end
+    
     local handlers = self.targetedHandlers
     local claimed
     

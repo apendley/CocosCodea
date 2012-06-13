@@ -46,9 +46,9 @@ end
 function ccColor4(...) return ccColor(ccc4VA(...)) end
 
 function ccColorUnpack(c) return c.r, c.g, c.b end
-function ccColorUnpack(c) return c.r, c.g, c.b, c.a end
+function ccColor4Unpack(c) return c.r, c.g, c.b, c.a end
 function ccColorCopy(c) local r,g,b = ccColorUnpack(c) return ccColor(r, g, b, 255) end
-function ccColorCopy(c) return ccColor(ccColorUnpack(c)) end
+function ccColor4Copy(c) return ccColor(ccColor4Unpack(c)) end
 
 ------------------------
 -- vec2 utilities

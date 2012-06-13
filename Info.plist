@@ -25,12 +25,14 @@
 		<string>CCActionEase</string>
 		<string>CCNode</string>
 		<string>CCScene</string>
+		<string>CCTransition</string>
 		<string>CCLayer</string>
 		<string>CCSprite</string>
 		<string>CCLabelTTF</string>
 		<string>CCMenu</string>
 		<string>CCMenuItem</string>
 		<string>MyLayer</string>
+		<string>MyLayer2</string>
 	</array>
 	<key>Created</key>
 	<string>2012-06-06 16:52:51 +0000</string>

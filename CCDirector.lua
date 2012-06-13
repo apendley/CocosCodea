@@ -3,7 +3,9 @@ CCDirector = CCClass()
 ccProp{CCDirector, "scheduler"}
 ccProp{CCDirector, "actionManager"}
 ccProp{CCDirector, "touchDispatcher", mode="r"}
-ccProp{CCDirector, "showFPS", mode="w", setter="showFPS"}
+ccProp{CCDirector, "runningScene", mode="r"}
+ccProp{CCDirector, "sendCleanupToScene", mode="r"}
+ccProp{CCDirector, "showFPS", mode="rw", setter="showFPS", getter="isShowingFPS"}
 
 -- singleton
 local di_ = nil
@@ -76,7 +78,8 @@ function CCDirector:finish()
     self.scheduler_ = nil
     self.touchDispatcher_ = nil
     
-    self.sceneStack_ = {}
+    --self.sceneStack_ = {}
+    self.sceneStack_ = nil
     
     self:stopAnimation()
     
@@ -84,22 +87,25 @@ function CCDirector:finish()
 end
 
 function CCDirector:setNextScene()
-    -- todo: transition handling;
-    local newIsTransition = false
-    local runningIsTransition = false
+    local runningIsTransition
+    if self.runningScene_ then
+        runningIsTransition = self.runningScene_:instanceOf(CCTransitionScene)
+    end
     
-    if newIsTransition == false and self.runningScene_ then
+    local newIsTransition = self.nextScene_:instanceOf(CCTransitionScene)    
+    
+    if (not newIsTransition) and self.runningScene_ then
         self.runningScene_:onExit()
         
-        if self.sendCleanupToScene then
+        if self.sendCleanupToScene_ then
             self.runningScene_:cleanup()
         end
     end
     
     self.runningScene_ = self.nextScene_
     self.nextScene_ = nil
-    
-    if runningIsTransition == false then
+
+    if not runningIsTransition then
         self.runningScene_:onEnter()
         self.runningScene_:onEnterTransitionDidFinish()
     end

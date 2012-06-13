@@ -49,7 +49,7 @@ end
 
 function CCTargetedTouchProtocol:onExit()
     if self.isTouchEnabled_ then
-        CCSharedDirector():touchDispatcher():removeDelgate(self)
+        CCSharedDirector():touchDispatcher():removeDelegate(self)
     end
 end
 

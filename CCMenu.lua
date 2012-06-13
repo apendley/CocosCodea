@@ -7,11 +7,7 @@ ccProp{CCMenu, "isEnabled", setter="setEnabled"}
 local kCCMenuStateWaiting = 0
 local kCCMenuStateTrackingTouch = 1
 
--- todo: also allow variable args
---function CCMenu:init(itemTable)
 function CCMenu:init(...)
-    local itemTable = (#arg == 1) and arg[1] or arg
-    
     CCLayer.init(self)
     CCRGBAProtocol.init(self)
     
@@ -24,9 +20,9 @@ function CCMenu:init(...)
     self:setContentSize(WIDTH, HEIGHT)        
     self:setPosition(WIDTH/2, HEIGHT/2)
     
-    if itemTable then
+    if #arg > 0 then
         local z = 0
-        for i,item in ipairs(itemTable) do
+        for i,item in ipairs(arg) do
             self:addChild(item, z)
             z = z + 1
         end
@@ -38,7 +34,7 @@ end
 
 function CCMenu:addChild(child, z, tag)
     ccAssert(child:instanceOf(CCMenuItem))
-    CCMenuItem.addChild(self, child, z, tag)
+    CCLayer.addChild(self, child, z, tag)
 end
 
 function CCMenu:onExit()
@@ -47,7 +43,8 @@ function CCMenu:onExit()
         self.state_ = kCCMenuStateWaiting
         self.selectedItem_ = nil
     end
-    CCMenuItem.onExit(self)
+    
+    CCLayer.onExit(self)
 end
 
 function CCMenu:setHandlerPriority(newPri)

@@ -300,12 +300,13 @@ local kCCCurrentItemTag = "1234"
 function CCMenuItemToggle:init(...)
     CCMenuItem.init(self)
     CCRGBAProtocol.init(self)
-
-    local itemTable = (#arg == 1) and arg[1] or arg
-    assert(#itemTable == 2)
-    self.subitems_ = itemTable
-    
+    self.subitems_ = arg
     self:setSelectedIndex(1)
+end
+
+function CCMenuItemToggle:cleanup()
+    arrayRemoveAllObjects(self.subitems_)
+    CCMenuItem.cleanup(self)
 end
 
 function CCMenuItemToggle:setSelectedIndex(index)

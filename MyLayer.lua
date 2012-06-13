@@ -73,20 +73,25 @@ function MyLayer:init()
     end
     
     local item4
-    do
-        local changeFont = function(item_)
-            item_:setFontName("Helvetica")
-            item_:setFontSize(40)
-            item_:setColor(128, 255, 128)
+    do    
+        local function resetScene()
+            local t = CCTransitionFade(0.75, MyLayer2:scene(), 0, 0, 0)
+            CCSharedDirector():replaceScene(t)
         end
-    
-        local item = CCMenuItemFont("Another Button", "Georgia", 30, CENTER)
-        item:setHandler(changeFont)
+        
+        local item = CCMenuItemFont("Go To Scene 2", "Georgia", 30, CENTER)
+        item:setHandler(resetScene)
         item:setColor(64, 64, 255)
         local pos = self:contentSize() / 2
         pos.y = pos.y + 200
         item:setPosition(pos)
         item4 = item        
+    
+        local changeFont = function(item_)
+            item_:setFontName("Helvetica")
+            item_:setFontSize(40)
+            item_:setColor(128, 255, 128)
+        end    
     
         local seq = CCSequence:actions(CCDelayTime(3), CCCallT(changeFont))
         item:runAction(seq)
