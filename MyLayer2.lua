@@ -6,7 +6,7 @@ function MyLayer2:init()
     local item4
     do    
         local function resetScene()
-            local t = CCTransitionFade(0.75, MyLayer:scene(), 0, 0, 0)            
+            local t = CCTransitionSlideInB(0.75, MyLayer:scene())
             CCSharedDirector():replaceScene(t)
         end
         
@@ -19,9 +19,19 @@ function MyLayer2:init()
         item4 = item        
     end
     
+    do
+        local ell = CCNodeEllipse(100, ccc4(128, 255, 255))
+        local pos = self:contentSize()/2
+        pos.y = pos.y - 200
+        ell:setPosition(pos)
+        ell:setAnchorPoint(.5, .5)
+        self:addChild(ell)
+    end
+    
     local menu = CCMenu(item4)
     menu:setContentSize(self:contentSize())
     menu:setPosition(self:position())
     menu:setAnchorPoint(self:anchorPoint())
     self:addChild(menu)    
 end
+

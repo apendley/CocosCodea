@@ -5,16 +5,20 @@
 -- * add non-targeted touch handling
 -- * implements batched sprites (using mesh)
 -- * implement bitmapped fonts
--- * implement tilemaps (using mesh)-- * labels
+-- * implement tilemaps (using mesh)
+-- * implement bitmapped font labels
 -- * lazily create children table
 -- * do fast children sort in visit(?)
 -- * implement skew
 -- * CCEaseElastic(in/out/inout), CCBounce(in/out/inout), CCEaseBack(in/out/inout)
 -- * skewBy, skewTo, JumpBy, JumpTo, BezierBy, BezierTo
--- * ReverseTime, Animate, TargetedAction
+-- * CCReverseTime, CCAnimate, CCTargetedAction
 -- * CCActionCatmullRom
+-- * implement particle systems
+-- * implement tile map nodes
+-- * CCRenderTexture
 
--- * write alternative version of sprite() in backend, and try to get TLL to use it
--- * when codea allows (s, t, u, v) to be specfied for a sprite
+-- * write alternative version of sprite() that takes (s,t,u,v)
+-- * in backend, and try to get TLL to use it
+-- * when codea allows (s, t, u, v) to be specfied in sprite()
     -- * add textureRect to CCSprite
-    -- * add flipX and flipY to CCSprite

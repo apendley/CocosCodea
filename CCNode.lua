@@ -438,18 +438,98 @@ end
 ----------------------
 CCNodeRect = CCClass(CCNode):include(CCRGBAMixin)
 
+ccPropColor{CCNodeRect, "strokeColor", mode="w"}
+ccProp{CCNodeRect, "strokeWidth", mode="w"}
+ccProp{CCNodeRect, "strokeEnabled"}
+
 function CCNodeRect:init(w, h, ...)
     CCNode.init(self)
     CCRGBAMixin.init(self, ...)
     self:setContentSize(w,h)
 end
 
+function CCNodeRect:strokeColor()
+    return self.strokeColor_ or ccc4()
+end
+
+function CCNodeRect:strokeWidth()
+    return self.strokeWidth_ or 2
+end
+
 function CCNodeRect:draw()
-    local c = self.color_    
-    fill(c.r, c.g, c.b, c.a)    
+    fill(self.color_)
     rectMode(CORNER)
-    noStroke()
+    
+    if self.strokeEnabled_ then
+        stroke(self:strokeColor())
+        strokeWidth(self:strokeWidth())
+    else
+        noStroke()        
+    end
 
     local s = self.contentSize_ 
     rect(0, 0, s.x, s.y)
+end
+
+
+----------------------
+-- CCNodeEllipse
+----------------------
+CCNodeEllipse = CCClass(CCNode):include(CCRGBAMixin)
+
+ccPropColor{CCNodeEllipse, "strokeColor", mode="w"}
+ccProp{CCNodeEllipse, "strokeWidth", mode="w"}
+ccProp{CCNodeEllipse, "strokeEnabled"}
+
+
+-- args: width, height, ccc4
+-- args: diameter, ccc4
+function CCNodeEllipse:init(...)
+    CCNode.init(self)
+    
+    local w,h,c
+    if #arg == 2 then
+        w,h = arg[1], arg[1]
+        c = arg[2]
+    elseif #arg == 3 then
+        w,h = arg[1], arg[2]
+        c = arg[3]
+    else
+        ccAssert(false, "CCNodeEllipse:init -> invalid parameters specified)")
+    end
+    
+    CCRGBAMixin.init(self, c)
+    
+    self:setContentSize(w,h)
+end
+
+function CCNodeEllipse:strokeColor()
+    return self.strokeColor_ or ccc4()
+end
+
+function CCNodeEllipse:strokeWidth()
+    return self.strokeWidth_ or 2
+end
+
+function CCNodeEllipse:draw()
+    fill(self.color_)    
+    ellipseMode(CORNER)
+    
+    if self.strokeEnabled_ then
+        stroke(self:strokeColor())
+        strokeWidth(self:strokeWidth())
+    else
+        noStroke()        
+    end    
+
+    local s = self.contentSize_ 
+    ellipse(0, 0, s.x, s.y)
+    
+    -- debug draw sprite rect
+    --[[ 
+    noFill()
+    strokeWidth(2)
+    stroke(255,128,128)
+    rect(0, 0, s.x, s.y)
+    --]]    
 end

@@ -1,3 +1,4 @@
+--CCActionManager
 CCActionManager = CCClass()
 
 local function newEntry(target, paused)
@@ -18,6 +19,7 @@ function CCActionManager:init()
 end
 
 function CCActionManager:addAction(action, target, paused)
+    ccAssert(action)
     local entry = self.targets[target]
     
     if entry == nil then

@@ -11,7 +11,7 @@ function ccc4VA(...)
             local g = arg[1]
             return g, g, g, 255
         else
-            return ccc3Unpack(arg[1])
+            return ccc4Unpack(arg[1])
         end
     elseif #arg == 2 then
         local g = arg[1]

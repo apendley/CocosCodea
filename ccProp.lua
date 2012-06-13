@@ -64,9 +64,12 @@ function ccPropColor(t)
     -- preserves the original's alpha value
     local function genSet(ivarName)
         return function(inst, ...)
-            local c = inst[ivarName]
-            assert(c)
-            c.r, c.g, c.b = ccc3VA(...)
+            local c = inst[ivarName]            
+            if c then
+                c.r, c.g, c.b = ccc3VA(...)                
+            else
+                inst[ivarName] = ccc3(ccc3VA(...))
+            end
         end
     end        
     

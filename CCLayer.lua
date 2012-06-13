@@ -11,7 +11,8 @@ function CCLayer:init(w, h)
     CCNode.init(self)
     CCTargetedTouchMixin.init(self)
     self:setAnchorPoint(0.5, 0.5)
-    self:setContentSize(w or WIDTH, h or HEIGHT)
+    local s = CCSharedDirector():winSize()
+    self:setContentSize(w or s.x, h or s.y)
     self:setIgnoreAnchorPointForPosition(true)
 end
 

@@ -1,6 +1,8 @@
 -- CCActionInterval
 CCActionInterval = CCClass(CCFiniteTimeAction)
 
+ccProp{CCActionInterval, "duration", mode="r"}
+
 function CCActionInterval:init(duration)
     CCFiniteTimeAction.init(self, duration or ccFLT_EPSILON)
     self.elapsed = 0
@@ -207,7 +209,7 @@ function CCSpawn(...)
     
     for i = 2, #list do
         next = list[i]
-        prev = CCSequenceAction(prev, next)
+        prev = CCSpawnAction(prev, next)
     end
         
     return prev    
@@ -268,19 +270,17 @@ function CCRotateTo:copy()
     return CCRotateTo(self.duration, self.dstAngle)
 end
 
--- hmm...reverse is missing in cocos2d...
-
 function CCRotateTo:startWithTarget(target)
     CCActionInterval.startWithTarget(self, target)
     
     local startAngle = target:rotation()
     local mo = (startAngle > 0) and 360 or -360
-    startAngle = math.fmod(startAngle, mo)    
+    startAngle = math.fmod(startAngle, mo)
     self.startAngle = startAngle
     
     local diffAngle = self.dstAngle - startAngle
-    local wrap = (diffAngle > 180) and -360 or 360
-    diffAngle = diffAngle + wrap    
+    if diffAngle > 180 then diffAngle = diffAngle - 360 end    
+    if diffAngle < -180 then diffAngle = diffAngle + 360 end
     self.diffAngle = diffAngle;    
 end
 
@@ -387,6 +387,48 @@ end
 
 -- TODO: skewBy, skewTo, JumpBy, JumpTo, BezierBy, BezierTo
 
+----------------------
+-- JumpBy
+----------------------
+CCJumpBy = CCClass(CCActionInterval)
+
+function CCJumpBy:init(duration, deltaPos, height, jumps)
+    CCActionInterval.init(self, duration)
+    self.delta_ = deltaPos
+    self.height_ = height
+    self.jumps_ = jumps
+end
+
+function CCJumpBy:copy()
+    return CCJumpBy(self.duration_, self.delta_, self.height_, self.jumps_)
+end
+
+function CCJumpBy:reverse()
+    return CCJumpBy(self.duration_, self.delta_ * -1, self.height_, self.jumps_)
+end
+
+function CCJumpBy:startWithTarget(target)
+    CCActionInterval.startWithTarget(self, target)
+    self.startPosition_ = target:position()
+end
+
+function CCJumpBy:update(t)
+    local frac = math.mod(t * self.jumps_, 1)
+    local y = self.height_ * 4 * frac * (1-frac)
+    y = y + self.delta_.y * t
+    local x = self.delta_.x * t
+    self.target:setPosition(self.startPosition_ + vec2(x, y))
+end
+
+----------------------
+-- JumpTo
+----------------------
+CCJumpTo = CCClass(CCJumpBy)
+
+function CCJumpTo:startWithTarget(target)
+    CCJumpBy.startWithTarget(self, target)
+    self.delta_ = self.delta_ - self.startPosition_
+end
 ----------------------
 -- ScaleTo
 ----------------------
@@ -572,3 +614,33 @@ CCDelayTime.reverse = CCDelayTime.copy
 
 -- TODO: ReverseTime, Animate, TargetedAction
 
+------------------------
+-- CCActionTween
+------------------------
+CCTween = CCClass(CCActionInterval)
+
+function CCTween:init(duration, setter, from, to)
+    CCActionInterval.init(self, duration)
+    
+    self.setter_ = setter
+    self.to_ = to
+    self.from_ = from
+end
+
+function CCTween:startWithTarget(t)
+    CCActionInterval.startWithTarget(self, t)
+    self.delta_ = self.to_ - self.from_
+end
+
+function CCTween:update(dt)
+    local target = self.target    
+    target[self.setter_](target, self.to_ - self.delta_ * (1-dt))
+end
+
+function CCTween:copy()
+    return CCTween(self.duration_, self.setter_, self.from_, self.to_)
+end
+
+function CCTween:reverse()
+    return CCTween(self.duration_, self.setter_, self.to_, self.from_)
+end

@@ -5,7 +5,8 @@ ccProp{CCDirector, "actionManager"}
 ccProp{CCDirector, "touchDispatcher", mode="r"}
 ccProp{CCDirector, "runningScene", mode="r"}
 ccProp{CCDirector, "sendCleanupToScene", mode="r"}
-ccProp{CCDirector, "showFPS", mode="rw", setter="showFPS", getter="isShowingFPS"}
+ccProp{CCDirector, "showFPS", setter="showFPS", getter="isShowingFPS"}
+ccPropVec2{CCDirector, "winSize"}
 
 -- singleton
 local di_ = nil
@@ -27,13 +28,11 @@ function CCDirector:init()
     self.showFPS_ = false
     self.FPS_ = 60
     self.frames_ = 0
-    self.time_ = 0    
+    self.time_ = 0
+    
+    self.winSize_ = vec2(WIDTH, HEIGHT)
     
     self.sceneStack_ = {}
-end
-
-function CCDirector:winSize()
-    return WIDTH, HEIGHT
 end
 
 function CCDirector:runWithScene(scene)

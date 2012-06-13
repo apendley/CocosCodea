@@ -28,6 +28,33 @@ function MyLayer:init()
         item.tag = 1
         item.userData = "Seven of Spades"
         item1 = item
+        
+        local duration = .2
+        local function randomAnchorPoint(target)
+            local range = 2
+            local x = math.random(50-range/2, 50+range/2) / 100
+            local y = math.random(50-range/2, 50+range/2) / 100
+            local ap = target:anchorPoint()
+            local tween = CCTween(duration, "setAnchorPoint", ap, vec2(x,y))
+            target:runAction(tween)
+        end
+        
+        local sequence =
+        {
+            CCDelayTime(duration), CCCallT(randomAnchorPoint),
+        }
+        
+        
+        item:runAction(CCRepeatForever(CCSequence(sequence)))
+        
+        sequence =
+        {
+            CCEaseSineInOut(CCRotateTo(.10, -1.5)),
+            CCEaseSineInOut(CCRotateBy(.10, 3))
+        }
+        
+        local loop = CCRepeatForever(CCSequence(sequence))
+        item:runAction(loop)
     end
     
     local item2
@@ -35,6 +62,10 @@ function MyLayer:init()
         local label = CCLabelTTF("Hello!", "Helvetica", 30)
         local normal = CCNodeRect(200, 200, 255, 0, 0)
         local selected = CCNodeRect(200, 200, ccc3(0, 255, 0))
+        normal:setStrokeEnabled(true)
+        normal:setStrokeColor(255)
+        selected:setStrokeEnabled(true)
+        selected:setStrokeColor(0)
         local item = CCMenuItemBackedLabel(label, normal, selected)
         item:setHandler(ccDelegate(self, "itemSelected"))        
         local pos = self:contentSize()/2
@@ -61,13 +92,13 @@ function MyLayer:init()
     
     local item4
     do    
-        local function resetScene()
-            local t = CCTransitionFade(0.75, MyLayer2:scene(), 0, 0, 0)
+        local function nextScene()
+            local t = CCTransitionShrinkGrow(2, MyLayer2:scene())
             CCSharedDirector():replaceScene(t)
         end
         
         local item = CCMenuItemFont("Go To Scene 2", "Georgia", 30, CENTER)
-        item:setHandler(resetScene)
+        item:setHandler(nextScene)
         item:setColor(255, 255, 255)
         local pos = self:contentSize() / 2
         pos.y = pos.y + 200

@@ -13,7 +13,7 @@
 		<string>ccProp</string>
 		<string>ArrayUtil</string>
 		<string>ccRect</string>
-		<string>CCProtocol</string>
+		<string>CCMixin</string>
 		<string>CCClass</string>
 		<string>CCDirector</string>
 		<string>CCTouchDispatcher</string>
