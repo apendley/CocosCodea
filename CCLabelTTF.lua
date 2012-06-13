@@ -5,6 +5,9 @@ ccProp{CCLabelTTF, "fontName", "font_", mode="r"}
 ccProp{CCLabelTTF, "fontSize", mode="r"}
 ccProp{CCLabelTTF, "alignment", mode="r"}
 ccProp{CCLabelTTF, "wrapWidth", mode="r"}
+ccProp{CCLabelTTF, "hasShadow"}
+ccPropVec2{CCLabelTTF, "shadowOffset"}
+ccPropColor4{CCLabelTTF, "shadowColor"}
 
 function CCLabelTTF:init(str, fnt, fntSize, alignment, wrapWidth)
     CCNode.init(self)
@@ -14,6 +17,8 @@ function CCLabelTTF:init(str, fnt, fntSize, alignment, wrapWidth)
     self.fontSize_ = fntSize or 17
     self.alignment_ = alignment_ or LEFT
     self.wrapWidth_ = wrapWidth_ or 0
+    self.hasShadow_ = false
+    self.shadowOffset_ = vec2(2,-2)
         
     CCLabelProtocol.init(self, str)
 end
@@ -66,9 +71,17 @@ function CCLabelTTF:updateContentSize_()
 end
 
 function CCLabelTTF:draw()
-    fill(self:color())
     self:applyStyle()
-    textMode(CORNER)    
+    textMode(CORNER)        
+    
+    if self.hasShadow_ then
+        local ofs = self.shadowOffset_
+        local col = self.shadowColor_ or ccc3(0,0,0)
+        fill(col)
+        text(self:string(), ofs.x, ofs.y)
+    end
+    
+    fill(self:color())
     text(self:string(), 0, 0)
     
     -- debug draw sprite rect

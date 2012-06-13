@@ -1,7 +1,7 @@
 -- Main
 
 function setup()
-    displayMode(FULLSCREEN)        
+    --displayMode(FULLSCREEN)        
     local director = CCSharedDirector()
     director:showFPS(true)
     director:runWithScene(MyLayer:scene())

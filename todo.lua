@@ -1,14 +1,13 @@
--- * implement scene switching
--- * implement transitions
+-- * implement scene push/pop
+-- * implement remaining transitions
 -- * add CCMenu alignment functions
 -- * add prioritized updates to CCScheduler and CCNode classes
--- * test child removal and cleanup
+-- * add non-targeted touch handling
 -- * implements batched sprites (using mesh)
 -- * implement bitmapped fonts
 -- * implement tilemaps (using mesh)-- * labels
 -- * lazily create children table
 -- * do fast children sort in visit(?)
--- * implmement transitions
 -- * implement skew
 -- * CCEaseElastic(in/out/inout), CCBounce(in/out/inout), CCEaseBack(in/out/inout)
 -- * skewBy, skewTo, JumpBy, JumpTo, BezierBy, BezierTo

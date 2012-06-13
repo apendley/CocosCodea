@@ -30,7 +30,7 @@ end
 ----------------------
 CCLayerColor = CCClass(CCLayer):include(CCRGBAProtocol)
 
--- can't take vararg color here, must pass a ccColor4() object
+-- can't take vararg color here, must pass a ccc4() object
 function CCLayerColor:init(color4, w, h)
     CCLayer.init(self)
     CCRGBAProtocol.init(self, color4)

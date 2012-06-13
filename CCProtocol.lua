@@ -11,7 +11,7 @@ ccPropColor{CCRGBAProtocol, "color"}
 ccPropColor{CCRGBAProtocol, "color", "color_"}
 
 function CCRGBAProtocol:init(...)
-    self.color_ = ccColor4(ccc4VA(...))
+    self.color_ = ccc4(ccc4VA(...))
 end
 
 function CCRGBAProtocol:setOpacity(o)
@@ -101,8 +101,8 @@ ccProp{CCMenuItemLabelProtocol, "disabledColor"}
 function CCMenuItemLabelProtocol:init(label)
     self:setLabel(label)    
     self.originalScale = 1
-    self.colorBackup = ccColor(255, 255, 255)
-    self.disabledColor_ = ccColor(126, 126, 126)
+    self.colorBackup = ccc3(255, 255, 255)
+    self.disabledColor_ = ccc3(126, 126, 126)
 end
 
 function CCMenuItemLabelProtocol:setLabel(label)
@@ -183,7 +183,7 @@ function CCMenuItemLabelProtocol:setColor(...)
 end
 
 function CCMenuItemLabelProtocol:color()    
-    return self.label:color()
+    return self.label_:color()
 end
 
 function CCMenuItemLabelProtocol:setColor4(...)

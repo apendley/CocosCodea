@@ -38,54 +38,52 @@ end
 ----------------------
 -- sequence
 ----------------------
-CCSequence = CCClass(CCActionInterval)
+CCSequenceAction = CCClass(CCActionInterval)
 
--- convenience function, NOT a class method
-function CCSequence.actions(klass, ...)    
-    ccAssert(klass == CCSequence, "Use CCSequence:actions(...) to sequence 2 or more actions")
-    
+-- convenience function
+function CCSequence(...)
     local list = (#arg == 1) and arg[1] or arg
     local prev, next = list[1], nil
     
     for i = 2, #list do
         next = list[i]
-        prev = CCSequence(prev, next)
+        prev = CCSequenceAction(prev, next)
     end
         
     return prev    
 end
 
-function CCSequence:init(one, two, ...)
+function CCSequenceAction:init(one, two, ...)
     --ccPrint("Adding Sequence: (" .. tostring(one) .. ") -> (" .. tostring(two) ..")\n")
-    ccAssert( #arg == 0, "Use CCSequence:actions(...) to sequence 2 or more actions")
+    ccAssert( #arg == 0, "Use CCSequence(...) to sequence 2 or more actions")
     local duration = one.duration_ + two.duration_
     CCActionInterval.init(self, duration)
     self.actions_ = {one, two}        
 end
 
-function CCSequence:copy()
+function CCSequenceAction:copy()
     local actions = self.actions_
-    return CCSequence(actions[1]:copy(), actions[2]:copy())
+    return CCSequenceAction(actions[1]:copy(), actions[2]:copy())
 end
 
-function CCSequence:reverse()
+function CCSequenceAction:reverse()
     local actions = self.actions_
-    return CCSequence(actions[2]:reverse(), actions[1]:reverse())
+    return CCSequenceAction(actions[2]:reverse(), actions[1]:reverse())
 end
 
-function CCSequence:startWithTarget(target)
+function CCSequenceAction:startWithTarget(target)
     CCActionInterval.startWithTarget(self, target)
     self.split = self.actions_[1].duration_ / math.max(self.duration_, ccFLT_EPSILON)
     self.last = -1
 end
 
-function CCSequence:stop()
+function CCSequenceAction:stop()
     if self.last ~= -1 then
         self.actions_[self.last]:stop()
     end
 end
 
-function CCSequence:update(t)
+function CCSequenceAction:update(t)
     local split = self.split
     local actions = self.actions_
     local cur, newT = 1, 0
@@ -200,60 +198,56 @@ end
 ----------------------
 -- Spawn
 ----------------------
-CCSpawn = CCClass(CCActionInterval)
+CCSpawnAction = CCClass(CCActionInterval)
 
--- convenience function, NOT a class method
-function CCSpawn.actions(klass, ...)    
-    -- todo: skip self to enable . or : syntax
-    ccAssert(klass == CCSpawn, "use CCSpawn:actions(...) to spawn 2 or more actions")
-    
+-- convenience function
+function CCSpawn(...)    
     local list = (#arg == 1) and arg[1] or arg
     local prev, next = list[1], nil
     
     for i = 2, #list do
         next = list[i]
-        prev = CCSequence(prev, next)
+        prev = CCSequenceAction(prev, next)
     end
         
     return prev    
 end
 
-function CCSpawn:init(one, two, ...)
-    --ccPrint("Adding Sequence: (" .. tostring(one) .. ") -> (" .. tostring(two) ..")\n")
-    ccAssert( #arg == 0, "use CCSpawn:actions(...) to spawn 2 or more actions")
+function CCSpawnAction:init(one, two, ...)
+    ccAssert( #arg == 0, "use CCSpawnAction:actions(...) to spawn 2 or more actions")
     
     local d1, d2 = one.duration_, two.duration_    
     CCActionInterval.init(self, math.max(d1, d2))
     self.one_, self.two_ = one, two
     
     if d1 > d2 then
-       self.two_ = CCSequence(two, CCDelayTime(d1-d2))
+       self.two_ = CCSequenceAction(two, CCDelayTime(d1-d2))
     elseif d1 < d2 then
-        self.one_ = CCSequence(one, CCDelayTime(d2-d1))
+        self.one_ = CCSequenceAction(one, CCDelayTime(d2-d1))
     end
 end
 
-function CCSpawn:copy()
-    return CCSpawn(self.one_:copy(), self.two_:copy())
+function CCSpawnAction:copy()
+    return CCSpawnAction(self.one_:copy(), self.two_:copy())
 end
 
-function CCSpawn:reverse()
-    return CCSpawn(self.one_:reverse(), self.two_:reverse())
+function CCSpawnAction:reverse()
+    return CCSpawnAction(self.one_:reverse(), self.two_:reverse())
 end
 
-function CCSpawn:startWithTarget(target)
+function CCSpawnAction:startWithTarget(target)
     CCActionInterval.startWithTarget(self, target)
     self.one_:startWithTarget(target)
     self.two_:startWithTarget(target)
 end
 
-function CCSpawn:stop()
+function CCSpawnAction:stop()
     self.one_:stop()
     self.two_:stop()
     CCActionInterval:stop(self)
 end
 
-function CCSpawn:update(t)
+function CCSpawnAction:update(t)
     self.one_:update(t)
     self.two_:update(t)
 end
@@ -480,19 +474,11 @@ CCTintTo = CCClass(CCActionInterval)
 
 function CCTintTo:init(duration, ...)
     CCActionInterval.init(self, duration)
-
-    if #arg == 3 then
-        local r, g, b = unpack(arg)
-        self.to_ = ccColor(r, g, b, 255)
-    elseif #arg == 1 then
-        self.to_ = ccColorCopy(arg[1])
-    else
-        ccAssert(false, "CCTintTo usage: CCTintTo(duration, r, g, b) or CCTintTo(duration, color)")
-    end
+    self.to_ = ccc3(ccc3VA(...))
 end
 
 function CCTintTo:copy()
-    return self.class(self.duration_, ccColorCopy(self.to_))
+    return self.class(self.duration_, ccc3Copy(self.to_))
 end
 
 function CCTintTo:startWithTarget(target)
@@ -516,24 +502,16 @@ CCTintBy = CCClass(CCActionInterval)
 
 function CCTintBy:init(duration, ...)
     CCActionInterval.init(self, duration)
-
-    if #arg == 3 then
-        local r, g, b = unpack(arg)
-        self.delta_ = ccColor(r, g, b, 255)
-    elseif #arg == 1 then
-        self.delta_ = ccColorCopy(arg[1])
-    else
-        ccAssert(false, "CCTintBy usage: CCTintBy(duration, r, g, b) or CCTintBy(duration, color)")
-    end    
+    self.delta_ = ccc3(ccc3VA(...))
 end
 
 function CCTintBy:copy()
-    return self.class(self.duration_, ccColorCopy(self.delta_))
+    return self.class(self.duration_, ccc3Copy(self.delta_))
 end
 
 function CCTintBy:reverse()
     local c = self.delta_
-    return self.class(self.duration_, ccColor(-c.r, -c.g, -c.b))
+    return self.class(self.duration_, ccc3(-c.r, -c.g, -c.b))
 end
 
 function CCTintBy:startWithTarget(target)

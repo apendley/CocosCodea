@@ -41,13 +41,13 @@ end
 function ccPropColor4(t)
     local function genGet(ivarName)
         return function(inst)
-            return ccColor4Copy(inst[ivarName])
+            return ccc4Copy(inst[ivarName])
         end
     end
 
     local function genSet(ivarName)
         return function(inst, ...)
-            inst[ivarName] = ccColor4(ccc4VA(...))
+            inst[ivarName] = ccc4(ccc4VA(...))
         end
     end        
     
@@ -57,7 +57,7 @@ end
 function ccPropColor(t)
     local function genGet(ivarName)
         return function(inst)
-            return ccColorCopy(inst[ivarName])
+            return ccc3Copy(inst[ivarName])
         end
     end
 
@@ -66,14 +66,7 @@ function ccPropColor(t)
         return function(inst, ...)
             local c = inst[ivarName]
             assert(c)
-            c.r, c.g, c.b = cccVA(...)
-            --[[
-            if c then
-                c.r, c.g, c.b = cccVA(...)
-            else
-                inst[ivarName] = ccColor(...)
-            end
-            --]]
+            c.r, c.g, c.b = ccc3VA(...)
         end
     end        
     

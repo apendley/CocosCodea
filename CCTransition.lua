@@ -100,7 +100,7 @@ local kSceneFadeTag = 0xFADEFADE
 -- last argument(s) is the color
 function CCTransitionFade:init(duration, scene, ...)
     CCTransitionScene.init(self, duration, scene)
-    self.color_ = ccColor4(ccc4VA(...))    
+    self.color_ = ccc4(ccc4VA(...))    
 end
 
 function CCTransitionFade:onEnter()
@@ -121,7 +121,7 @@ function CCTransitionFade:onEnter()
         CCFadeOut(duration*0.5),
         CCCall(function() self:finish() end)
     }
-    l:runAction(CCSequence:actions(sequence))
+    l:runAction(CCSequence(sequence))
 end
 
 function CCTransitionFade:onExit()

@@ -45,9 +45,10 @@ local function insertChild(node, child, z)
     if last == nil or last.zOrder <= z then
         table.insert(children, child)
     else
+        --ccPrint("Last: "..last.zOrder.."    new: "..z)        
         for i,v in ipairs(children) do
             if last.zOrder > z then
-                table.insert(children, child, i)
+                table.insert(children, i, child)
                 break
             end
         end
