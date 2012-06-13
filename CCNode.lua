@@ -436,11 +436,11 @@ end
 ----------------------
 -- CCNodeRect
 ----------------------
-CCNodeRect = CCClass(CCNode):include(CCRGBAProtocol)
+CCNodeRect = CCClass(CCNode):include(CCRGBAMixin)
 
 function CCNodeRect:init(w, h, ...)
     CCNode.init(self)
-    CCRGBAProtocol.init(self, ...)
+    CCRGBAMixin.init(self, ...)
     self:setContentSize(w,h)
 end
 

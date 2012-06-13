@@ -1,4 +1,4 @@
-CCMenu = CCClass(CCLayer):include(CCRGBAProtocol)
+CCMenu = CCClass(CCLayer):include(CCRGBAMixin)
 
 kCCMenuHandlerPriority = -128
 
@@ -9,7 +9,7 @@ local kCCMenuStateTrackingTouch = 1
 
 function CCMenu:init(...)
     CCLayer.init(self)
-    CCRGBAProtocol.init(self)
+    CCRGBAMixin.init(self)
     
     self:setTouchEnabled(true)
     self:setEnabled(true)
@@ -117,7 +117,7 @@ function CCMenu:ccTouchEnded(touch)
 end
 
 function CCMenu:setOpacity(o)
-    CCCRGBAProtocol.setOpacity(o)
+    CCCRGBAMixin.setOpacity(o)
     
     for i, item in ipairs(self.children) do
         item:setOpacity(o)
@@ -125,7 +125,7 @@ function CCMenu:setOpacity(o)
 end
 
 function CCMenu:setColor(c)
-    CCCRGBAProtocol.setColor(c)
+    CCCRGBAMixin.setColor(c)
     
     for i, item in ipairs(self.children) do
         item:setColor(c)
@@ -133,7 +133,7 @@ function CCMenu:setColor(c)
 end
 
 function CCMenu:setColor4(c)
-    CCCRGBAProtocol.setColor4(c)
+    CCCRGBAMixin.setColor4(c)
     
     for i, item in ipairs(self.children) do
         item:setColor4(c)

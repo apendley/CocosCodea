@@ -1,5 +1,5 @@
 --CCLabelTTF
-CCLabelTTF = CCClass(CCNode):include(CCRGBAProtocol):include(CCLabelProtocol)
+CCLabelTTF = CCClass(CCNode):include(CCRGBAMixin):include(CCLabelMixin)
 
 ccProp{CCLabelTTF, "fontName", "font_", mode="r"}
 ccProp{CCLabelTTF, "fontSize", mode="r"}
@@ -11,7 +11,7 @@ ccPropColor4{CCLabelTTF, "shadowColor"}
 
 function CCLabelTTF:init(str, fnt, fntSize, alignment, wrapWidth)
     CCNode.init(self)
-    CCRGBAProtocol.init(self)
+    CCRGBAMixin.init(self)
     
     self.font_ = fnt or "Georgia"
     self.fontSize_ = fntSize or 17
@@ -20,11 +20,11 @@ function CCLabelTTF:init(str, fnt, fntSize, alignment, wrapWidth)
     self.hasShadow_ = false
     self.shadowOffset_ = vec2(2,-2)
         
-    CCLabelProtocol.init(self, str)
+    CCLabelMixin.init(self, str)
 end
 
 function CCLabelTTF:setString(str)
-    CCLabelProtocol.setString(self, str)
+    CCLabelMixin.setString(self, str)
     self:updateContentSize_()
 end
 

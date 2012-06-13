@@ -1,11 +1,11 @@
-CCSprite = CCClass(CCNode):include(CCRGBAProtocol)
+CCSprite = CCClass(CCNode):include(CCRGBAMixin)
 
 ccProp{CCSprite, "flipX"}
 ccProp{CCSprite, "flipY"}
 
 function CCSprite:init(spriteNameOrImage)
     CCNode.init(self)
-    CCRGBAProtocol.init(self)
+    CCRGBAMixin.init(self)
     self:setSprite(spriteNameOrImage)
     self:setAnchorPoint(0.5, 0.5)
     self.flipX_ = false

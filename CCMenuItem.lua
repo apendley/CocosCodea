@@ -57,32 +57,32 @@ end
 -------------------
 -- CCMenuItemSprite
 -------------------
-CCMenuItemSprite = CCClass(CCMenuItem):include(CCMenuItemSpriteProtocol)
+CCMenuItemSprite = CCClass(CCMenuItem):include(CCMenuItemSpriteMixin)
 
 function CCMenuItemSprite:init(normalSprite, selectedSprite, disabledSprite)
     CCMenuItem.init(self)
-    CCMenuItemSpriteProtocol.init(self, normalSprite, selectedSprite, disabledSprite)
+    CCMenuItemSpriteMixin.init(self, normalSprite, selectedSprite, disabledSprite)
 end
 
 function CCMenuItemSprite:cleanup()
     CCMenuItem.cleanup(self)
-    CCMenuItemSpriteProtocol.cleanup(self)
+    CCMenuItemSpriteMixin.cleanup(self)
 end
 
 function CCMenuItemSprite:selected()
     CCMenuItem.selected(self)
-    CCMenuItemSpriteProtocol.selected(self)
+    CCMenuItemSpriteMixin.selected(self)
 end
 
 function CCMenuItemSprite:unselected()
     CCMenuItem.unselected(self)
-    CCMenuItemSpriteProtocol.unselected(self)
+    CCMenuItemSpriteMixin.unselected(self)
 end
 
 function CCMenuItemSprite:setEnabled(enabled)
     if self.isEnabled_ ~= enabled then
         CCMenuItem.setEnabled(self, enabled)
-        CCMenuItemSpriteProtocol.setEnabled(self, enabled)
+        CCMenuItemSpriteMixin.setEnabled(self, enabled)
     end
 end
 
@@ -92,16 +92,16 @@ end
 --------------------
 -- CCMenuItemLabel
 --------------------
-CCMenuItemLabel = CCClass(CCMenuItem):include(CCMenuItemLabelProtocol)
+CCMenuItemLabel = CCClass(CCMenuItem):include(CCMenuItemLabelMixin)
 
 function CCMenuItemLabel:init(label)
     CCMenuItem.init(self)
-    CCMenuItemLabelProtocol.init(self, label)
+    CCMenuItemLabelMixin.init(self, label)
 end
 
 function CCMenuItemLabel:activate()
     if self.isEnabled_ then
-        CCMenuItemLabelProtocol.activate(self)
+        CCMenuItemLabelMixin.activate(self)
         CCMenuItem.activate(self)
     end
 end
@@ -109,39 +109,39 @@ end
 function CCMenuItemLabel:selected()
     if self.isEnabled_ then
         CCMenuItem.selected(self)
-        CCMenuItemLabelProtocol.selected(self)
+        CCMenuItemLabelMixin.selected(self)
     end
 end
 
 function CCMenuItemLabel:unselected()
     if self.isEnabled_ then
         CCMenuItem.unselected(self)
-        CCMenuItemLabelProtocol.unselected(self)
+        CCMenuItemLabelMixin.unselected(self)
     end
 end
 
 function CCMenuItemLabel:setEnabled(enabled)
-    CCMenuItemLabelProtocol.setEnabled(self, enabled)
+    CCMenuItemLabelMixin.setEnabled(self, enabled)
     CCMenuItem.setEnabled(self, enabled)
 end
 
 function CCMenuItemLabel:cleanup()
     CCMenuItem.cleanup(self)
-    CCMenuItemLabelProtocol.cleanup(self)
+    CCMenuItemLabelMixin.cleanup(self)
 end
 
 ----------------------------------------
 -- CCMenuItemBackedLabel
 ----------------------------------------
 CCMenuItemBackedLabel = CCClass(CCMenuItem)
-CCMenuItemBackedLabel:include(CCMenuItemSpriteProtocol)
-CCMenuItemBackedLabel:include(CCMenuItemLabelProtocol)
+CCMenuItemBackedLabel:include(CCMenuItemSpriteMixin)
+CCMenuItemBackedLabel:include(CCMenuItemLabelMixin)
 
 function CCMenuItemBackedLabel:init(label, normal, selected, disabled)
     assert(label and normal)
     CCMenuItem.init(self)
-    CCMenuItemSpriteProtocol.init(self, normal, selected, disabled)    
-    CCMenuItemLabelProtocol.init(self, label)    
+    CCMenuItemSpriteMixin.init(self, normal, selected, disabled)    
+    CCMenuItemLabelMixin.init(self, label)    
     self:updateContentSize()
 end
 
@@ -178,7 +178,7 @@ end
 
 function CCMenuItemBackedLabel:activate()
     if self.isEnabled_ then
-        CCMenuItemLabelProtocol.activate(self)
+        CCMenuItemLabelMixin.activate(self)
         CCMenuItem.activate(self)
     end
 end
@@ -186,56 +186,56 @@ end
 function CCMenuItemBackedLabel:selected()
     if self.isEnabled_ then
         CCMenuItem.selected(self)
-        CCMenuItemLabelProtocol.selected(self)
-        CCMenuItemSpriteProtocol.selected(self)
+        CCMenuItemLabelMixin.selected(self)
+        CCMenuItemSpriteMixin.selected(self)
     end
 end
 
 function CCMenuItemBackedLabel:unselected()
     if self.isEnabled_ then
         CCMenuItem.unselected(self)
-        CCMenuItemLabelProtocol.unselected(self)
-        CCMenuItemSpriteProtocol.unselected(self)    
+        CCMenuItemLabelMixin.unselected(self)
+        CCMenuItemSpriteMixin.unselected(self)    
     end
 end
 
 function CCMenuItemBackedLabel:setEnabled(enabled)
-    CCMenuItemLabelProtocol.setEnabled(self, enabled)
-    CCMenuItemSpriteProtocol.setEnabled(self, enabled)
+    CCMenuItemLabelMixin.setEnabled(self, enabled)
+    CCMenuItemSpriteMixin.setEnabled(self, enabled)
     CCMenuItem.setEnabled(self, enabled)
 end
 
 function CCMenuItemBackedLabel:cleanup()
     CCMenuItem.cleanup(self)
-    CCMenuItemLabelProtocol.cleanup(self)
-    CCMenuItemSpriteProtocol.cleanup(self)
+    CCMenuItemLabelMixin.cleanup(self)
+    CCMenuItemSpriteMixin.cleanup(self)
 end
 
 function CCMenuItemBackedLabel:setOpacity(o)
-    CCMenuItemLabelProtocol.setOpacity(self, o)
-    CCMenuItemSpriteProtocol.setOpacity(self, o)
+    CCMenuItemLabelMixin.setOpacity(self, o)
+    CCMenuItemSpriteMixin.setOpacity(self, o)
 end
     
 function CCMenuItemBackedLabel:opacity()
-    return CCMenuItemLabelProtocol.opacity(self)
+    return CCMenuItemLabelMixin.opacity(self)
 end
 
 function CCMenuItemBackedLabel:setColor(...)
-    CCMenuItemLabelProtocol.setColor(self, ...)
-    CCMenuItemSpriteProtocol.setColor(self, ...)
+    CCMenuItemLabelMixin.setColor(self, ...)
+    CCMenuItemSpriteMixin.setColor(self, ...)
 end
 
 function CCMenuItemBackedLabel:color()    
-    return CCMenuItemLabelProtocol.color(self)
+    return CCMenuItemLabelMixin.color(self)
 end
 
 function CCMenuItemBackedLabel:setColor4(...)
-    CCMenuItemLabelProtocol.setColor4(self, ...)
-    CCMenuItemSpriteProtocol.setColor4(self, ...)    
+    CCMenuItemLabelMixin.setColor4(self, ...)
+    CCMenuItemSpriteMixin.setColor4(self, ...)    
 end
 
 function CCMenuItemBackedLabel:color4()
-    return CCMenuItemLabelProtocol.color4(self)
+    return CCMenuItemLabelMixin.color4(self)
 end
 
 
@@ -291,7 +291,7 @@ end
 --------------------
 -- CCMenuItemToggle
 --------------------
-CCMenuItemToggle = CCClass(CCMenuItem):include(CCRGBAProtocol)
+CCMenuItemToggle = CCClass(CCMenuItem):include(CCRGBAMixin)
 
 ccProp{CCMenuItemToggle, "selectedIndex", mode="r"}
 
@@ -299,7 +299,7 @@ local kCCCurrentItemTag = "1234"
 
 function CCMenuItemToggle:init(...)
     CCMenuItem.init(self)
-    CCRGBAProtocol.init(self)
+    CCRGBAMixin.init(self)
     self.subitems_ = arg
     self:setSelectedIndex(1)
 end
@@ -362,7 +362,7 @@ function CCMenuItemToggle:setEnabled(enabled)
 end
 
 function CCMenuItemToggle:setOpacity(o)
-    CCRGBAProtocol.setOpacity(self, o)
+    CCRGBAMixin.setOpacity(self, o)
     
     for i,v in ipairs(self.subitems_) do
         item:setOpacity(o)
@@ -370,7 +370,7 @@ function CCMenuItemToggle:setOpacity(o)
 end
 
 function CCMenuItemToggle:setColor(...)
-    CCRGBAProtocol.setColor(self, ...)
+    CCRGBAMixin.setColor(self, ...)
 
     for i,v in ipairs(self.subitems_) do
         item:setColor(...)
@@ -378,7 +378,7 @@ function CCMenuItemToggle:setColor(...)
 end
 
 function CCMenuItemToggle:setColor4(...)
-    CCRGBAProtocol.setColor4(self, ...)
+    CCRGBAMixin.setColor4(self, ...)
 
     for i,v in ipairs(self.subitems_) do
         item:setColor4(...)

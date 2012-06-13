@@ -1,4 +1,4 @@
-CCLayer = CCClass(CCNode):include(CCTargetedTouchProtocol)
+CCLayer = CCClass(CCNode):include(CCTargetedTouchMixin)
 
 -- convenience function to wrap a layer up in scene
 function CCLayer:scene(...)
@@ -9,7 +9,7 @@ end
 
 function CCLayer:init(w, h)
     CCNode.init(self)
-    CCTargetedTouchProtocol.init(self)
+    CCTargetedTouchMixin.init(self)
     self:setAnchorPoint(0.5, 0.5)
     self:setContentSize(w or WIDTH, h or HEIGHT)
     self:setIgnoreAnchorPointForPosition(true)
@@ -17,23 +17,23 @@ end
 
 function CCLayer:onEnter()
     CCNode.onEnter(self)
-    CCTargetedTouchProtocol.onEnter(self)
+    CCTargetedTouchMixin.onEnter(self)
 end
 
 function CCLayer:onExit()
-    CCTargetedTouchProtocol.onExit(self)    
+    CCTargetedTouchMixin.onExit(self)    
     CCNode.onExit(self)
 end
 
 ----------------------
 -- LayerColor class
 ----------------------
-CCLayerColor = CCClass(CCLayer):include(CCRGBAProtocol)
+CCLayerColor = CCClass(CCLayer):include(CCRGBAMixin)
 
 -- can't take vararg color here, must pass a ccc4() object
 function CCLayerColor:init(color4, w, h)
     CCLayer.init(self)
-    CCRGBAProtocol.init(self, color4)
+    CCRGBAMixin.init(self, color4)
 end
 
 function CCLayerColor:draw()

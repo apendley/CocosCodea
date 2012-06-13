@@ -1,31 +1,31 @@
---CCProtocol
+--CCMixin
 
 -----------------------------------------------------------
--- CCRGBAProtocol
+-- CCRGBAMixin
 --
--- includers must forward init to CCRGBAProtocol
+-- includers must forward init to CCRGBAMixin
 -----------------------------------------------------------
-CCRGBAProtocol = {}
+CCRGBAMixin = {}
 
-ccPropColor{CCRGBAProtocol, "color"}
-ccPropColor{CCRGBAProtocol, "color", "color_"}
+ccPropColor{CCRGBAMixin, "color"}
+ccPropColor{CCRGBAMixin, "color", "color_"}
 
-function CCRGBAProtocol:init(...)
+function CCRGBAMixin:init(...)
     self.color_ = ccc4(ccc4VA(...))
 end
 
-function CCRGBAProtocol:setOpacity(o)
+function CCRGBAMixin:setOpacity(o)
     self.color_.a = o
 end
 
-function CCRGBAProtocol:opacity()
+function CCRGBAMixin:opacity()
     return self.color_.a
 end
 
 -----------------------------------------------------------------------
--- CCTargetedTouchProtocol
+-- CCTargetedTouchMixin
 --
--- includers must forward init, onEnter, and onExit to CCRGBAProtocol
+-- includers must forward init, onEnter, and onExit to CCRGBAMixin
 --
 -- * includer should implement registerWithTouchDispatcher for not-default
 --   priority or of it doesn't want to swallow touches
@@ -33,31 +33,31 @@ end
 -- * include must implement either ccTouched or ccTouchBegan, with
 --   ccTouched having precedence if implemented
 -----------------------------------------------------------------------
-CCTargetedTouchProtocol = {}
+CCTargetedTouchMixin = {}
 
-ccProp{CCTargetedTouchProtocol, "isTouchEnabled", mode="r"}
+ccProp{CCTargetedTouchMixin, "isTouchEnabled", mode="r"}
 
-function CCTargetedTouchProtocol:init()
+function CCTargetedTouchMixin:init()
     self.isTouchEnabled_ = false
 end
 
-function CCTargetedTouchProtocol:onEnter()
+function CCTargetedTouchMixin:onEnter()
     if self.isTouchEnabled_ then
         self:registerWithTouchDispatcher()
     end
 end
 
-function CCTargetedTouchProtocol:onExit()
+function CCTargetedTouchMixin:onExit()
     if self.isTouchEnabled_ then
         CCSharedDirector():touchDispatcher():removeDelegate(self)
     end
 end
 
-function CCTargetedTouchProtocol:registerWithTouchDispatcher()
+function CCTargetedTouchMixin:registerWithTouchDispatcher()
     CCSharedDirector():touchDispatcher():addTargetedDelegate(self, 0, true)
 end
 
-function CCTargetedTouchProtocol:setTouchEnabled(enabled)
+function CCTargetedTouchMixin:setTouchEnabled(enabled)
     if self.isTouchEnabled_ ~= enabled then
         self.isTouchEnabled_ = enabled
         if self.isRunning_ then
@@ -70,42 +70,42 @@ function CCTargetedTouchProtocol:setTouchEnabled(enabled)
     end
 end
 
-function CCTargetedTouchProtocol:ccTouchBegan(touch)
+function CCTargetedTouchMixin:ccTouchBegan(touch)
     return false
 end
 
 -----------------------------------------------------------------------
--- CCLabelProtocol
+-- CCLabelMixin
 -----------------------------------------------------------------------
-CCLabelProtocol = {}
+CCLabelMixin = {}
 
-ccProp{CCLabelProtocol, "string", "labelString_"}
+ccProp{CCLabelMixin, "string", "labelString_"}
 
-function CCLabelProtocol:init(str)
+function CCLabelMixin:init(str)
     self:setString(str)
 end
 
 
 -----------------------------------------------------------------------
--- CCMenuItemLabelProtocol
--- this class implements CCRGBAProtocol, so shouldn't include both.
+-- CCMenuItemLabelMixin
+-- this class implements CCRGBAMixin, so shouldn't include both.
 -----------------------------------------------------------------------
-CCMenuItemLabelProtocol = {}
+CCMenuItemLabelMixin = {}
 
 local kCCZoomActionTag = 19191919
 
-ccProp{CCMenuItemLabelProtocol, "label", mode="r"}
-ccProp{CCMenuItemLabelProtocol, "disabledColor"}
+ccProp{CCMenuItemLabelMixin, "label", mode="r"}
+ccProp{CCMenuItemLabelMixin, "disabledColor"}
 
 
-function CCMenuItemLabelProtocol:init(label)
+function CCMenuItemLabelMixin:init(label)
     self:setLabel(label)    
     self.originalScale = 1
     self.colorBackup = ccc3(255, 255, 255)
     self.disabledColor_ = ccc3(126, 126, 126)
 end
 
-function CCMenuItemLabelProtocol:setLabel(label)
+function CCMenuItemLabelMixin:setLabel(label)
     ccAssert(label ~= nil)
     
     if self.label_ ~= label then
@@ -117,16 +117,16 @@ function CCMenuItemLabelProtocol:setLabel(label)
     end
 end
 
-function CCMenuItemLabelProtocol:updateContentSize()
+function CCMenuItemLabelMixin:updateContentSize()
     self:setContentSize(self.label_:contentSize())
 end
 
-function CCMenuItemLabelProtocol:setString(str)
+function CCMenuItemLabelMixin:setString(str)
     self.label_:setString(str)
     self:updateContentSize()
 end
 
-function CCMenuItemLabelProtocol:activate()
+function CCMenuItemLabelMixin:activate()
     if self.isEnabled_ then
         -- careful, scales up self, not the label
         self:stopActionByTag(kCCZoomActionTag)
@@ -134,7 +134,7 @@ function CCMenuItemLabelProtocol:activate()
     end
 end
 
-function CCMenuItemLabelProtocol:selected()
+function CCMenuItemLabelMixin:selected()
     if self.isEnabled_ then
         local action = self:getActionByTag(kCCZoomActionTag)
         if action then
@@ -149,7 +149,7 @@ function CCMenuItemLabelProtocol:selected()
     end
 end
 
-function CCMenuItemLabelProtocol:unselected()
+function CCMenuItemLabelMixin:unselected()
     if self.isEnabled_ then
         self:stopActionByTag(kCCZoomActionTag)
         local zoomAction = CCScaleTo(0.1, self.originalScale)
@@ -158,7 +158,7 @@ function CCMenuItemLabelProtocol:unselected()
     end
 end
 
-function CCMenuItemLabelProtocol:setEnabled(enabled)
+function CCMenuItemLabelMixin:setEnabled(enabled)
     if self.isEnabled_ ~= enabled then
         local label = self.label_
         if enabled == false then
@@ -170,45 +170,45 @@ function CCMenuItemLabelProtocol:setEnabled(enabled)
     end
 end
 
-function CCMenuItemLabelProtocol:setOpacity(o)
+function CCMenuItemLabelMixin:setOpacity(o)
     self.label_:setOpacity(o)
 end
     
-function CCMenuItemLabelProtocol:opacity()
+function CCMenuItemLabelMixin:opacity()
     return self.label_:opacity()
 end
 
-function CCMenuItemLabelProtocol:setColor(...)
+function CCMenuItemLabelMixin:setColor(...)
     self.label_:setColor(...)
 end
 
-function CCMenuItemLabelProtocol:color()    
+function CCMenuItemLabelMixin:color()    
     return self.label_:color()
 end
 
-function CCMenuItemLabelProtocol:setColor4(...)
+function CCMenuItemLabelMixin:setColor4(...)
     self.label_:setColor4(...)
 end
 
-function CCMenuItemLabelProtocol:color4()
+function CCMenuItemLabelMixin:color4()
     return self.label_:color4()
 end
 
-function CCMenuItemLabelProtocol:cleanup()
+function CCMenuItemLabelMixin:cleanup()
     self.label_ = nil
 end
 
 -----------------------------------------------------------------------
--- CCMenuItemSpriteProtocol
--- this class implements CCRGBAProtocol, so shouldn't include both.
+-- CCMenuItemSpriteMixin
+-- this class implements CCRGBAMixin, so shouldn't include both.
 -----------------------------------------------------------------------
-CCMenuItemSpriteProtocol = {}    
+CCMenuItemSpriteMixin = {}    
 
-ccProp{CCMenuItemSpriteProtocol, "normalImage", mode="r"}
-ccProp{CCMenuItemSpriteProtocol, "selectedImage", mode="r"}
-ccProp{CCMenuItemSpriteProtocol, "disabledImage", mode="r"}
+ccProp{CCMenuItemSpriteMixin, "normalImage", mode="r"}
+ccProp{CCMenuItemSpriteMixin, "selectedImage", mode="r"}
+ccProp{CCMenuItemSpriteMixin, "disabledImage", mode="r"}
     
-function CCMenuItemSpriteProtocol:init(normalSprite, selectedSprite, disabledSprite)
+function CCMenuItemSpriteMixin:init(normalSprite, selectedSprite, disabledSprite)
     ccAssert(normalSprite)
     self:setNormalImage(normalSprite)
     self:setSelectedImage(selectedSprite)
@@ -216,13 +216,13 @@ function CCMenuItemSpriteProtocol:init(normalSprite, selectedSprite, disabledSpr
     self:updateContentSize()
 end
                 
-function CCMenuItemSpriteProtocol:cleanup()
+function CCMenuItemSpriteMixin:cleanup()
     self.normalImage_ = nil
     self.selectedImage_ = nil
     self.disabledImage_ = nil
 end                        
 
-function CCMenuItemSpriteProtocol:setNormalImage(img)
+function CCMenuItemSpriteMixin:setNormalImage(img)
     if img ~= self.normalImage_ then
         ccAssert(img)        
         img:setAnchorPoint(0, 0)
@@ -234,7 +234,7 @@ function CCMenuItemSpriteProtocol:setNormalImage(img)
     end
 end
 
-function CCMenuItemSpriteProtocol:setSelectedImage(img)
+function CCMenuItemSpriteMixin:setSelectedImage(img)
     if img ~= self.selectedImage_ then
         if self.selectedImage_ then self:removeChild(self.selectedImage_, true) end
         
@@ -250,7 +250,7 @@ function CCMenuItemSpriteProtocol:setSelectedImage(img)
     end    
 end
 
-function CCMenuItemSpriteProtocol:setDisabledImage(img)
+function CCMenuItemSpriteMixin:setDisabledImage(img)
     if img ~= self.disabledImage_ then
         if self.disabledImage_ then self:removeChild(self.disabledImage_, true) end        
         
@@ -266,7 +266,7 @@ function CCMenuItemSpriteProtocol:setDisabledImage(img)
     end    
 end
 
-function CCMenuItemSpriteProtocol:updateImagesVisibility()
+function CCMenuItemSpriteMixin:updateImagesVisibility()
     local ni = self.normalImage_
     local si = self.selectedImage_
     local di = self.disabledImage_
@@ -288,11 +288,11 @@ function CCMenuItemSpriteProtocol:updateImagesVisibility()
     end
 end
 
-function CCMenuItemSpriteProtocol:updateContentSize()
+function CCMenuItemSpriteMixin:updateContentSize()
     return self:setContentSize(self.normalImage_:contentSize())
 end
 
-function CCMenuItemSpriteProtocol:setOpacity(o)
+function CCMenuItemSpriteMixin:setOpacity(o)
     local ni = self.normalImage_
     local si = self.selectedImage_
     local di = self.disabledImage_
@@ -302,7 +302,7 @@ function CCMenuItemSpriteProtocol:setOpacity(o)
     if di then di:setOpacity(o) end
 end
 
-function CCMenuItemSpriteProtocol:setColor(...)
+function CCMenuItemSpriteMixin:setColor(...)
     local ni = self.normalImage_
     local si = self.selectedImage_
     local di = self.disabledImage_
@@ -312,7 +312,7 @@ function CCMenuItemSpriteProtocol:setColor(...)
     if di then di:setColor(...) end
 end
 
-function CCMenuItemSpriteProtocol:setColor4(...)
+function CCMenuItemSpriteMixin:setColor4(...)
     local ni = self.normalImage_
     local si = self.selectedImage_
     local di = self.disabledImage_
@@ -322,19 +322,19 @@ function CCMenuItemSpriteProtocol:setColor4(...)
     if di then di:setColor4(...) end    
 end
 
-function CCMenuItemSpriteProtocol:color()
+function CCMenuItemSpriteMixin:color()
     return self.normalImage_:color()
 end
 
-function CCMenuItemSpriteProtocol:opacity()
+function CCMenuItemSpriteMixin:opacity()
     return self.normalImage_:opacity()
 end
 
-function CCMenuItemSpriteProtocol:color4()
+function CCMenuItemSpriteMixin:color4()
     return self.normalImage_:color4()
 end
 
-function CCMenuItemSpriteProtocol:selected()
+function CCMenuItemSpriteMixin:selected()
     local ni = self.normalImage_
     local si = self.selectedImage_
     local di = self.disabledImage_   
@@ -349,7 +349,7 @@ function CCMenuItemSpriteProtocol:selected()
     end
 end
 
-function CCMenuItemSpriteProtocol:unselected()
+function CCMenuItemSpriteMixin:unselected()
     local ni = self.normalImage_
     local si = self.selectedImage_
     local di = self.disabledImage_
@@ -359,7 +359,7 @@ function CCMenuItemSpriteProtocol:unselected()
     if di then di:setVisible(false) end
 end
 
-function CCMenuItemSpriteProtocol:setEnabled(enabled)
+function CCMenuItemSpriteMixin:setEnabled(enabled)
     if self.isEnabled_ ~= enabled then
         self:updateImagesVisibility()
     end
