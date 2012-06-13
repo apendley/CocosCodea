@@ -48,212 +48,60 @@ function CCMenuItem:draw()
     local s = self:contentSize()
     rect(0, 0, s.x, s.y)
 end
---]]    
+--]]
+
+
+
+
 
 -------------------
 -- CCMenuItemSprite
 -------------------
-CCMenuItemSprite = CCClass(CCMenuItem):include(CCRGBAProtocol)
+CCMenuItemSprite = CCClass(CCMenuItem):include(CCMenuItemSpriteProtocol)
 
 function CCMenuItemSprite:init(normalSprite, selectedSprite, disabledSprite)
     CCMenuItem.init(self)
-    --CCRGBAProtocol.init(self)
-    self:setNormalImage(normalSprite)
-    self:setSelectedImage(selectedSprite)
-    self:setDisabledImage(disabledSprite)
-    self:setContentSize(normalSprite:contentSize())
+    CCMenuItemSpriteProtocol.init(self, normalSprite, selectedSprite, disabledSprite)
 end
 
 function CCMenuItemSprite:cleanup()
-    self.normalImage = nil
-    self.selectedImage = nil
-    self.disabledImage = nil
     CCMenuItem.cleanup(self)
-end
-
-function CCMenuItemSprite:setNormalImage(img)
-    if img ~= self.normalImage then
-        ccAssert(img)        
-        img:setAnchorPoint(0, 0)
-        self:removeChild(self.normalImage, true)
-        self:addChild(img)
-        self.normalImage = img
-        self:setContentSize(img:contentSize())
-        self:updateImagesVisibility()
-    end
-end
-
-function CCMenuItemSprite:setSelectedImage(img)
-    if img ~= self.selectedImage then
-        if self.selectedImage then self:removeChild(self.selectedImage, true) end        
-        
-        if img then
-            img:setAnchorPoint(0, 0)
-            self:addChild(img)
-            self.selectedImage = img
-        else
-            self.selectedImage = nil
-        end
-        
-        self:updateImagesVisibility()        
-    end    
-end
-
-function CCMenuItemSprite:setDisabledImage(img)
-    if img ~= self.disabledImage then
-        if self.disabledImage then self:removeChild(self.disabledImage, true) end        
-        
-        if img then
-            img:setAnchorPoint(0, 0)
-            self:addChild(img)
-            self.disabledImage = img
-        else
-            self.disabledImage = nil
-        end
-        
-        self:updateImagesVisibility()        
-    end    
-end
-
-function CCMenuItemSprite:setOpacity(o)
-    local ni = self.normalImage
-    local si = self.selectedImage
-    local di = self.disabledImage
-    
-    if ni then ni:setOpacity(o) end
-    if si then si:setOpacity(o) end
-    if di then di:setOpacity(o) end
-end
-
-function CCMenuItemSprite:setColor(...)
-    local ni = self.normalImage
-    local si = self.selectedImage
-    local di = self.disabledImage
-    
-    if ni then ni:setColor(...) end
-    if si then si:setColor(...) end
-    if di then di:setColor(...) end
-end
-
-function CCMenuItemSprite:setColor4(...)
-    local ni = self.normalImage
-    local si = self.selectedImage
-    local di = self.disabledImage
-    
-    if ni then ni:setColor4(...) end
-    if si then si:setColor4(...) end
-    if di then di:setColor4(...) end    
-end
-
-function CCMenuItemSprite:color()
-    return self.normalImage:color()
-end
-
-function CCMenuItemSprite:opacity()
-    return self.normalImage:opacity()
-end
-
-function CCMenuItemSprite:color4()
-    return self.normalImage:color4()
+    CCMenuItemSpriteProtocol.cleanup(self)
 end
 
 function CCMenuItemSprite:selected()
     CCMenuItem.selected(self)
-    
-    local ni = self.normalImage
-    local si = self.selectedImage
-    local di = self.disabledImage    
-    
-    if si then
-        ni:setVisible(false)
-        si:setVisible(true)
-        if di then di:setVisible(false) end
-    else
-        ni:setVisible(true)
-        if di then di:setVisible(false) end
-    end
+    CCMenuItemSpriteProtocol.selected(self)
 end
 
 function CCMenuItemSprite:unselected()
-    local ni = self.normalImage
-    local si = self.selectedImage
-    local di = self.disabledImage
-    
-    ni:setVisible(true)
-    if si then si:setVisible(false) end
-    if di then di:setVisible(false) end
+    CCMenuItem.unselected(self)
+    CCMenuItemSpriteProtocol.unselected(self)
 end
 
 function CCMenuItemSprite:setEnabled(enabled)
     if self.isEnabled_ ~= enabled then
-        CCMenuItem.setEnabled(enabled)
-        self:updateImagesVisibility()
+        CCMenuItem.setEnabled(self, enabled)
+        CCMenuItemSpriteProtocol.setEnabled(self, enabled)
     end
 end
 
-function CCMenuItemSprite:updateImagesVisibility()
-    local ni = self.normalImage
-    local si = self.selectedImage
-    local di = self.disabledImage
-        
-    if self.isEnabled_ then
-        ni:setVisible(true)
-        if si then si:setVisible(false) end
-        if di then di:setVisible(false) end
-    else
-        if di then
-            ni:setVisible(false)
-            if si then si:setVisible(false) end
-            di:setVisible(true)
-        else
-            ni:setVisible(true)
-            if si then si:setVisible(false) end
-            if di then di:setVisible(false) end        
-        end
-    end
-end
 
--- todo: allow changing the function
+
 
 --------------------
 -- CCMenuItemLabel
 --------------------
-CCMenuItemLabel = CCClass(CCMenuItem):include(CCRGBAProtocol)
-
-local kCCZoomActionTag = 19191919
-
-ccProp{CCMenuItemLabel, "label", mode="r"}
-ccProp{CCMenuItemLabel, "disabledColor"}
+CCMenuItemLabel = CCClass(CCMenuItem):include(CCMenuItemLabelProtocol)
 
 function CCMenuItemLabel:init(label)
-    CCMenuItem.init(self, fn)
-    self:setLabel(label)    
-    self.originalScale = 1
-    self.colorBackup = ccColor(255, 255, 255)
-    self.disabledColor_ = ccColor(126, 126, 126)
-end
-
-function CCMenuItemLabel:setLabel(label)
-    ccAssert(label ~= nil)
-    
-    if self.label_ ~= label then
-        if self.label_ then self:removeChild(self.label_, true) end
-        self:addChild(label)
-        self.label_ = label
-        label:setAnchorPoint(0, 0)
-        self:setContentSize(label:contentSize())
-    end
-end
-
-function CCMenuItemLabel:setString(str)
-    self.label_:setString(str)
-    self:setContentSize(self.label_:contentSize())
+    CCMenuItem.init(self)
+    CCMenuItemLabelProtocol.init(self, label)
 end
 
 function CCMenuItemLabel:activate()
     if self.isEnabled_ then
-        self:stopAllActions()
-        self:setScale(self.originalScale)
+        CCMenuItemLabelProtocol.activate(self)
         CCMenuItem.activate(self)
     end
 end
@@ -261,72 +109,135 @@ end
 function CCMenuItemLabel:selected()
     if self.isEnabled_ then
         CCMenuItem.selected(self)
-        
-        local action = self:getActionByTag(kCCZoomActionTag)
-        if action then
-            self:stopAction(action)
-        else
-            self.originalScale = self:scale()
-        end
-        
-        local zoomAction = CCScaleTo(0.1, self.originalScale * 1.2)
-        zoomAction.tag = kCCZoomActionTag
-        self:runAction(zoomAction)
+        CCMenuItemLabelProtocol.selected(self)
     end
 end
 
 function CCMenuItemLabel:unselected()
     if self.isEnabled_ then
         CCMenuItem.unselected(self)
-        self:stopActionByTag(kCCZoomActionTag)
-        local zoomAction = CCScaleTo(0.1, self.originalScale)
-        zoomAction.tag = kCCZoomActionTag
-        self:runAction(zoomAction)
+        CCMenuItemLabelProtocol.unselected(self)
     end
 end
 
 function CCMenuItemLabel:setEnabled(enabled)
-    if self.isEnabled_ ~= enabled then
-        local label = self.label
-        if enabled == false then
-            self.colorBackup = label:color()
-            label:setColor(self.disabledColor_)
-        else
-            label:setColor(self.colorBackup)
-        end
-    end
-    
+    CCMenuItemLabelProtocol.setEnabled(self, enabled)
     CCMenuItem.setEnabled(self, enabled)
-end
-
-function CCMenuItemLabel:setOpacity(o)
-    self.label_:setOpacity(o)
-end
-
-function CCMenuItemLabel:opacity()
-    return self.label_:opacity()
-end
-
-function CCMenuItemLabel:setColor(...)
-    self.label_:setColor(...)
-end
-
-function CCMenuItemLabel:color(c)
-    return self.label_:color()
-end
-
-function CCMenuItemLabel:setColor4(...)
-    self.label_:setColor4(...)
-end
-
-function CCMenuItemLabel:color4()
-    return self.label_:color4()
 end
 
 function CCMenuItemLabel:cleanup()
     CCMenuItem.cleanup(self)
-    self.label_ = nil
+    CCMenuItemLabelProtocol.cleanup(self)
 end
+
+----------------------------------------
+-- CCMenuItemBackedLabel
+----------------------------------------
+CCMenuItemBackedLabel = CCClass(CCMenuItem)
+CCMenuItemBackedLabel:include(CCMenuItemSpriteProtocol)
+CCMenuItemBackedLabel:include(CCMenuItemLabelProtocol)
+
+function CCMenuItemBackedLabel:init(label, normal, selected, disabled)
+    assert(label and normal)
+    CCMenuItem.init(self)
+    CCMenuItemSpriteProtocol.init(self, normal, selected, disabled)    
+    CCMenuItemLabelProtocol.init(self, label)    
+    self:updateContentSize()
+end
+
+function CCMenuItemBackedLabel:updateContentSize()
+    local img = self.normalImage_
+    local label = self.label_
+
+    local lw, lh
+    if label then
+        local cs = label:contentSize()
+        lw, lh = cs.x, cs.y
+    else
+        lw, lh = 0, 0
+    end
+    
+    local iw, ih
+    if img then 
+        local cs = img:contentSize()
+        iw, ih = cs.x, cs.y
+    else
+        iw, ih = 0, 0
+    end
+
+    local w = math.max(iw, lw)
+    local h = math.max(ih, lh)
+    self:setContentSize(w, h)
+    
+    if label and img then
+        local pos = img:contentSize()/2
+        pos = pos - label:contentSize()/2
+        label:setPosition(pos)
+    end
+end
+
+function CCMenuItemBackedLabel:activate()
+    if self.isEnabled_ then
+        CCMenuItemLabelProtocol.activate(self)
+        CCMenuItem.activate(self)
+    end
+end
+
+function CCMenuItemBackedLabel:selected()
+    if self.isEnabled_ then
+        CCMenuItem.selected(self)
+        CCMenuItemLabelProtocol.selected(self)
+        CCMenuItemSpriteProtocol.selected(self)
+    end
+end
+
+function CCMenuItemBackedLabel:unselected()
+    if self.isEnabled_ then
+        CCMenuItem.unselected(self)
+        CCMenuItemLabelProtocol.unselected(self)
+        CCMenuItemSpriteProtocol.unselected(self)    
+    end
+end
+
+function CCMenuItemBackedLabel:setEnabled(enabled)
+    CCMenuItemLabelProtocol.setEnabled(self, enabled)
+    CCMenuItemSpriteProtocol.setEnabled(self, enabled)
+    CCMenuItem.setEnabled(self, enabled)
+end
+
+function CCMenuItemBackedLabel:cleanup()
+    CCMenuItem.cleanup(self)
+    CCMenuItemLabelProtocol.cleanup(self)
+    CCMenuItemSpriteProtocol.cleanup(self)
+end
+
+function CCMenuItemBackedLabel:setOpacity(o)
+    CCMenuItemLabelProtocol.setOpacity(self, o)
+    CCMenuItemSpriteProtocol.setOpacity(self, o)
+end
+    
+function CCMenuItemBackedLabel:opacity()
+    return CCMenuItemLabelProtocol.opacity(self)
+end
+
+function CCMenuItemBackedLabel:setColor(...)
+    CCMenuItemLabelProtocol.setColor(self, ...)
+    CCMenuItemSpriteProtocol.setColor(self, ...)
+end
+
+function CCMenuItemBackedLabel:color()    
+    return CCMenuItemLabelProtocol.color(self)
+end
+
+function CCMenuItemBackedLabel:setColor4(...)
+    CCMenuItemLabelProtocol.setColor4(self, ...)
+    CCMenuItemSpriteProtocol.setColor4(self, ...)    
+end
+
+function CCMenuItemBackedLabel:color4()
+    return CCMenuItemLabelProtocol.color4(self)
+end
+
 
 --------------------
 -- CCMenuItemFont
@@ -375,4 +286,100 @@ end
 function CCMenuItemFont:setWrapWidth(width)
     self.wrapWidth_ = width
     self:updateLabel()
+end
+
+--------------------
+-- CCMenuItemToggle
+--------------------
+CCMenuItemToggle = CCClass(CCMenuItem):include(CCRGBAProtocol)
+
+ccProp{CCMenuItemToggle, "selectedIndex", mode="r"}
+
+local kCCCurrentItemTag = "1234"
+
+function CCMenuItemToggle:init(...)
+    CCMenuItem.init(self)
+    CCRGBAProtocol.init(self)
+
+    local itemTable = (#arg == 1) and arg[1] or arg
+    assert(#itemTable == 2)
+    self.subitems_ = itemTable
+    
+    self:setSelectedIndex(1)
+end
+
+function CCMenuItemToggle:setSelectedIndex(index)
+    if index ~= self.selectedIndex_ then
+        self.selectedIndex_ = index
+        
+        local cur = self:getChildByTag(kCCCurrentItemTag)
+        if cur then cur:removeFromParent(false) end
+        
+        local item = self.subitems_[index]
+        self:addChild(item, 0, kCCCurrentItemTag)
+        
+        local s = item:contentSize()
+        self:setContentSize(s)
+        item:setPosition(s/2)
+    end
+end
+
+function CCMenuItemToggle:selectedItem()
+    return self.subitems_[self.selectedIndex_]
+end
+
+function CCMenuItemToggle:selected()
+    CCMenuItem.selected(self)
+    local item = self.subitems_[self.selectedIndex_]
+    item:selected()
+end
+
+function CCMenuItemToggle:unselected()
+    CCMenuItem.unselected(self)
+    local item = self.subitems_[self.selectedIndex_]
+    item:unselected()
+end
+
+function CCMenuItemToggle:activate()
+    if self.isEnabled_ then
+        local newIndex = self.selectedIndex_ + 1
+        if newIndex > #self.subitems_ then newIndex = 1 end
+        self:setSelectedIndex(newIndex)
+    end
+    
+    CCMenuItem.activate(self)
+end
+
+function CCMenuItemToggle:setEnabled(enabled)
+    if self.isEnabled_ ~= enabled then
+        CCMenuItem.setEnabled(self, enabled)
+        
+        for i,item in ipairs(self.subitems_) do
+            item:setEnabled(enabled)
+        end
+    end
+end
+
+function CCMenuItemToggle:setOpacity(o)
+    CCRGBAProtocol.setOpacity(self, o)
+    
+    for i,v in ipairs(self.subitems_) do
+        item:setOpacity(o)
+    end
+end
+
+function CCMenuItemToggle:setColor(...)
+    CCRGBAProtocol.setColor(self, ...)
+
+    for i,v in ipairs(self.subitems_) do
+        item:setColor(...)
+    end        
+end
+
+function CCMenuItemToggle:setColor4(...)
+    CCRGBAProtocol.setColor4(self, ...)
+
+    for i,v in ipairs(self.subitems_) do
+        item:setColor4(...)
+    end        
 end

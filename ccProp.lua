@@ -61,15 +61,19 @@ function ccPropColor(t)
         end
     end
 
-    -- might need to change to preserve the original's alpha value
+    -- preserves the original's alpha value
     local function genSet(ivarName)
         return function(inst, ...)
             local c = inst[ivarName]
+            assert(c)
+            c.r, c.g, c.b = cccVA(...)
+            --[[
             if c then
                 c.r, c.g, c.b = cccVA(...)
             else
                 inst[ivarName] = ccColor(...)
             end
+            --]]
         end
     end        
     

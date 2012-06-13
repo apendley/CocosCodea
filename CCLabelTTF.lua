@@ -66,10 +66,9 @@ function CCLabelTTF:updateContentSize_()
 end
 
 function CCLabelTTF:draw()
-    textMode(CORNER)
     fill(self:color())
-    
     self:applyStyle()
+    textMode(CORNER)    
     text(self:string(), 0, 0)
     
     -- debug draw sprite rect

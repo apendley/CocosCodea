@@ -1,0 +1,21 @@
+-- * implement scene switching
+-- * implement transitions
+-- * add CCMenu alignment functions
+-- * add prioritized updates to CCScheduler and CCNode classes
+-- * test child removal and cleanup
+-- * implements batched sprites (using mesh)
+-- * implement bitmapped fonts
+-- * implement tilemaps (using mesh)-- * labels
+-- * lazily create children table
+-- * do fast children sort in visit(?)
+-- * implmement transitions
+-- * implement skew
+-- * CCEaseElastic(in/out/inout), CCBounce(in/out/inout), CCEaseBack(in/out/inout)
+-- * skewBy, skewTo, JumpBy, JumpTo, BezierBy, BezierTo
+-- * ReverseTime, Animate, TargetedAction
+-- * CCActionCatmullRom
+
+-- * write alternative version of sprite() in backend, and try to get TLL to use it
+-- * when codea allows (s, t, u, v) to be specfied for a sprite
+    -- * add textureRect to CCSprite
+    -- * add flipX and flipY to CCSprite

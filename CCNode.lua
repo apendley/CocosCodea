@@ -81,7 +81,6 @@ function CCNode:reorderChild(child, z)
 end
 
 function CCNode:detachChild(child, cleanup)
-    ccPrint("Detach")
     if self.isRunning_ then
         child:onExitTransitionDidStart()
         child:onExit()

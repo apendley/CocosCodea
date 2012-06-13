@@ -26,6 +26,7 @@ function MyLayer:init()
         item1 = item
     end
     
+    --[[
     local item2
     do
         local normal = CCNodeRect(200, 200, ccColor(255, 255, 255))
@@ -43,6 +44,22 @@ function MyLayer:init()
         label:setAnchorPoint(.5, .5)
         item:addChild(label) 
         item2 = item
+    end
+    --]]
+    
+    local item2
+    do
+        local label = CCLabelTTF("Hello!", "Helvetica", 30)
+        local normal = CCNodeRect(200, 200, ccColor(255, 0, 0))
+        local selected = CCNodeRect(200, 200, ccColor(0, 255, 0))
+        local item = CCMenuItemBackedLabel(label, normal, selected)
+        item:setHandler(ccDelegate(self, "itemSelected"))        
+        local pos = self:contentSize()/2
+        pos.x = pos.x + 100
+        item:setPosition(pos)
+        item.tag = 2
+        item.userData = "Right Button"
+        item2 = item        
     end
     
     -- label item
@@ -75,7 +92,33 @@ function MyLayer:init()
         item:runAction(seq)
     end
     
-    local menu = CCMenu(item1, item2, item3, item4)
+    local item5
+    do
+        local function onSelected(i)
+            ccPrint(i:selectedItem().userdata)
+        end
+        
+        local i1s1 = CCSprite("Playing Cards:cardback2")
+        local i1s2 = CCSprite("Playing Cards:cardback2")
+        i1s2:setColor(255, 128, 128)
+        local item1 = CCMenuItemSprite(i1s1, i1s2)
+        item1.userdata = "Back"
+        
+        local i2s1 = CCSprite("Playing Cards:A_S")
+        local i2s2 = CCSprite("Playing Cards:A_S")
+        i2s2:setColor(255, 128, 128)        
+        local item2 = CCMenuItemSprite(i2s1, i2s2)
+        item2.userdata = "Front"
+                
+        local toggle = CCMenuItemToggle(item1, item2)
+        toggle:setHandler(onSelected)
+        local pos = self:contentSize()/2
+        pos.x = toggle:contentSize().x/2 + 20
+        toggle:setPosition(pos)
+        item5 = toggle
+    end
+    
+    local menu = CCMenu(item1, item2, item3, item4, item5)
     menu:setContentSize(self:contentSize())
     menu:setPosition(self:position())
     menu:setAnchorPoint(self:anchorPoint())
