@@ -18,14 +18,8 @@ function arrayIndexOfObject(array, object)
     end
 end  
 
-function arrayGetIndex(array, obj)
-    for i,v in ipairs(array) do
-        if v == obj then return i end
-    end
-end
-
 function arrayRemoveObject(array, obj)
-    local idx = arrayGetIndex(array, obj)
+    local idx = arrayIndexOfObject(array, obj)
     if idx then table.remove(array, idx) end
 end
 
@@ -85,4 +79,10 @@ function arrayBubbleSort(array, comparator, property)
             end
         end
     end
+end
+
+function arrayCopy(array)
+    local t = {}
+    for i,v in ipairs(array) do t[i] = v end
+    return t
 end

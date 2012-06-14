@@ -4,7 +4,7 @@ MyLayer = CCClass(CCLayer)
 function MyLayer:init()
     CCLayer.init(self)
     
-    -- a label somewhere    
+    -- status label
     do
         local label = CCLabelTTF("", "AmericanTypewriter", 40, CENTER)
         local size = self:contentSize()
@@ -15,19 +15,25 @@ function MyLayer:init()
         self.statusLabel = label
     end
     
-    local item1
+    -- menu to contain buttons
+    local menu = CCMenu()
+    menu:setPosition(self:position())
+    self:addChild(menu)    
+    
+    -- a tree
     do
-        local normal = CCSprite("Playing Cards:7_S")
-        local selected = CCSprite("Playing Cards:7_S")
+        local normal = CCSprite("Small World:Tree 2")
+        local selected = CCSprite("Small World:Tree 2")
         selected:setColor(255, 128, 128)
+        
         local item = CCMenuItemSprite(normal, selected)
-        item:setHandler(ccDelegate(self, "itemSelected"))
+        menu:addChild(item, 0, "A Tree!")
+        item:setHandler(self, "itemSelected")
+
         local pos = self:contentSize()/2
         pos.x = pos.x - 100
         item:setPosition(pos)
-        item.tag = 1
-        item.userData = "Seven of Spades"
-        item1 = item
+        item:setScale(2)
         
         local duration = .2
         local function randomAnchorPoint(target)
@@ -41,7 +47,7 @@ function MyLayer:init()
         
         local sequence =
         {
-            CCDelayTime(duration), CCCallT(randomAnchorPoint),
+            CCDelayTime(duration), CCFuncT(randomAnchorPoint),
         }
         
         
@@ -57,102 +63,94 @@ function MyLayer:init()
         item:runAction(loop)
     end
     
-    local item2
+    -- Hello! button
     do
-        local label = CCLabelTTF("Hello!", "Helvetica", 30)
+        local label = CCLabelTTF("Hello!", "Helvetica", 50)
+        label:setHasShadow(true)
+        
         local normal = CCNodeRect(200, 200, 255, 0, 0)
-        local selected = CCNodeRect(200, 200, ccc3(0, 255, 0))
         normal:setStrokeEnabled(true)
         normal:setStrokeColor(255)
+                
+        local selected = CCNodeRect(200, 200, ccc3(0, 255, 0))
         selected:setStrokeEnabled(true)
         selected:setStrokeColor(0)
+        
         local item = CCMenuItemBackedLabel(label, normal, selected)
-        item:setHandler(ccDelegate(self, "itemSelected"))        
+        item:setHandler(self, "itemSelected")
+        menu:addChild(item, 0, "Hello!")
+        
         local pos = self:contentSize()/2
         pos.x = pos.x + 100
         item:setPosition(pos)
-        item.tag = 2
-        item.userData = "Right Button"
-        item:label():setHasShadow(true)
-        item2 = item        
     end
     
-    -- label item
-    local item3
-    do
-        local item = CCMenuItemLabel(CCLabelTTF("A Label Button", "Georgia", 30, CENTER))
-        local pos = self:contentSize()/2
-        pos.y = pos.y - 200
-        item:setPosition(pos)
-        item3 = item
-        
-        local seq = CCSequence(CCTintTo(0.5, 0), CCTintTo(.5, 255, 0, 255))
-        item:runAction(CCRepeatForever(CCEaseSineInOut(seq)))
-    end
-    
-    local item4
+    -- a button to exit the scene
     do    
         local function nextScene()
-            local t = CCTransitionShrinkGrow(2, MyLayer2:scene())
+            local t = CCTransitionRotoZoom(1, MyLayer2:scene())
             CCSharedDirector():replaceScene(t)
         end
         
         local item = CCMenuItemFont("Go To Scene 2", "Georgia", 30, CENTER)
         item:setHandler(nextScene)
+        menu:addChild(item)
+                
         item:setColor(255, 255, 255)
+        
         local pos = self:contentSize() / 2
         pos.y = pos.y + 200
         item:setPosition(pos)
-        item4 = item
         
-        item:label():setHasShadow(true)
-        item:label():setShadowColor(128, 128, 255, 160)
+        local label = item:label()
+        label:setHasShadow(true)
+        label:setShadowColor(128, 128, 255, 160)
     
         local cs = item:contentSize()
-        local bg = CCNodeRect(cs.x*1.5, cs.y*1.5, 0, 0, 0)
+        local bg = CCNodeRect(cs.x*1.5, cs.y*1.5, 0, 0, 128)
+        self:addChild(bg, -1)        
         bg:setPosition(item:position())
         bg:setAnchorPoint(item:anchorPoint())
-        self:addChild(bg, -1)
+        bg:setStrokeEnabled(true)
+        bg:setStrokeColor(255)
+        bg:setStrokeWidth(5)
                 
         local seq = CCSequence(CCScaleBy(0.3, 1.1), CCScaleBy(0.3, 1/1.1))
         bg:runAction(CCRepeatForever(CCEaseSineInOut(seq)))
     end
     
-    local item5
+    -- heart toggle button
     do
         local function onSelected(i)
-            self.statusLabel:setString(i:selectedItem().userData)
+            self.statusLabel:setString(i:selectedItem().tag)
         end
         
-        local i1s1 = CCSprite("Playing Cards:cardback2")
-        local i1s2 = CCSprite("Playing Cards:cardback2")
-        i1s2:setColor(255, 128, 128)
+        local i1s1 = CCSprite("Small World:Heart")
+        local i1s2 = CCSprite("Small World:Heart")
+        i1s2:setColor(128, 128, 128)
         local item1 = CCMenuItemSprite(i1s1, i1s2)
-        item1.userData = "Back"
+        item1.tag = "Red"
         
-        local i2s1 = CCSprite("Playing Cards:A_S")
-        local i2s2 = CCSprite("Playing Cards:A_S")
-        i2s2:setColor(255, 128, 128)        
+        local i2s1 = CCSprite("Small World:Heart Gold")
+        local i2s2 = CCSprite("Small World:Heart Gold")
+        i2s2:setColor(128, 128, 128)        
         local item2 = CCMenuItemSprite(i2s1, i2s2)
-        item2.userData = "Front"
+        item2.tag = "Gold"
                 
         local toggle = CCMenuItemToggle(item1, item2)
         toggle:setHandler(onSelected)
+        menu:addChild(toggle)
+                
+        local s = 5
+        toggle:setScale(5)                
         local pos = self:contentSize()/2
-        pos.x = toggle:contentSize().x/2 + 20
+        pos.x = (toggle:contentSize().x * s) * 0.5 + 20
         toggle:setPosition(pos)
-        item5 = toggle
     end
-    
-    local menu = CCMenu(item1, item2, item3, item4, item5)
-    menu:setContentSize(self:contentSize())
-    menu:setPosition(self:position())
-    menu:setAnchorPoint(self:anchorPoint())
-    self:addChild(menu)    
 end
 
 function MyLayer:itemSelected(item)
-    self.statusLabel:setString(item.userData or "")
+    self.statusLabel:setString(item.tag or "")
 end
 
 function MyLayer:cleanup()

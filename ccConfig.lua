@@ -25,5 +25,3 @@ ccPrintPair = printPair_
 ccPrintArray = printArray_
 ccPrintTable = printTable_
 ccColor = color
-
-ccFLT_EPSILON = 0.00000011920929

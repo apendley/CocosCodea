@@ -11,7 +11,7 @@
 		<string>ccConfig</string>
 		<string>ccUtil</string>
 		<string>ccProp</string>
-		<string>ArrayUtil</string>
+		<string>ccArray</string>
 		<string>ccRect</string>
 		<string>CCMixin</string>
 		<string>CCClass</string>

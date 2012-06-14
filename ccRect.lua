@@ -46,5 +46,21 @@ function ccRect:__tostring()
     return "["..self.x..","..self.y..","..self.w..","..self.h.."]"
 end
 
+function ccRect:applyTransform(m)
+    local x, y, w, h = self.x, self.y, self.w, self.h
+    local Min, Max, xform = math.min, math.max, affineTransform2
+    
+    local blx, bly = xform(0,0,m)
+    local brx, bry = xform(w,0,m)
+    local tlx, tly = xform(0,h,m)
+    local trx, try = xform(w,h,m)
+    
+    local minX = Min(tlx, Min(trx, Min(blx, brx)))
+    local maxX = Max(tlx, Max(trx, Max(blx, brx)))
+    local minY = Min(tly, Min(try, Min(bly, bry)))
+    local maxY = Max(tly, Max(try, Max(bly, bry)))
+    
+    return ccRect(minX, minY, maxX - minX, maxY - minY)
+end
 
 -- todo: add other methods

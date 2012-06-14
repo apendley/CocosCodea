@@ -579,7 +579,7 @@ function CCFadeIn:update(t) self.target:setOpacity(255 * t) end
 CCFadeOut = CCClass(CCActionInterval)
 function CCFadeOut:update(t) self.target:setOpacity(255 * (1-t)) end
 
-CCAction:ImplementReverse(CCFadeIn, CCFadeOut)
+CCFadeIn:impReverse(CCFadeOut)
 
 ----------------------
 -- fade to

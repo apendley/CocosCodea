@@ -11,7 +11,7 @@
 -- * do fast children sort in visit(?)
 -- * implement skew
 -- * CCEaseElastic(in/out/inout), CCBounce(in/out/inout), CCEaseBack(in/out/inout)
--- * skewBy, skewTo, JumpBy, JumpTo, BezierBy, BezierTo
+-- * skewBy, skewTo, BezierBy, BezierTo
 -- * CCReverseTime, CCAnimate, CCTargetedAction
 -- * CCActionCatmullRom
 -- * implement particle systems

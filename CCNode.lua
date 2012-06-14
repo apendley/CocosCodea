@@ -35,7 +35,6 @@ function CCNode:init()
     local dir = CCSharedDirector()
     self.actionManager_ = dir:actionManager()
     self.scheduler_ = dir:scheduler()
-    --self.touchDispatcher_ = dir:touchDispatcher()
 end
 
 local function insertChild(node, child, z)
@@ -45,7 +44,6 @@ local function insertChild(node, child, z)
     if last == nil or last.zOrder <= z then
         table.insert(children, child)
     else
-        --ccPrint("Last: "..last.zOrder.."    new: "..z)        
         for i,v in ipairs(children) do
             if last.zOrder > z then
                 table.insert(children, i, child)
@@ -72,7 +70,7 @@ function CCNode:getChildByTag(tag)
 end
 
 function CCNode:reorderChild(child, z)
-    local idx = getChildIndex(self, child)
+    local idx = arrayIndexOfObject(self.children, child)
     
     if idx then        
         local c = self.children[idx]
@@ -245,10 +243,6 @@ function CCNode:worldToNodeTransform()
     return self:nodeToWorldTransform():inverse()
 end
 
-local function affineTransform(pt, m)
-    return vec2(m[1]*pt.x+m[5]*pt.y + m[13], m[2]*pt.x+m[6]*pt.y+m[14])
-end
-
 function CCNode:convertToNodeSpace(worldPt)
     return affineTransform(worldPt, self:worldToNodeTransform())
 end
@@ -278,10 +272,15 @@ function CCNode:convertTouchToNodeSpaceAR(tp)
     return self:convertToNodeSpaceAR(CCSharedDirector():convertToGL(tp))
 end
 
+function CCNode:boundingBox()
+    local cs = self.contentSize_
+    local r = ccRect(0, 0, cs.x, cs.y)
+    return r:applyTransform(self:nodeToParentTransform())
+end
+
 --------------------
 -- properties
 --------------------
-
 function CCNode:setRotation(angle)
     self.rotation_ = angle
     self.isTransformDirty_, self.isInverseDirty_ = true, true
@@ -323,7 +322,6 @@ function CCNode:setAnchorPoint(...)
     app.x, app.y = cs.x * ap.x, cs.y * ap.y
     self.isTransformDirty_, self.isInverseDirty_ = true, true
 end
-
 
 function CCNode:setContentSize(...)
     local cs = self.contentSize_
@@ -445,6 +443,7 @@ ccProp{CCNodeRect, "strokeEnabled"}
 function CCNodeRect:init(w, h, ...)
     CCNode.init(self)
     CCRGBAMixin.init(self, ...)
+    self:setAnchorPoint(.5, .5)    
     self:setContentSize(w,h)
 end
 
@@ -500,6 +499,8 @@ function CCNodeEllipse:init(...)
     
     CCRGBAMixin.init(self, c)
     
+    
+    self:setAnchorPoint(.5, .5)
     self:setContentSize(w,h)
 end
 

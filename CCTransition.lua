@@ -116,14 +116,15 @@ function CCTransitionFade:onEnter()
     
     local duration = self.duration_
     
-    local sequence =
+    local sequence = CCSequence
     {
         CCFadeIn(duration*0.5),
-        CCCall(function() self:hideOutShowIn() end),
+        CCMethod(self, "hideOutShowIn"),
         CCFadeOut(duration*0.5),
-        CCCall(function() self:finish() end)
+        CCMethod(self, "finish")
     }
-    l:runAction(CCSequence(sequence))
+    
+    l:runAction(sequence)
 end
 
 function CCTransitionFade:onExit()
@@ -161,7 +162,7 @@ function CCTransitionRotoZoom:onEnter()
     
     local rotozoom = CCSequence(sequence)
     outScene:runAction(rotozoom)
-    inScene:runAction(CCSequence(rotozoom:reverse(), CCCall(ccDelegate(self, "finish"))))
+    inScene:runAction(CCSequence(rotozoom:reverse(), CCMethod(self, "finish")))
 end
 
 -------------------------
@@ -191,7 +192,7 @@ function CCTransitionJumpZoom:onEnter()
     {
         CCDelayTime(d*.5),
         CCSequence(jump:copy(), CCScaleTo(d_4, 1)),
-        CCCallT(ccDelegate(self, "finish")),
+        CCMethod(self, "finish")
     }
     
     inScene:runAction(CCSequence(sequence))
@@ -271,7 +272,7 @@ function CCTransitionSlideInL:onEnter()
     local sequence = 
     {
         self:easeActionWithAction(self:action()),
-        CCCallT(ccDelegate(self, "finish"))
+        CCMethod(self, "finish")
     }
     
     self.outScene_:runAction(CCSequence(sequence))
@@ -374,7 +375,7 @@ function CCTransitionShrinkGrow:onEnter()
     local sequence =
     {
         self:easeActionWithAction(CCScaleTo(self.duration_, .01)),
-        CCCallT(ccDelegate(self, "finish"))
+        CCMethod(self, "finish")
     }
     
     outScene:runAction(CCSequence(sequence))

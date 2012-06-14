@@ -33,9 +33,9 @@ function CCAction:update(time)
 end
 
 -- implements reverse methods for reciprocal classes
-function CCAction:ImplementReverse(class1, class2)
+function CCAction.impReverse(class1, class2)
     function class1:reverse() return class2() end
-    function class2:reverse() return class1() end    
+    function class2:reverse() return class1() end 
 end
 
 ----------------------

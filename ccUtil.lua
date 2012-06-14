@@ -71,8 +71,30 @@ function ccVec2VA(...)
 end
 
 ------------------------
--- other utilities
+-- math utilities
 ------------------------
-function ccDelegate(obj, funcName, ...)
+ccFLT_EPSILON = 0.00000011920929
+
+-- todo: rename to ccAffineTransform
+function affineTransform(pt, m)
+    return vec2(m[1]*pt.x+m[5]*pt.y + m[13], m[2]*pt.x+m[6]*pt.y+m[14])
+end
+
+-- todo: rename to ccAffineTransform2
+function affineTransform2(x, y, m)
+    return m[1]*x+m[5]*y+m[13], m[2]*x+m[6]*y+m[14]
+end
+
+------------------------
+-- copying
+------------------------
+function ccShallowCopy(destT, srcT)
+    for k,v in pairs(srcT) do destT[k] = v end
+end
+    
+------------------------
+-- delegation
+------------------------
+function ccDelegate(obj, funcName)
     return function(...) obj[funcName](obj, ...) end
 end

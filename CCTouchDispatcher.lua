@@ -47,7 +47,10 @@ function CCTouchDispatcher:touched(touch)
                 claimed = delegate:ccTouchBegan(touch)
             end
             
-            if claimed then handler.claimedTouches[touch.id] = true end
+            if claimed then 
+                handler.claimedTouches[touch.id] = true 
+            end
+            
         elseif handler.claimedTouches[touch.id] then
             claimed = true
             

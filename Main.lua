@@ -1,7 +1,8 @@
 -- Main
 
 function setup()
-    --displayMode(FULLSCREEN)        
+    --displayMode(FULLSCREEN)
+    
     local director = CCSharedDirector()
     director:showFPS(true)
     director:runWithScene(MyLayer:scene())
@@ -12,6 +13,6 @@ function touched(touch)
 end
 
 function draw()    
-    background(128, 128, 128, 0)
+    background(0)
     CCSharedDirector():drawScene(DeltaTime)
 end

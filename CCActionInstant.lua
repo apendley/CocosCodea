@@ -10,86 +10,147 @@ function CCActionInstant:step(dt)
 end
 
 
---
--- todo: comment on CCCall and CCCallT replacing cocos2d-iphone's call actions
---
+---------------------------------
+-- base class for caller actions
+---------------------------------
+CCCallBase = CCClass(CCActionInstant)
+
+function CCCallBase:init(...)
+    CCActionInstant.init(self)
+    if #arg > 0 then self.params = arrayCopy(arg) end    
+end
+
+function CCCallBase:execute(...)
+    ccAssert(false, "implement me!")
+end
+
+function CCCallBase:update(t)
+    local params = self.params
+    self:execute(params and unpack(params) or nil)
+end
+
 -------------------------
 -- call a function
+-- CCFunc(f, ...) -> f(...)
 -------------------------
-CCCall = CCClass(CCActionInstant)
+CCFunc = CCClass(CCCallBase)
 
-function CCCall:init(f, ...)
-    CCActionInstant.init(self)
-    self.func = f
-    self.params = arg
+function CCFunc:init(f, ...)
+    CCCallBase.init(self, ...)
+    self.func = f          
 end
     
-function CCCall:copy()
+function CCFunc:copy()
+    local fn = self.func
     local params = self.params    
-    
-    if not params then
-        return self.class(self.func)
-    else
-        return self.class(self.func, unpack(params))
-    end
+    return self.class(fn, params and unpack(params) or nil)
 end
 
-function CCCall:execute(...)
+function CCFunc:execute(...)
     self.func(...)
 end
-
-function CCCall:update(t)
-    local params = self.params
     
-    if not params then
-        self:execute()
-    else
-        self:execute(unpack(self.params))
-    end
-end
-
--- allow either . or : syntax
-local function skipSelf(any, self)
-    return type(self) == "table" and any or self
-end
-
--- return a CCallT action subclass for action that calls a function
-function CCCall:MakeCallerClass(f)
-    local fn = skipSelf(f, self)
-    local klass = CCClass(CCCall)
-    function klass:init(...) CCCall.init(self, fn, ...) end
-    function klass:copy() return klass(unpack(self.params)) end    
+function CCFunc:makeCaller(fn)
+    local klass = CCClass(self)
+    
+    function klass.init(inst, ...) self.init(inst, fn, ...) end
+    
+    function klass.copy(inst)
+        local params = inst.params
+        return klass(params and unpack(params) or nil)
+    end    
+        
     return klass    
 end
 
-CCCallT = CCClass(CCCall)
+---------------------------------------------------------------------------
+-- call a function, passing the action target as the first param
+-- CCFuncT(f, ...) -> f(actionTarget, ...)
+---------------------------------------------------------------------------
+CCFuncT = CCClass(CCFunc)
 
-function CCCallT:execute(...)
+function CCFuncT:execute(...)
     self.func(self.target, ...)
 end
 
--- return a CCallT action subclass for action that calls a function
-function CCCallT:MakeCallerClass(f)
-    local fn = skipSelf(f, self)    
-    local klass = CCClass(CCCallT)
-    function klass:init(...) CCCallT.init(self, fn, ...) end
-    function klass:copy() return klass(unpack(self.params)) end    
-    return klass    
+---------------------------------------------------------------------------
+-- call a method
+-- CCMethod(table, sel, ...) -> table.sel(table, ...)
+---------------------------------------------------------------------------
+CCMethod = CCClass(CCCallBase)
+
+function CCMethod:init(obj, selector, ...)
+    CCCallBase.init(self, ...)
+    self.obj_ = obj
+    self.selector_ = selector
+end
+    
+function CCMethod:copy()
+    local obj = self.obj_
+    local sel = self.selector_
+    local params = self.params
+    return self.class(obj, sel, params and unpack(params) or nil)
 end
 
---------------------------------------------------------------------------------
--- commonly used actions implemented in terms of CCCall(T)
---------------------------------------------------------------------------------
-CCShow = CCCallT:MakeCallerClass(function(t) t:setVisible(true) end)
-CCHide = CCCallT:MakeCallerClass(function(t) t:setVisible(false) end)
-CCAction:ImplementReverse(CCShow, CCHide)
+function CCMethod:execute(...)    
+    local obj = self.obj_
+    obj[self.selector_](obj, ...)
+end
 
-CCToggleVisibility = CCCallT:MakeCallerClass(function(t) t:setVisible(not t:visible()) end)
+---------------------------------------------------------------------------
+-- call a method passing the action target as the first parameter
+-- CCMethodT(table, sel, ...) -> table.sel(table, actionTarget, ...)
+---------------------------------------------------------------------------
+CCMethodT = CCClass(CCCallMethod)
 
-CCPlace = CCCallT:MakeCallerClass(function(t, x, y) t:setPosition(x, y) end)
+function CCMethodT:execute(...)
+    local obj = self.obj_    
+    obj[self.selector_](obj, self.target, ...)
+end
 
-CCPrint = CCCall:MakeCallerClass(function(str) ccPrint(str) end)
-CCPrintT = CCCallT:MakeCallerClass(function(target, str) ccPrint(tostring(target)..": "..str) end)
+---------------------------------------------------------------------------
+-- call a method on the action target, passing itself as the first parameter
+-- CCCallTarget(sel, ...) -> actionTarget.sel(actionTarget, ...)
+---------------------------------------------------------------------------
+CCCallTarget = CCClass(CCCallBase)
+
+function CCCallTarget:init(selector, ...)
+    CCCallBase.init(self, ...)
+    self.selector_ = selector
+end
+
+function CCCallTarget:copy()
+    local sel = self.selector_
+    local params = self.params
+    return self.class(sel, params and unpack(params) or nil)
+end
+
+function CCCallTarget:execute(...)
+    local target = self.target
+    target[self.selector_](target, ...)
+end
+
+---------------------------------------
+-- other instant actions
+---------------------------------------
+CCShow = CCFuncT:makeCaller(function(t) t:setVisible(true) end)
+CCHide = CCFuncT:makeCaller(function(t) t:setVisible(false) end)
+CCShow:impReverse(CCHide)
+
+CCToggleVisibility = CCFuncT:makeCaller(function(t) t:setVisible(not t:visible()) end)
+
+CCPlace = CCFuncT:makeCaller(function(t, x, y) t:setPosition(x, y) end)
+
+local function ccprint_(s) ccPrint("CCPrint: "..tostring(s)) end
+CCPrint = CCFunc:makeCaller(ccprint_)
+
+local function ccprintt_(t, s) 
+    ccPrint("CCPrint["..tostring(t).."]: "..tostring(s)) 
+end
+
+CCPrintT = CCFuncT:makeCaller(ccprintt_)
+    
 
 -- todo: flipX, flipY
+
     

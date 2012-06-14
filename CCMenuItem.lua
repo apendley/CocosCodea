@@ -3,7 +3,6 @@ CCMenuItem = CCClass(CCNode)
 
 ccProp{CCMenuItem, "isEnabled", setter="setEnabled"}
 ccProp{CCMenuItem, "isSelected", mode="r"}
-ccProp{CCMenuItem, "handler"}
 
 function CCMenuItem:init()
     CCNode.init(self)
@@ -14,6 +13,19 @@ end
 function CCMenuItem:cleanup()
     self.handler_ = nil
     CCNode.cleanup(self)
+end
+
+-- setHandler(function)
+-- setHandler(target, selector)
+function CCMenuItem:setHandler(...)
+    if #arg == 1 then
+        self.handler_ = arg[1]
+    elseif #arg == 2 then
+        self.handler_ = ccDelegate(arg[1], arg[2])
+        --self.handler_ = function() end
+    else
+        ccAssert(false, "CCMenuItem:setHandler -> invalid parameters")
+    end
 end
 
 function CCMenuItem:selected()
@@ -293,9 +305,7 @@ end
 --------------------
 CCMenuItemToggle = CCClass(CCMenuItem):include(CCRGBAMixin)
 
-ccProp{CCMenuItemToggle, "selectedIndex", mode="r"}
-
-local kCCCurrentItemTag = "1234"
+--ccProp{CCMenuItemToggle, "selectedIndex", mode="r"}
 
 function CCMenuItemToggle:init(...)
     CCMenuItem.init(self)
@@ -317,7 +327,7 @@ function CCMenuItemToggle:setSelectedIndex(index)
         if cur then cur:removeFromParent(false) end
         
         local item = self.subitems_[index]
-        self:addChild(item, 0, kCCCurrentItemTag)
+        self:addChild(item, 0)
         
         local s = item:contentSize()
         self:setContentSize(s)
