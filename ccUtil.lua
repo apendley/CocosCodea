@@ -75,13 +75,11 @@ end
 ------------------------
 ccFLT_EPSILON = 0.00000011920929
 
--- todo: rename to ccAffineTransform
-function affineTransform(pt, m)
+function ccAffineTransform(pt, m)
     return vec2(m[1]*pt.x+m[5]*pt.y + m[13], m[2]*pt.x+m[6]*pt.y+m[14])
 end
 
--- todo: rename to ccAffineTransform2
-function affineTransform2(x, y, m)
+function ccAffineTransform2(x, y, m)
     return m[1]*x+m[5]*y+m[13], m[2]*x+m[6]*y+m[14]
 end
 

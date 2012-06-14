@@ -48,7 +48,7 @@ end
 
 function ccRect:applyTransform(m)
     local x, y, w, h = self.x, self.y, self.w, self.h
-    local Min, Max, xform = math.min, math.max, affineTransform2
+    local Min, Max, xform = math.min, math.max, ccAffineTransform2
     
     local blx, bly = xform(0,0,m)
     local brx, bry = xform(w,0,m)

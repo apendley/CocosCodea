@@ -244,11 +244,11 @@ function CCNode:worldToNodeTransform()
 end
 
 function CCNode:convertToNodeSpace(worldPt)
-    return affineTransform(worldPt, self:worldToNodeTransform())
+    return ccAffineTransform(worldPt, self:worldToNodeTransform())
 end
 
 function CCNode:convertToWorldSpace(nodePt)
-    return affineTransform(nodePt, self:nodeToWorldTransform())
+    return ccAffineTransform(nodePt, self:nodeToWorldTransform())
 end
 
 function CCNode:convertToNodeSpaceAR(worldPt)
