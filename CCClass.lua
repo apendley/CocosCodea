@@ -131,6 +131,10 @@ end
 
 Object.static.subclassOf = _subclassOf
 Object.static.includes = _includes
+Object.static.synth = ccSynth
+Object.static.synthColor = ccSynthColor
+Object.static.synthColor4 = ccSynthColor4
+Object.static.synthVec2 = ccSynthVec2
 
 function Object:init() end
 

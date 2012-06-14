@@ -69,7 +69,7 @@ function MyLayer2:spawnDrop(dt)
         local y = ws.y + cs.y
         drop:setPosition(x, y)
 
-        local d = 1 + math.random() * 1
+        local d = 1 + math.random() * 1.5
         local fall = CCMoveTo(d, x, -cs.y)
         local remove = CCCallTarget("removeFromParent", true)
         drop:runAction(CCSequence(fall, remove))

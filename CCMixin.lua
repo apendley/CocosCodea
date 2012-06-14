@@ -1,14 +1,28 @@
 --CCMixin
+CCMixin = {__methods = {}}
+CCMixin.__methods.__index = CCMixin.__methods
+
+setmetatable(CCMixin, 
+{
+    __index = CCMixin.__methods,
+    __newindex = CCMixin.__methods,
+    __call = function(self, ...) return setmetatable({}, CCMixin.__methods) end,
+})
+
+CCMixin.synth = ccSynth
+CCMixin.synthColor = ccSynthColor
+CCMixin.synthColor4 = ccSynthColor4
+CCMixin.synthVec2 = ccSynthVec2
 
 -----------------------------------------------------------
 -- CCRGBAMixin
 --
 -- includers must forward init to CCRGBAMixin
 -----------------------------------------------------------
-CCRGBAMixin = {}
+CCRGBAMixin = CCMixin()
 
-ccSynthColor4{CCRGBAMixin, "color4", ivar="color_"}
-ccSynthColor{CCRGBAMixin, "color"}
+CCRGBAMixin:synthColor4{"color4", ivar="color_"}
+CCRGBAMixin:synthColor{"color"}
 
 function CCRGBAMixin:init(...)
     self.color_ = ccc4(ccc4VA(...))
@@ -33,9 +47,9 @@ end
 -- * include must implement either ccTouched or ccTouchBegan, with
 --   ccTouched having precedence if implemented
 -----------------------------------------------------------------------
-CCTargetedTouchMixin = {}
+CCTargetedTouchMixin = CCMixin()
 
-ccSynth{CCTargetedTouchMixin, "isTouchEnabled", mode="r"}
+CCTargetedTouchMixin:synth{"isTouchEnabled", mode="r"}
 
 function CCTargetedTouchMixin:init()
     self.isTouchEnabled_ = false
@@ -77,9 +91,9 @@ end
 -----------------------------------------------------------------------
 -- CCLabelMixin
 -----------------------------------------------------------------------
-CCLabelMixin = {}
+CCLabelMixin = CCMixin()
 
-ccSynth{CCLabelMixin, "string", "labelString_"}
+CCLabelMixin:synth{"string", ivar="labelString_"}
 
 function CCLabelMixin:init(str)
     self:setString(str)
@@ -90,13 +104,12 @@ end
 -- CCMenuItemLabelMixin
 -- this class implements CCRGBAMixin, so shouldn't include both.
 -----------------------------------------------------------------------
-CCMenuItemLabelMixin = {}
+CCMenuItemLabelMixin = CCMixin()
 
-local kCCZoomActionTag = 19191919
+local kCCZoomActionTag = 0xc0c05002
 
-ccSynth{CCMenuItemLabelMixin, "label", mode="r"}
-ccSynth{CCMenuItemLabelMixin, "disabledColor"}
-
+CCMenuItemLabelMixin:synth{"label", mode="r"}
+CCMenuItemLabelMixin:synthColor{"disabledColor"}
 
 function CCMenuItemLabelMixin:init(label)
     self:setLabel(label)    
@@ -202,11 +215,11 @@ end
 -- CCMenuItemSpriteMixin
 -- this class implements CCRGBAMixin, so shouldn't include both.
 -----------------------------------------------------------------------
-CCMenuItemSpriteMixin = {}    
+CCMenuItemSpriteMixin = CCMixin()
 
-ccSynth{CCMenuItemSpriteMixin, "normalImage", mode="r"}
-ccSynth{CCMenuItemSpriteMixin, "selectedImage", mode="r"}
-ccSynth{CCMenuItemSpriteMixin, "disabledImage", mode="r"}
+CCMenuItemSpriteMixin:synth{"normalImage", mode="r"}
+CCMenuItemSpriteMixin:synth{"selectedImage", mode="r"}
+CCMenuItemSpriteMixin:synth{"disabledImage", mode="r"}
     
 function CCMenuItemSpriteMixin:init(normalSprite, selectedSprite, disabledSprite)
     ccAssert(normalSprite)

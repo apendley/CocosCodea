@@ -4,10 +4,8 @@ local function genSetter(propName)
     return "set" .. string.upper(string.sub(propName, 1, 1)) .. string.sub(propName, 2)
 end
 
-local function ccSynthesize(t, genGetFn, genSetFn)
-    local klass = t[1]
-    local propName = t[2]
-    --local ivarName = t[3] or propName .. "_"
+local function ccSynthesize(klass, t, genGetFn, genSetFn)
+    local propName = t[1]
     local ivarName = t["ivar"] or propName .. "_"
     
     ccAssert(klass and propName)
@@ -27,7 +25,7 @@ local function ccSynthesize(t, genGetFn, genSetFn)
     end    
 end
 
-function ccSynth(t)
+function ccSynth(klass, t)
     local function genGet(ivarName)
         return function(inst) ccAssert(inst) return inst[ivarName] end
     end
@@ -36,10 +34,10 @@ function ccSynth(t)
         return function(inst, value) inst[ivarName] = value end
     end    
     
-    ccSynthesize(t, genGet, genSet)
+    ccSynthesize(klass, t, genGet, genSet)
 end
 
-function ccSynthColor4(t)
+function ccSynthColor4(klass, t)
     local function genGet(ivarName)
         return function(inst)
             return ccc4Copy(inst[ivarName])
@@ -52,10 +50,10 @@ function ccSynthColor4(t)
         end
     end        
     
-   ccSynthesize(t, genGet, genSet)
+   ccSynthesize(klass, t, genGet, genSet)
 end
 
-function ccSynthColor(t)
+function ccSynthColor(klass, t)
     local function genGet(ivarName)
         return function(inst)
             return ccc3Copy(inst[ivarName])
@@ -74,11 +72,11 @@ function ccSynthColor(t)
         end
     end        
     
-   ccSynthesize(t, genGet, genSet)
+   ccSynthesize(klass, t, genGet, genSet)
 end
 
 
-function ccSynthVec2(t)
+function ccSynthVec2(klass, t)
     local function genGet(ivarName)
         return function(inst)
             local v = inst[ivarName]
@@ -94,5 +92,5 @@ function ccSynthVec2(t)
         end
     end    
      
-    ccSynthesize(t, genGet, genSet)
+    ccSynthesize(klass, t, genGet, genSet)
 end

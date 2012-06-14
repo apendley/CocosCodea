@@ -4,9 +4,9 @@ ccRect.__methods.__index = ccRect.__methods
 
 setmetatable(ccRect, 
 {
-    __call = function(self, ...) return self:new(...) end,
-    __index = function(_,k) return ccRect.__methods[k] end,
+    __index = ccRect.__methods,
     __newindex = ccRect.__methods,
+    __call = function(self, ...) return self:new(...) end,
 })
 
 function ccRect:new(...)

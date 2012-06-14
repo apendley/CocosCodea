@@ -1,8 +1,8 @@
 --CCMenuItem
 CCMenuItem = CCClass(CCNode)
 
-ccSynth{CCMenuItem, "isEnabled", set="setEnabled"}
-ccSynth{CCMenuItem, "isSelected", mode="r"}
+CCMenuItem:synth{"isEnabled", set="setEnabled"}
+CCMenuItem:synth{"isSelected", mode="r"}
 
 function CCMenuItem:init()
     CCNode.init(self)
@@ -256,10 +256,10 @@ end
 --------------------
 CCMenuItemFont = CCClass(CCMenuItemLabel)
 
-ccSynth{CCMenuItemFont, "fontSize", mode="r"}
-ccSynth{CCMenuItemFont, "fontName", mode="r"}
-ccSynth{CCMenuItemFont, "alignment", mode="r"}
-ccSynth{CCMenuItemFont, "wrapWidth", mode="r"}
+CCMenuItemFont:synth{"fontSize", mode="r"}
+CCMenuItemFont:synth{"fontName", mode="r"}
+CCMenuItemFont:synth{"alignment", mode="r"}
+CCMenuItemFont:synth{"wrapWidth", mode="r"}
 
 function CCMenuItemFont:init(str, fontName, pointSize, align, wrapWidth)
     local label = CCLabelTTF(str, fontName, pointSize, align, wrapWidth)

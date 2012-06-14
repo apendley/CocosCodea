@@ -1,7 +1,7 @@
 CCSprite = CCClass(CCNode):include(CCRGBAMixin)
 
-ccSynth{CCSprite, "flipX"}
-ccSynth{CCSprite, "flipY"}
+CCSprite:synth{"flipX"}
+CCSprite:synth{"flipY"}
 
 function CCSprite:init(spriteNameOrImage)
     CCNode.init(self)
