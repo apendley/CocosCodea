@@ -80,7 +80,7 @@ function ccSynthVec2(klass, t)
     local function genGet(ivarName)
         return function(inst)
             local v = inst[ivarName]
-            return vec2(v.x, v.y)
+            return ccVec2(v.x, v.y)
         end
     end
 

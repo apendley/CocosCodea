@@ -326,9 +326,9 @@ function CCMoveTo:init(duration, ...)
     
     if #arg == 1 then
         local p = arg[1]
-        self.endPosition = vec2(p.x, p.y)
+        self.endPosition = ccVec2(p.x, p.y)
     else
-        self.endPosition = vec2(arg[1], arg[2])
+        self.endPosition = ccVec2(arg[1], arg[2])
     end
 end
 
@@ -359,9 +359,9 @@ function CCMoveBy:init(duration, ...)
    
     if #arg == 1 then
         local p = arg[1]
-        self.delta = vec2(p.x, p.y)
+        self.delta = ccVec2(p.x, p.y)
     else
-        self.delta = vec2(arg[1], arg[2])
+        self.delta = ccVec2(arg[1], arg[2])
     end    
 end
 
@@ -371,7 +371,7 @@ end
 
 function CCMoveBy:startWithTarget(target)
     local delta = self.delta
-    local p = vec2(delta.x, delta.y)
+    local p = ccVec2(delta.x, delta.y)
     CCMoveTo.startWithTarget(self, target)
     self.delta = p
 end
@@ -417,7 +417,7 @@ function CCJumpBy:update(t)
     local y = self.height_ * 4 * frac * (1-frac)
     y = y + self.delta_.y * t
     local x = self.delta_.x * t
-    self.target:setPosition(self.startPosition_ + vec2(x, y))
+    self.target:setPosition(self.startPosition_ + ccVec2(x, y))
 end
 
 ----------------------

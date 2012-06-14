@@ -57,7 +57,7 @@ function CCMenu:registerWithTouchDispatcher()
 end
 
 function CCMenu:itemForTouch(touch)
-    local p = vec2(touch.x, touch.y)
+    local p = ccVec2(touch.x, touch.y)
     p = CCSharedDirector():convertToGL(p)
     
     for i,item in ipairs(self.children) do

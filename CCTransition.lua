@@ -184,7 +184,7 @@ function CCTransitionJumpZoom:onEnter()
        
     local d = self.duration_
     local d_4 = d *.25
-    local jump = CCJumpBy(d_4, vec2(-s.x, 0), s.x*.25, 2)
+    local jump = CCJumpBy(d_4, ccVec2(-s.x, 0), s.x*.25, 2)
     
     outScene:runAction(CCSequence(CCScaleTo(d_4, .5), jump))
     

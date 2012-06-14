@@ -80,7 +80,7 @@ function MyLayer2:ccTouched(touch)
     local ell = self.ellipse_
     
     if touch.state == BEGAN then
-        local p = vec2(touch.x, touch.y)
+        local p = ccVec2(touch.x, touch.y)
         p = CCSharedDirector():convertToGL(p)
         
         if ell:boundingBox():containsPoint(p) then
@@ -89,7 +89,7 @@ function MyLayer2:ccTouched(touch)
             return true
         end
     elseif touch.state == MOVING then
-        ell:setPosition(ell:position() + vec2(touch.deltaX, touch.deltaY))
+        ell:setPosition(ell:position() + ccVec2(touch.deltaX, touch.deltaY))
     else
         ell:setStrokeColor(255, 128, 128)
         self:reorderChild(ell, -1)

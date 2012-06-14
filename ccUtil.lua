@@ -55,7 +55,7 @@ function ccc3Copy(c) local r,g,b = ccc3Unpack(c) return ccc3(r, g, b, 255) end
 function ccc4Copy(c) return ccc4(ccc4Unpack(c)) end
 
 ------------------------
--- vec2 utilities
+-- ccVec2 utilities
 ------------------------
 function ccVec2VA(...)
     if #arg == 0 then
@@ -70,13 +70,21 @@ function ccVec2VA(...)
     end
 end
 
+function ccVec2Copy(v)
+	return ccVec2(v.x, v.y)
+end
+
+function ccVec2Unpack(v)
+	return v.x, v.y
+end
+
 ------------------------
 -- math utilities
 ------------------------
 ccFLT_EPSILON = 0.00000011920929
 
 function ccAffineTransform(pt, m)
-    return vec2(m[1]*pt.x+m[5]*pt.y + m[13], m[2]*pt.x+m[6]*pt.y+m[14])
+    return ccVec2(m[1]*pt.x+m[5]*pt.y + m[13], m[2]*pt.x+m[6]*pt.y+m[14])
 end
 
 function ccAffineTransform2(x, y, m)

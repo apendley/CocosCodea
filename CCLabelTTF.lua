@@ -18,7 +18,7 @@ function CCLabelTTF:init(str, fnt, fntSize, alignment, wrapWidth)
     self.alignment_ = alignment_ or LEFT
     self.wrapWidth_ = wrapWidth_ or 0
     self.hasShadow_ = false
-    self.shadowOffset_ = vec2(2,-2)
+    self.shadowOffset_ = ccVec2(2,-2)
         
     CCLabelMixin.init(self, str)
 end

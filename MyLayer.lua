@@ -41,7 +41,7 @@ function MyLayer:init()
             local x = math.random(50-range/2, 50+range/2) / 100
             local y = math.random(50-range/2, 50+range/2) / 100
             local ap = target:anchorPoint()
-            local tween = CCTween(duration, "setAnchorPoint", ap, vec2(x,y))
+            local tween = CCTween(duration, "setAnchorPoint", ap, ccVec2(x,y))
             target:runAction(tween)
         end
         

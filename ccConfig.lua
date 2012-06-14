@@ -25,3 +25,4 @@ ccPrintPair = printPair_
 ccPrintArray = printArray_
 ccPrintTable = printTable_
 ccColor = color
+ccVec2 = vec2

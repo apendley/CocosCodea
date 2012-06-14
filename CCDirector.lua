@@ -30,7 +30,7 @@ function CCDirector:init()
     self.frames_ = 0
     self.time_ = 0
     
-    self.winSize_ = vec2(WIDTH, HEIGHT)
+    self.winSize_ = ccVec2(WIDTH, HEIGHT)
     
     self.sceneStack_ = {}
 end

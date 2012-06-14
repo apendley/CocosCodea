@@ -12,11 +12,11 @@ CCNode:synthVec2{"anchorPoint", mode="r"}
 CCNode:synthVec2{"contentSize", mode="r"}
 
 function CCNode:init()
-    self.position_ = vec2(0,0)
-    self.anchorPoint_ = vec2(0,0)
-    self.anchorPointInPoints_ = vec2(0,0)
+    self.position_ = ccVec2(0,0)
+    self.anchorPoint_ = ccVec2(0,0)
+    self.anchorPointInPoints_ = ccVec2(0,0)
     self.ignoreAnchorPointForPosition_ = false
-    self.contentSize_ = vec2(0,0)
+    self.contentSize_ = ccVec2(0,0)
     self.rotation_ = 0
     self.scaleX_ = 1
     self.scaleY_ = 1
@@ -201,7 +201,7 @@ function CCNode:nodeToParentTransform()
             y = y + app.y
         end        
         
-        if app ~= vec2(0, 0) then
+        if app ~= ccVec2(0, 0) then
             x = x + (c * -app.x * sx) + (-s * -app.y * sy)
             y = y + (s * -app.x * sx) + (c * -app.y * sy)
         end
