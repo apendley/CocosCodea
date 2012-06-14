@@ -317,7 +317,7 @@ function CCMenuItemToggle:init(...)
     --self.subitems_ = arrayCopy(arg) or {}
     
     for i,item in ipairs(self.subitems_) do
-        item[kToggleTagKey] = kInvalidTag
+        item:setTag(kInvalidTag, kToggleTagKey)
     end
     
     self:setSelectedIndex(1)    
@@ -332,16 +332,14 @@ function CCMenuItemToggle:setSelectedIndex(index)
     if index ~= self.selectedIndex_ then
         self.selectedIndex_ = index
         
-        local cur = self:getChildByUserTag(kToggleTagKey, kCurrentItemTag)
+        local cur = self:getChildByTag(kCurrentItemTag, kToggleTagKey)
         if cur then 
-            cur[kToggleTagKey] = kInvalidTag
+            cur:setTag(kInvalidTag, kToggleTagKey)
             cur:removeFromParent(false)
-            
-            cur = self:getChildByUserTag(kToggleTagKey, kCurrentItemTag)
         end
         
         local item = self.subitems_[index]
-        item[kToggleTagKey] = kCurrentItemTag
+        item:setTag(kCurrentItemTag, kToggleTagKey)
         self:addChild(item, 0)
         
         local s = item:contentSize()

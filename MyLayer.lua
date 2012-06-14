@@ -4,10 +4,11 @@ MyLayer = CCClass(CCLayer)
 function MyLayer:init()
     CCLayer.init(self)
     
+    local size = self:contentSize()    
+    
     -- status label
     do
         local label = CCLabelTTF("", "AmericanTypewriter", 40, CENTER)
-        local size = self:contentSize()
         label:setAnchorPoint(0.5, 1)
         label:setPosition(size.x/2, size.y)
         label:setHasShadow(true)
@@ -29,10 +30,7 @@ function MyLayer:init()
         local item = CCMenuItemSprite(normal, selected)
         menu:addChild(item, 0, "A Tree!")
         item:setHandler(self, "itemSelected")
-
-        local pos = self:contentSize()/2
-        pos.x = pos.x - 100
-        item:setPosition(pos)
+        item:setPosition(size.x/2 - 100, size.y/2)
         item:setScale(2)
         
         local duration = .2
@@ -78,11 +76,8 @@ function MyLayer:init()
         
         local item = CCMenuItemBackedLabel(label, normal, selected)
         item:setHandler(self, "itemSelected")
+        item:setPosition(size.x/2 + 100, size.y/2)        
         menu:addChild(item, 0, "Hello!")
-        
-        local pos = self:contentSize()/2
-        pos.x = pos.x + 100
-        item:setPosition(pos)
     end
     
     -- a button to exit the scene
@@ -92,15 +87,11 @@ function MyLayer:init()
             CCSharedDirector():replaceScene(t)
         end
         
-        local item = CCMenuItemFont("Go To Scene 2", "Georgia", 30, CENTER)
+        local item = CCMenuItemFont("Next Scene", "Georgia", 30, CENTER)
         item:setHandler(nextScene)
-        menu:addChild(item)
-                
-        item:setColor(255, 255, 255)
-        
-        local pos = self:contentSize() / 2
-        pos.y = pos.y + 200
-        item:setPosition(pos)
+        item:setColor(255, 255, 255)        
+        item:setPosition(size.x/2, size.y/2 + 200)
+        menu:addChild(item)        
         
         local label = item:label()
         label:setHasShadow(true)
@@ -143,9 +134,7 @@ function MyLayer:init()
                 
         local s = 5
         toggle:setScale(5)                
-        local pos = self:contentSize()/2
-        pos.x = (toggle:contentSize().x * s) * 0.5 + 20
-        toggle:setPosition(pos)
+        toggle:setPosition((toggle:contentSize().x * s) * 0.5 + 20, size.y/2)
     end
 end
 

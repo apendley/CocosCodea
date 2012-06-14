@@ -7,6 +7,7 @@ CCNode:synth{"scaleX", mode="r"}
 CCNode:synth{"scaleY", mode="r"}
 CCNode:synth{"scale", ivar="scaleX_", mode="r"}
 CCNode:synth{"ignoreAnchorPointForPosition", mode="r"}
+CCNode:synth{"userData"}
 CCNode:synthVec2{"position", mode="r"}
 CCNode:synthVec2{"anchorPoint", mode="r"}
 CCNode:synthVec2{"contentSize", mode="r"}
@@ -61,17 +62,32 @@ function CCNode:addChild(child, z, tag)
     child.parent = self
 end
 
-function CCNode:getChildByTag(tag)
-    for i,v in ipairs(self.children) do
-        if v.tag == tag then return v end
+function CCNode:setTag(tag, key)
+    if key then
+        if self.userTags_ == nil then
+            self.userTags_ = {}
+        end
+        
+        self.userTags_[key] = tag
+    else
+        self.tag = tag
     end
 end
 
-function CCNode:getChildByUserTag(tagKey, tagValue)
-    for i,v in ipairs(self.children) do
-        local val = v[tagKey]
-        local found = (val == tagValue)
-        if found then return v end
+-- todo: rename tag ivar to tag_ so we can rename this to tag(key)
+function CCNode:getTag(key)
+    return key and self.userTags_[key] or self.tag
+end
+
+function CCNode:getChildByTag(tag, key)
+    if key then
+        for i,child in ipairs(self.children) do
+            if child.userTags_[key] == tag then return child end
+        end        
+    else
+        for i,child in ipairs(self.children) do
+            if child.tag == tag then return child end
+        end                
     end
 end
 
@@ -108,8 +124,8 @@ function CCNode:removeChild(child, cleanup)
     end
 end
 
-function CCNode:removeChildByTag(tag, cleanup)
-    child = self:getChildByTag(tag)
+function CCNode:removeChildByUserTag(tag, key, cleanup)
+    child = self:getChildByTag(tag, key)
     
     if child then
         -- default cleanup = true
@@ -118,15 +134,8 @@ function CCNode:removeChildByTag(tag, cleanup)
     end
 end
 
-function CCNode:removeChildByUserTag(tag, cleanup)
-    child = self:getChildByUserTag(tag)
-    
-    if child then
-        -- default cleanup = true
-        if cleanup == nil then cleanup = true end
-        self:removeChild(child, cleanup)
-        
-    end
+function CCNode:removeChildByTag(tag, cleanup)
+    self:removeChildByUserTag(tag, nil, cleanup)
 end
 
 function CCNode:removeAllChildren(cleanup_)

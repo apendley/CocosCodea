@@ -3,30 +3,27 @@ MyLayer2 = CCClass(CCLayer)
 function MyLayer2:init()
     CCLayer.init(self)
     
+    local size = self:contentSize()
+    
     -- make a button to exit scene    
     local exitButton
     do    
-        local function resetScene()
-            local t = CCTransitionFade(0.75, MyLayer:scene(), 0)
+        local function nextScene()
+            local t = CCTransitionFade(0.75, MyRetinaTest:scene(), 0)
             CCSharedDirector():replaceScene(t)
         end
         
-        local item = CCMenuItemFont("Go To Scene 1", "Georgia", 30, CENTER)
-        item:setHandler(resetScene)
+        local item = CCMenuItemFont("Next Scene", "Georgia", 30, CENTER)
+        item:setHandler(nextScene)
         item:setColor(64, 64, 255)
-        
-        local pos = self:contentSize()/2
-        pos.y = pos.y + 200
-        item:setPosition(pos)
+        item:setPosition(size.x/2, size.y/2 + 200)
         exitButton = item
     end
     
     -- make an ellipse that we can drag around
     do
         local ell = CCNodeEllipse(200, ccc4(192, 192, 192, 192))
-        local pos = self:contentSize()/2
-        pos.y = pos.y - 200
-        ell:setPosition(pos)
+        ell:setPosition(size.x/2, size.y/2 - 100)
         ell:setStrokeEnabled(true)
         ell:setStrokeColor(255, 128, 128)
         ell:setStrokeWidth(5)
