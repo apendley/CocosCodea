@@ -23,6 +23,13 @@ function CCSprite:draw()
     local s = self.contentSize_    
     local w = self.flipX_ and -s.x or s.x
     local h = self.flipY_ and -s.y or s.y
+    
+    -- see ccConfig
+    if CC_ENABLE_CODEA_RETINA_SUPPORT then
+        w = w * ContentScaleFactor
+        h = h * ContentScaleFactor
+    end
+    
     if self.sprite_ then sprite(self.sprite_, s.x/2, s.y/2, w, h) end
     
     -- debug draw sprite rect

@@ -36,8 +36,9 @@ function CCMenuItem:unselected()
     self.isSelected_ = false
 end
 
-function CCMenuItem:activate()
-    if self.isEnabled_ and self.handler_ then
+function CCMenuItem:activate(callHandler)
+    if not callHandler then callHandler = true end    
+    if callHandler and self.isEnabled_ and self.handler_ then
         self:handler_()
     end
 end
@@ -111,10 +112,10 @@ function CCMenuItemLabel:init(label)
     CCMenuItemLabelMixin.init(self, label)
 end
 
-function CCMenuItemLabel:activate()
+function CCMenuItemLabel:activate(callHandler)    
     if self.isEnabled_ then
         CCMenuItemLabelMixin.activate(self)
-        CCMenuItem.activate(self)
+        CCMenuItem.activate(self, callHandler)
     end
 end
 
@@ -188,7 +189,7 @@ function CCMenuItemBackedLabel:updateContentSize()
     end
 end
 
-function CCMenuItemBackedLabel:activate()
+function CCMenuItemBackedLabel:activate(callHandler)
     if self.isEnabled_ then
         CCMenuItemLabelMixin.activate(self)
         CCMenuItem.activate(self)
@@ -305,11 +306,21 @@ end
 --------------------
 CCMenuItemToggle = CCClass(CCMenuItem):include(CCRGBAMixin)
 
+local kToggleTagKey = "menuItemToggleTag"
+local kInvalidTag = -1
+local kCurrentItemTag = 0xc0c05001
+
 function CCMenuItemToggle:init(...)
     CCMenuItem.init(self)
     CCRGBAMixin.init(self)
     self.subitems_ = arg
-    self:setSelectedIndex(1)
+    --self.subitems_ = arrayCopy(arg) or {}
+    
+    for i,item in ipairs(self.subitems_) do
+        item[kToggleTagKey] = kInvalidTag
+    end
+    
+    self:setSelectedIndex(1)    
 end
 
 function CCMenuItemToggle:cleanup()
@@ -321,10 +332,16 @@ function CCMenuItemToggle:setSelectedIndex(index)
     if index ~= self.selectedIndex_ then
         self.selectedIndex_ = index
         
-        local cur = self:getChildByTag(kCCCurrentItemTag)
-        if cur then cur:removeFromParent(false) end
+        local cur = self:getChildByUserTag(kToggleTagKey, kCurrentItemTag)
+        if cur then 
+            cur[kToggleTagKey] = kInvalidTag
+            cur:removeFromParent(false)
+            
+            cur = self:getChildByUserTag(kToggleTagKey, kCurrentItemTag)
+        end
         
         local item = self.subitems_[index]
+        item[kToggleTagKey] = kCurrentItemTag
         self:addChild(item, 0)
         
         local s = item:contentSize()
@@ -351,6 +368,8 @@ end
 
 function CCMenuItemToggle:activate()
     if self.isEnabled_ then
+        -- this was missing from cocos2d-iphone, but it seems important...
+        self:selectedItem():activate(false)
         local newIndex = self.selectedIndex_ + 1
         if newIndex > #self.subitems_ then newIndex = 1 end
         self:setSelectedIndex(newIndex)

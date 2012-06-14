@@ -65,8 +65,14 @@ function CCNode:getChildByTag(tag)
     for i,v in ipairs(self.children) do
         if v.tag == tag then return v end
     end
-    
-    return nil
+end
+
+function CCNode:getChildByUserTag(tagKey, tagValue)
+    for i,v in ipairs(self.children) do
+        local val = v[tagKey]
+        local found = (val == tagValue)
+        if found then return v end
+    end
 end
 
 function CCNode:reorderChild(child, z)
@@ -109,6 +115,17 @@ function CCNode:removeChildByTag(tag, cleanup)
         -- default cleanup = true
         if cleanup == nil then cleanup = true end
         self:removeChild(child, cleanup)
+    end
+end
+
+function CCNode:removeChildByUserTag(tag, cleanup)
+    child = self:getChildByUserTag(tag)
+    
+    if child then
+        -- default cleanup = true
+        if cleanup == nil then cleanup = true end
+        self:removeChild(child, cleanup)
+        
     end
 end
 
