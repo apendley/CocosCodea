@@ -2,7 +2,7 @@ CCMenu = CCClass(CCLayer):include(CCRGBAMixin)
 
 kCCMenuHandlerPriority = -128
 
-ccProp{CCMenu, "isEnabled", setter="setEnabled"}
+ccSynth{CCMenu, "isEnabled", set="setEnabled"}
 
 local kCCMenuStateWaiting = 0
 local kCCMenuStateTrackingTouch = 1

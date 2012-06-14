@@ -1,7 +1,7 @@
 -- CCActionInterval
 CCActionInterval = CCClass(CCFiniteTimeAction)
 
-ccProp{CCActionInterval, "duration", mode="r"}
+ccSynth{CCActionInterval, "duration", mode="r"}
 
 function CCActionInterval:init(duration)
     CCFiniteTimeAction.init(self, duration or ccFLT_EPSILON)

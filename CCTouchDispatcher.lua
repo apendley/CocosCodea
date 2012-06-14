@@ -1,6 +1,6 @@
 CCTouchDispatcher = CCClass()
 
-ccProp{CCTouchDispatcher, "dispatchEvents"}
+ccSynth{CCTouchDispatcher, "dispatchEvents"}
 
 kCCTouchPriorityMin = -10000
 

@@ -1,12 +1,12 @@
 CCDirector = CCClass()
 
-ccProp{CCDirector, "scheduler"}
-ccProp{CCDirector, "actionManager"}
-ccProp{CCDirector, "touchDispatcher", mode="r"}
-ccProp{CCDirector, "runningScene", mode="r"}
-ccProp{CCDirector, "sendCleanupToScene", mode="r"}
-ccProp{CCDirector, "showFPS", setter="showFPS", getter="isShowingFPS"}
-ccPropVec2{CCDirector, "winSize"}
+ccSynth{CCDirector, "scheduler"}
+ccSynth{CCDirector, "actionManager"}
+ccSynth{CCDirector, "touchDispatcher", mode="r"}
+ccSynth{CCDirector, "runningScene", mode="r"}
+ccSynth{CCDirector, "sendCleanupToScene", mode="r"}
+ccSynth{CCDirector, "showFPS", set="showFPS", get="isShowingFPS"}
+ccSynthVec2{CCDirector, "winSize"}
 
 -- singleton
 local di_ = nil

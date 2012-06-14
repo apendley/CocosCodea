@@ -1,13 +1,13 @@
 --CCLabelTTF
 CCLabelTTF = CCClass(CCNode):include(CCRGBAMixin):include(CCLabelMixin)
 
-ccProp{CCLabelTTF, "fontName", "font_", mode="r"}
-ccProp{CCLabelTTF, "fontSize", mode="r"}
-ccProp{CCLabelTTF, "alignment", mode="r"}
-ccProp{CCLabelTTF, "wrapWidth", mode="r"}
-ccProp{CCLabelTTF, "hasShadow"}
-ccPropVec2{CCLabelTTF, "shadowOffset"}
-ccPropColor4{CCLabelTTF, "shadowColor"}
+ccSynth{CCLabelTTF, "fontName", ivar="font_", mode="r"}
+ccSynth{CCLabelTTF, "fontSize", mode="r"}
+ccSynth{CCLabelTTF, "alignment", mode="r"}
+ccSynth{CCLabelTTF, "wrapWidth", mode="r"}
+ccSynth{CCLabelTTF, "hasShadow"}
+ccSynthVec2{CCLabelTTF, "shadowOffset"}
+ccSynthColor4{CCLabelTTF, "shadowColor"}
 
 function CCLabelTTF:init(str, fnt, fntSize, alignment, wrapWidth)
     CCNode.init(self)

@@ -10,7 +10,7 @@
 		<string>Main</string>
 		<string>ccConfig</string>
 		<string>ccUtil</string>
-		<string>ccProp</string>
+		<string>ccSynth</string>
 		<string>ccArray</string>
 		<string>ccRect</string>
 		<string>CCMixin</string>

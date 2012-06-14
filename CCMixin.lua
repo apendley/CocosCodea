@@ -7,8 +7,8 @@
 -----------------------------------------------------------
 CCRGBAMixin = {}
 
-ccPropColor{CCRGBAMixin, "color"}
-ccPropColor{CCRGBAMixin, "color", "color_"}
+ccSynthColor4{CCRGBAMixin, "color4", ivar="color_"}
+ccSynthColor{CCRGBAMixin, "color"}
 
 function CCRGBAMixin:init(...)
     self.color_ = ccc4(ccc4VA(...))
@@ -35,7 +35,7 @@ end
 -----------------------------------------------------------------------
 CCTargetedTouchMixin = {}
 
-ccProp{CCTargetedTouchMixin, "isTouchEnabled", mode="r"}
+ccSynth{CCTargetedTouchMixin, "isTouchEnabled", mode="r"}
 
 function CCTargetedTouchMixin:init()
     self.isTouchEnabled_ = false
@@ -79,7 +79,7 @@ end
 -----------------------------------------------------------------------
 CCLabelMixin = {}
 
-ccProp{CCLabelMixin, "string", "labelString_"}
+ccSynth{CCLabelMixin, "string", "labelString_"}
 
 function CCLabelMixin:init(str)
     self:setString(str)
@@ -94,8 +94,8 @@ CCMenuItemLabelMixin = {}
 
 local kCCZoomActionTag = 19191919
 
-ccProp{CCMenuItemLabelMixin, "label", mode="r"}
-ccProp{CCMenuItemLabelMixin, "disabledColor"}
+ccSynth{CCMenuItemLabelMixin, "label", mode="r"}
+ccSynth{CCMenuItemLabelMixin, "disabledColor"}
 
 
 function CCMenuItemLabelMixin:init(label)
@@ -204,9 +204,9 @@ end
 -----------------------------------------------------------------------
 CCMenuItemSpriteMixin = {}    
 
-ccProp{CCMenuItemSpriteMixin, "normalImage", mode="r"}
-ccProp{CCMenuItemSpriteMixin, "selectedImage", mode="r"}
-ccProp{CCMenuItemSpriteMixin, "disabledImage", mode="r"}
+ccSynth{CCMenuItemSpriteMixin, "normalImage", mode="r"}
+ccSynth{CCMenuItemSpriteMixin, "selectedImage", mode="r"}
+ccSynth{CCMenuItemSpriteMixin, "disabledImage", mode="r"}
     
 function CCMenuItemSpriteMixin:init(normalSprite, selectedSprite, disabledSprite)
     ccAssert(normalSprite)

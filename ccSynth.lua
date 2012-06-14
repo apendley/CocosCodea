@@ -1,13 +1,14 @@
---ccProp
+--ccSynth
 
 local function genSetter(propName)
     return "set" .. string.upper(string.sub(propName, 1, 1)) .. string.sub(propName, 2)
 end
 
-local function ccSynth(t, genGetFn, genSetFn)
+local function ccSynthesize(t, genGetFn, genSetFn)
     local klass = t[1]
     local propName = t[2]
-    local ivarName = t[3] or propName .. "_"
+    --local ivarName = t[3] or propName .. "_"
+    local ivarName = t["ivar"] or propName .. "_"
     
     ccAssert(klass and propName)
     
@@ -16,17 +17,17 @@ local function ccSynth(t, genGetFn, genSetFn)
     local write = string.find(mode, "w") ~= nil    
 
     if read then
-        local getter = t["getter"] or propName
+        local getter = t["get"] or propName
         klass[getter] = genGetFn(ivarName)
     end
     
     if write then
-        local setter = t["setter"] or genSetter(propName)
+        local setter = t["set"] or genSetter(propName)
         klass[setter] = genSetFn(ivarName)
     end    
 end
 
-function ccProp(t)
+function ccSynth(t)
     local function genGet(ivarName)
         return function(inst) ccAssert(inst) return inst[ivarName] end
     end
@@ -35,10 +36,10 @@ function ccProp(t)
         return function(inst, value) inst[ivarName] = value end
     end    
     
-    ccSynth(t, genGet, genSet)
+    ccSynthesize(t, genGet, genSet)
 end
 
-function ccPropColor4(t)
+function ccSynthColor4(t)
     local function genGet(ivarName)
         return function(inst)
             return ccc4Copy(inst[ivarName])
@@ -51,10 +52,10 @@ function ccPropColor4(t)
         end
     end        
     
-   ccSynth(t, genGet, genSet)
+   ccSynthesize(t, genGet, genSet)
 end
 
-function ccPropColor(t)
+function ccSynthColor(t)
     local function genGet(ivarName)
         return function(inst)
             return ccc3Copy(inst[ivarName])
@@ -73,11 +74,11 @@ function ccPropColor(t)
         end
     end        
     
-   ccSynth(t, genGet, genSet)
+   ccSynthesize(t, genGet, genSet)
 end
 
 
-function ccPropVec2(t)
+function ccSynthVec2(t)
     local function genGet(ivarName)
         return function(inst)
             local v = inst[ivarName]
@@ -93,5 +94,5 @@ function ccPropVec2(t)
         end
     end    
      
-    ccSynth(t, genGet, genSet)
+    ccSynthesize(t, genGet, genSet)
 end

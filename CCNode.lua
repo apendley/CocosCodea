@@ -1,15 +1,15 @@
 --CCNode
 CCNode = CCClass()
 
-ccProp{CCNode, "visible"}
-ccProp{CCNode, "rotation", mode = "r"}
-ccProp{CCNode, "scaleX", mode = "r"}
-ccProp{CCNode, "scaleY", mode = "r"}
-ccProp{CCNode, "scale", "scaleX_", mode = "r"}
-ccProp{CCNode, "ignoreAnchorPointForPosition", mode = "r"}
-ccPropVec2{CCNode, "position", mode = "r"}
-ccPropVec2{CCNode, "anchorPoint", mode = "r"}
-ccPropVec2{CCNode, "contentSize", mode = "r"}
+ccSynth{CCNode, "visible"}
+ccSynth{CCNode, "rotation", mode="r"}
+ccSynth{CCNode, "scaleX", mode="r"}
+ccSynth{CCNode, "scaleY", mode="r"}
+ccSynth{CCNode, "scale", ivar="scaleX_", mode="r"}
+ccSynth{CCNode, "ignoreAnchorPointForPosition", mode="r"}
+ccSynthVec2{CCNode, "position", mode="r"}
+ccSynthVec2{CCNode, "anchorPoint", mode="r"}
+ccSynthVec2{CCNode, "contentSize", mode="r"}
 
 function CCNode:init()
     self.position_ = vec2(0,0)
@@ -403,7 +403,7 @@ end
 ---------------------
 -- scheduler
 ---------------------
-ccProp{CCNode, "scheduler", mode="r"}
+ccSynth{CCNode, "scheduler", mode="r"}
 
 function CCNode:schedule(selector, interval, times, delay)
     interval = interval or 0
@@ -436,9 +436,9 @@ end
 ----------------------
 CCNodeRect = CCClass(CCNode):include(CCRGBAMixin)
 
-ccPropColor{CCNodeRect, "strokeColor", mode="w"}
-ccProp{CCNodeRect, "strokeWidth", mode="w"}
-ccProp{CCNodeRect, "strokeEnabled"}
+ccSynthColor{CCNodeRect, "strokeColor", mode="w"}
+ccSynth{CCNodeRect, "strokeWidth", mode="w"}
+ccSynth{CCNodeRect, "strokeEnabled"}
 
 function CCNodeRect:init(w, h, ...)
     CCNode.init(self)
@@ -476,9 +476,9 @@ end
 ----------------------
 CCNodeEllipse = CCClass(CCNode):include(CCRGBAMixin)
 
-ccPropColor{CCNodeEllipse, "strokeColor", mode="w"}
-ccProp{CCNodeEllipse, "strokeWidth", mode="w"}
-ccProp{CCNodeEllipse, "strokeEnabled"}
+ccSynthColor{CCNodeEllipse, "strokeColor", mode="w"}
+ccSynth{CCNodeEllipse, "strokeWidth", mode="w"}
+ccSynth{CCNodeEllipse, "strokeEnabled"}
 
 
 -- args: width, height, ccc4

@@ -1,8 +1,8 @@
 --CCMenuItem
 CCMenuItem = CCClass(CCNode)
 
-ccProp{CCMenuItem, "isEnabled", setter="setEnabled"}
-ccProp{CCMenuItem, "isSelected", mode="r"}
+ccSynth{CCMenuItem, "isEnabled", set="setEnabled"}
+ccSynth{CCMenuItem, "isSelected", mode="r"}
 
 function CCMenuItem:init()
     CCNode.init(self)
@@ -256,10 +256,10 @@ end
 --------------------
 CCMenuItemFont = CCClass(CCMenuItemLabel)
 
-ccProp{CCMenuItemFont, "fontSize", mode="r"}
-ccProp{CCMenuItemFont, "fontName", mode="r"}
-ccProp{CCMenuItemFont, "alignment", mode="r"}
-ccProp{CCMenuItemFont, "wrapWidth", mode="r"}
+ccSynth{CCMenuItemFont, "fontSize", mode="r"}
+ccSynth{CCMenuItemFont, "fontName", mode="r"}
+ccSynth{CCMenuItemFont, "alignment", mode="r"}
+ccSynth{CCMenuItemFont, "wrapWidth", mode="r"}
 
 function CCMenuItemFont:init(str, fontName, pointSize, align, wrapWidth)
     local label = CCLabelTTF(str, fontName, pointSize, align, wrapWidth)
@@ -304,8 +304,6 @@ end
 -- CCMenuItemToggle
 --------------------
 CCMenuItemToggle = CCClass(CCMenuItem):include(CCRGBAMixin)
-
---ccProp{CCMenuItemToggle, "selectedIndex", mode="r"}
 
 function CCMenuItemToggle:init(...)
     CCMenuItem.init(self)

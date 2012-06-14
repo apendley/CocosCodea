@@ -2,7 +2,7 @@
 
 CCTransitionScene = CCClass(CCScene)
 
-ccProp{CCTransitionScene, "duration", mode="r"}
+ccSynth{CCTransitionScene, "duration", mode="r"}
 
 function CCTransitionScene:init(duration, scene)
     CCScene.init(self)
