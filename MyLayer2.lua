@@ -12,7 +12,7 @@ function MyLayer2:init()
     local exitButton
     do    
         local function nextScene()
-            local t = CCTransitionFade(0.75, MyRetinaTest:scene(), 0)
+            local t = CCTransitionFade(0.75, MyLayer3:scene(), 0)
             CCSharedDirector():replaceScene(t)
         end
         

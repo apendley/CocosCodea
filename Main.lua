@@ -1,11 +1,11 @@
 -- Main
 
 function setup()
-    displayMode(FULLSCREEN)
+    --displayMode(FULLSCREEN)
 
     local director = CCSharedDirector()
     director:showFPS(true)
-    director:runWithScene(MyLayer:scene())
+    director:runWithScene(MyLayer3:scene())
 end
 
 function touched(touch)
@@ -20,5 +20,12 @@ function draw()
     fill(255)
     textSize(20)
     text(DeltaTime, WIDTH/2, HEIGHT/2)
+    --]]
+    
+    --[[
+    fill(0, 255, 0)
+    strokeWidth(5)
+    pointSize(20)
+    point(WIDTH/2, HEIGHT/2)
     --]]
 end

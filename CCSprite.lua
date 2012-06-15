@@ -19,7 +19,7 @@ function CCSprite:setContentSize(...)
         
     -- see ccConfig
     if CC_ENABLE_CODEA_2X_MODE then
-    	local csf = ContentScaleFactor
+        local csf = ContentScaleFactor
         cs.x, cs.y = cs.x * csf, cs.y * csf
     end            
         
