@@ -4,12 +4,7 @@ ccArrayInsert = table.insert
 ccArrayRemove = table.remove
 
 function ccArrayCopy(array)
-	return {unpack(array)}
---[[
-    local t = {}
-    for i,v in ipairs(array) do t[i] = v end
-    return t
---]]
+	return { unpack(array) }
 end
 
 function ccArrayContains(array, object)
@@ -28,7 +23,7 @@ end
 
 function ccArrayRemoveObject(array, obj)
     local idx = ccArrayIndexOf(array, obj)
-    if idx then ccArrayRemove(array, idx) end
+    if idx then table.remove(array, idx) end
 end
 
 function ccArrayForEach(array, fnOrSelector)
@@ -40,7 +35,7 @@ function ccArrayForEach(array, fnOrSelector)
 end
 
 function ccArrayClear(array)
-    while #array > 0 do ccArrayRemove(array, #array) end
+    while #array > 0 do table.remove(array, #array) end
 end
 
 function ccArrayShuffle(array)
@@ -56,3 +51,33 @@ ccCompareGT = function(a,b) return (b>a) end
 ccCompareKeyLT = function(key) return function(a, b) return (a[key] < b[key]) end end
 ccCompareKeyLT = function(key) return function(a, b) return (a[key] > b[key]) end end
 ccArraySort = table.sort
+
+-- a simple bubble sort
+function ccArrayBubbleSort(array, comparator)
+    ccAssert(array)
+    comparator = comparator or ccCompare.lt
+
+    local swapped = true
+    local j = 0
+    
+    while swapped do
+        swapped = false
+        j = j + 1
+        
+        local p1, p2, first, second
+        for i = 1, #array - j do
+            first, second = array[i], array[i+1]
+            
+            if keyOrNil then
+                p1, p2 = first[keyOrNil], second[keyOrNil]
+            else
+                p1, p2 = first, second
+            end            
+            
+            if not comparator(p1, p2) then
+                array[i], array[i+1] = second, first
+                swapped = true
+            end
+        end
+    end
+end

@@ -36,7 +36,7 @@ local retina =
 function MyRetinaTest:init()
     CCLayer.init(self)
     
-    local size = self:contentSize()    
+    local size = self:contentSize()
     
     -- keep these on a different layer
     local layer = CCLayer()

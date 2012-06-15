@@ -1,11 +1,11 @@
 -- Main
 
 function setup()
-    --displayMode(FULLSCREEN)
+    displayMode(FULLSCREEN)
 
     local director = CCSharedDirector()
     director:showFPS(true)
-    director:runWithScene(MyRetinaTest:scene())
+    director:runWithScene(MyLayer2:scene())
 end
 
 function touched(touch)
@@ -15,4 +15,10 @@ end
 function draw()    
     background(0)
     CCSharedDirector():drawScene(DeltaTime)
+    
+    --[[
+    fill(255)
+    textSize(20)
+    text(DeltaTime, WIDTH/2, HEIGHT/2)
+    --]]
 end
