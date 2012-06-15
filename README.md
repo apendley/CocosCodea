@@ -133,7 +133,7 @@ Actions:
 	* CCActionProgressTimer
  	* CCCatmullRomTo/CCCatmullRomBy
 
-other:
+Other:
 	* CCSpriteFrame
 	* CCAnimation
 	* CCGrid
