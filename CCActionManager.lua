@@ -43,7 +43,7 @@ function CCActionManager:removeAllActionsFromTarget(target)
     local entry = self.targets[target]
     
     if entry then
-        local containsAction = arrayContainsObject(entry.actions, entry.currentAction)
+        local containsAction = ccArrayContains(entry.actions, entry.currentAction)
         if containsAction and (entry.salvagedAction == nil) then
             entry.salvagedAction = entry.currentAction
         end
@@ -65,7 +65,7 @@ function CCActionManager:removeAction(action)
     local entry = self.targets[action.originalTarget]
     
     if entry then
-        local idx = arrayIndexOfObject(entry.actions, action)
+        local idx = ccArrayIndexOf(entry.actions, action)
         
         if idx ~= nil then
             self:removeActionAtIndex(idx, entry)

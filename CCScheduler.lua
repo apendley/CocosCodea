@@ -76,8 +76,8 @@ local function newSelectorEntry(target, paused)
 end
 
 local function invalidateEntry(entry)
-    arrayPerformSelectorOnObjects(entry.timers, "invalidate")
-    arrayRemoveAllObjects(entry.timers)
+    ccArrayForEach(entry.timers, "invalidate")
+    ccArrayClear(entry.timers)
     entry.target = nil
     entry.currentTimer = nil
     entry.timerSalvaged = nil
@@ -180,12 +180,12 @@ function CCScheduler:unscheduleAllSelectorsForTarget(target)
     local entry = self.selectorEntries[target]
     
     if entry then
-        if arrayContainsObject(entry.timers, entry.currentTimer) and not entry.timerSalvaged then
+        if ccArrayContains(entry.timers, entry.currentTimer) and not entry.timerSalvaged then
             entry.timerSalvaged = entry.currentTimer
         end
         
         --entry.timers = {}
-        arrayRemoveAllObjects(entry.timers)
+        ccArrayClear(entry.timers)
         
         if self.currentEntry == entry then
             self.entrySalvaged = entry

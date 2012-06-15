@@ -17,7 +17,7 @@ CCCallBase = CCClass(CCActionInstant)
 
 function CCCallBase:init(...)
     CCActionInstant.init(self)
-    if #arg > 0 then self.params = arrayCopy(arg) end    
+    if #arg > 0 then self.params = ccArrayCopy(arg) end    
 end
 
 function CCCallBase:execute(...)

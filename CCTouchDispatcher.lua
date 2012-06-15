@@ -82,7 +82,7 @@ function CCTouchDispatcher:updatePreDraw()
             self:forceAddHandler(handler, self.targetedHandlers)
         end
         
-        arrayRemoveAllObjects(self.handlersToAdd)
+        ccArrayClear(self.handlersToAdd)
     end
     
     if self.toRemove then
@@ -92,7 +92,7 @@ function CCTouchDispatcher:updatePreDraw()
             self:forceRemoveDelegate(delegate)
         end
         
-        arrayRemoveAllObjects(self.handlersToRemove)
+        ccArrayClear(self.handlersToRemove)
     end
     
     if self.toQuit then
@@ -156,7 +156,7 @@ end
 
 function CCTouchDispatcher:forceRemoveAllDelegates()
     arrayCallFunctionOnObjects(self.targetedHandlers, invalidateTargetedTouchHandler)
-    arrayRemoveAllObjects(self.targetedHandlers)
+    ccArrayClear(self.targetedHandlers)
 end
 
 function CCTouchDispatcher:removeAllDelegates()
@@ -182,7 +182,7 @@ function CCTouchDispatcher:findHandler(delegate)
 end
 
 function CCTouchDispatcher:rearrangeHandlers(array)
-    arrayBubbleSort(array, arrayLessThan, "priority")
+    ccArrayBubbleSort(array, ccOrderAscending, "priority")
 end
 
 function CCTouchDispatcher:setPriority(delegate, priority)
@@ -190,7 +190,7 @@ function CCTouchDispatcher:setPriority(delegate, priority)
     local handler = self:findHandler(delegate)    
     ccAssert(handler)
     handler.priority = priority
-    arrayBubbleSort(self.targetedHandlers, arrayLessThan, "priority")
+    ccArrayBubbleSort(self.targetedHandlers, ccOrderAscending, "priority")
 end
 
 

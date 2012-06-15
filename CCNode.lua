@@ -100,7 +100,7 @@ function CCNode:getChildByTag(tagOrPair)
 end
 
 function CCNode:reorderChild(child, z)
-    local idx = arrayIndexOfObject(self.children, child)
+    local idx = ccArrayIndexOf(self.children, child)
     
     if idx then        
         local c = self.children[idx]
@@ -118,7 +118,7 @@ function CCNode:detachChild(child, cleanup)
     if cleanup then child:cleanup() end
         
     child.parent = nil
-    arrayRemoveObject(self.children, child)
+    ccArrayRemove(self.children, child)
 end
 
 function CCNode:removeChild(child, cleanup)
@@ -127,7 +127,7 @@ function CCNode:removeChild(child, cleanup)
     --default cleanup = true
     if cleanup == nil then cleanup = true end
     
-    if arrayContainsObject(self.children, child) then
+    if ccArrayContains(self.children, child) then
         self:detachChild(child, cleanup)
     end
 end
@@ -156,7 +156,7 @@ function CCNode:removeAllChildren(cleanup_)
         child.parent = nil
     end
     
-    arrayRemoveAllObjects(self.children)
+    ccArrayClear(self.children)
 end
 
 function CCNode:removeFromParent(cleanup_)
@@ -171,7 +171,7 @@ function CCNode:cleanup()
     --ccPrint("cleanup: " .. tostring(self))
     self:stopAllActions()
     self:unscheduleAllSelectors()
-    arrayPerformSelectorOnObjects(self.children, "cleanup")
+    ccArrayForEach(self.children, "cleanup")
     self.userData = nil
 end
 
@@ -369,25 +369,25 @@ function CCNode:draw()
 end
 
 function CCNode:onEnter()
-    arrayPerformSelectorOnObjects(self.children, "onEnter")
+    ccArrayForEach(self.children, "onEnter")
     self:resumeSchedulerAndActions()
     
     self.isRunning_ = true
 end
 
 function CCNode:onEnterTransitionDidFinish()
-    arrayPerformSelectorOnObjects(self.children, "onEnterTransitionDidFinish")
+    ccArrayForEach(self.children, "onEnterTransitionDidFinish")
 end
 
 function CCNode:onExitTransitionDidStart()
-    arrayPerformSelectorOnObjects(self.children, "onExitTransitionDidStart")
+    ccArrayForEach(self.children, "onExitTransitionDidStart")
 end
 
 function CCNode:onExit()
     self:pauseSchedulerAndActions()
     self.isRunning_ = false
     
-    arrayPerformSelectorOnObjects(self.children, "onExit")
+    ccArrayForEach(self.children, "onExit")
 end
 
 ---------------------

@@ -314,7 +314,7 @@ function CCMenuItemToggle:init(...)
     CCMenuItem.init(self)
     CCRGBAMixin.init(self)
     self.subitems_ = arg
-    --self.subitems_ = arrayCopy(arg) or {}
+    --self.subitems_ = ccArrayCopy(arg) or {}
     
     for i,item in ipairs(self.subitems_) do
         item:setTag{kToggleTagKey, kInvalidTag}
@@ -324,7 +324,7 @@ function CCMenuItemToggle:init(...)
 end
 
 function CCMenuItemToggle:cleanup()
-    arrayRemoveAllObjects(self.subitems_)
+    ccArrayClear(self.subitems_)
     CCMenuItem.cleanup(self)
 end
 

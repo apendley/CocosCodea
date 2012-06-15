@@ -67,7 +67,7 @@ Actions:
 	* CCEaseSineIn/CCEaseSineOut/CCEaseSineInOut
 
 Other:
-	* CCClass - a customized version of a class system called MiddleClass by Enrique García Cota
+	* CocosCodea uses customized version of a class system called MiddleClass by Enrique García Cota
 	* synthesize get/set methods for class properties
 	* ccc3/ccc4 color functions
 	* ccRect type (partially implemented)
@@ -118,8 +118,8 @@ Transitions:
 
 
 Actions:
-	CCActionCamera/CCOrbitCamera
-	CCFollow
+	* CCActionCamera/CCOrbitCamera
+	* CCFollow
 	* CCSkewBy/CCSkewTo
 	* CCBezierTo/CCBezierBy
 	* CCReverseTime
