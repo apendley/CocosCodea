@@ -32,10 +32,11 @@ ccVec2 = vec2
 -- the sprite() function that do not have an @2x version.
 -- I discovered that passing the width and height values returned by
 -- Codea's spriteSize() function will draw the sprite at the correct
--- size. As a result, sprites without a @2x version will be drawn
--- at half size (the expected behavior without Codea's special retina
--- support for non-retina images). This is the normal behavior for cocos2d.
--- Re-enabling Codea's support will cause any sprites with a @2x version 
+-- size. As a result, sprites without a @2x version were drawn
+-- at half size (the expected behavior without Codea's double sizing
+-- support). This is the normal behavior for cocos2d.
+--
+-- Re-enabling Codea's scaling will cause any sprites with a @2x version 
 -- to be double-sized on the retina iPad. So, you have a choice:
 --    a) leave it disabled, and only use sprites with both a normal and an @2x
 --       version, or they will be half-sized on retina displays (this is the
@@ -43,4 +44,5 @@ ccVec2 = vec2
 --    b) enable it, and do not use any sprites with an @2x version, or they will
 --       be double sized on retina displays. (your sprites will work the same on
 --       all devices, but will be blurry on retina screens)
-CC_ENABLE_CODEA_RETINA_SUPPORT = false
+
+CC_ENABLE_CODEA_2X_MODE = false

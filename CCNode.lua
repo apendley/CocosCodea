@@ -64,39 +64,39 @@ function CCNode:addChild(child, z, tagOrPair)
 end
 
 function CCNode:setTag(tagOrPair)
-	if type(tagOrPair) == "table" then
-		local key, tag = tagOrPair[1], tagOrPair[2]
-		
-		if self.userTags_ == nil then
-			self.userTags_ = {}
-		end
-		
-		self.userTags_[key] = tag
-	else
-		self.tag_ = tagOrPair
-	end
+    if type(tagOrPair) == "table" then
+        local key, tag = tagOrPair[1], tagOrPair[2]
+        
+        if self.userTags_ == nil then
+            self.userTags_ = {}
+        end
+        
+        self.userTags_[key] = tag
+    else
+        self.tag_ = tagOrPair
+    end
 end
 
 function CCNode:tag(keyOrNil)
-	if keyOrNil == nil then
-		return self.tag_
-	elseif self.userTags_ then
-		return self.userTags_[keyOrNil]
-	end
+    if keyOrNil == nil then
+        return self.tag_
+    elseif self.userTags_ then
+        return self.userTags_[keyOrNil]
+    end
 end
 
 function CCNode:getChildByTag(tagOrPair)
-	if type(tagOrPair) == "table" then
-		local key, tag = tagOrPair[1], tagOrPair[2]
-		
+    if type(tagOrPair) == "table" then
+        local key, tag = tagOrPair[1], tagOrPair[2]
+        
         for i,child in ipairs(self.children) do
             if child.userTags_[key] == tag then return child end
-        end        	
-	else
+        end            
+    else
         for i,child in ipairs(self.children) do
             if child.tag_ == tagOrPair then return child end
         end                
-	end
+    end
 end
 
 function CCNode:reorderChild(child, z)

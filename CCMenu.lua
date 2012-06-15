@@ -140,4 +140,47 @@ function CCMenu:setColor4(c)
     end        
 end
 
+------------------------
+-- alignment
+------------------------
+local kDefaultPadding = 5
 
+function CCMenu:alignItemsVertically(padding)
+    padding = padding or kDefaultPadding
+    local children = self.children
+    
+    local height = -padding
+    
+    for i, item in ipairs(children) do
+        height = height + item:contentSize().y * item:scaleY() + padding
+    end
+    
+    local y = height / 2
+    
+    for i, item in ipairs(children) do
+        local size = item:contentSize()
+        local sy = item:scaleY()
+        item:setPosition(0, y - size.y * sy / 2)
+        y = y - size.y * sy + padding
+    end
+end
+
+function CCMenu:alignItemsHorizontally(padding)
+    padding = padding or kDefaultPadding
+    local children = self.children
+    
+    local width = -padding
+    
+    for i, item in ipairs(children) do
+        width = width + item:contentSize().x * item:scaleX() + padding
+    end
+    
+    local x = -width / 2
+    
+    for i, item in ipairs(children) do
+        local size = item:contentSize()
+        local sx = item:scaleX()
+        item:setPosition(x + size.x * sx / 2, 0)
+        x = x + size.x * sx + padding
+    end
+end

@@ -44,7 +44,8 @@ function MyRetinaTest:init()
     self:addChild(layer)
     self.layer = layer
     
-    self:populate(createSprite)
+    self.createFn = createSprite
+    self:populate()    
     
     local m = CCMenu(toggle)
     m:setPosition(self:position())
@@ -70,7 +71,7 @@ function MyRetinaTest:init()
         disable:setUserData("On Retina Devices, everything but the church will be tiny")
         
         local first, second = disable, enable
-        if CC_ENABLE_CODEA_RETINA_SUPPORT then first, second = enable, disable end
+        if CC_ENABLE_CODEA_2X_MODE then first, second = enable, disable end
         
         local toggle = CCMenuItemToggle(first, second)
         toggle:setHandler(self, "toggled")
@@ -82,9 +83,11 @@ function MyRetinaTest:init()
     
     do
         local useSprites = CCMenuItemFont("Use sprites", "Georgia", 30)
-        useSprites:tag("sprite")        
+        useSprites:setTag("sprite")        
+        useSprites:setUserData(createSprite)
         local useImage = CCMenuItemFont("Use image objects", "Georgia", 30)
-        useImage:tag("image")
+        useImage:setTag("image")
+        useImage:setUserData(createImage)
         local toggle = CCMenuItemToggle(useSprites, useImage)
         toggle:setHandler(self, "imageToggled")
         toggle:setPosition(size.x/2, 30)
@@ -105,7 +108,8 @@ function MyRetinaTest:init()
     
 end
 
-function MyRetinaTest:populate(create)
+function MyRetinaTest:populate()
+    local create = self.createFn
     local layer = self.layer
     
     for i,v in ipairs(nonretina) do
@@ -121,10 +125,14 @@ function MyRetinaTest:toggled(toggle)
     local item = toggle:selectedItem()
     
     if item:tag() == "enable" then
-        CC_ENABLE_CODEA_RETINA_SUPPORT = true
+        CC_ENABLE_CODEA_2X_MODE = true
     else
-        CC_ENABLE_CODEA_RETINA_SUPPORT = false        
+        CC_ENABLE_CODEA_2X_MODE = false        
     end
+    
+    local layer = self.layer
+    layer:removeAllChildren(true)
+    self:populate()    
     
     self.statusLabel:setString(item:userData())
 end
@@ -134,10 +142,7 @@ function MyRetinaTest:imageToggled(toggle)
     
     local layer = self.layer
     layer:removeAllChildren(true)
-        
-    if item:tag() == "image" then
-        self:populate(createImage)
-    else
-        self:populate(createSprite)
-    end
+   
+    self.createFn = item:userData()
+    self:populate()
 end

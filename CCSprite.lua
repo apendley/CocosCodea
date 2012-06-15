@@ -12,6 +12,22 @@ function CCSprite:init(spriteNameOrImage)
     self.flipY_ = false
 end
 
+function CCSprite:setContentSize(...)
+    
+    local cs = self.contentSize_
+    cs.x, cs.y = ccVec2VA(...)
+        
+    -- see ccConfig
+    if CC_ENABLE_CODEA_2X_MODE then
+    	local csf = ContentScaleFactor
+        cs.x, cs.y = cs.x * csf, cs.y * csf
+    end            
+        
+    local ap, app = self.anchorPoint_, self.anchorPointInPoints_
+    app.x, app.y = cs.x * ap.x, cs.y * ap.y
+    self.isTransformDirty_, self.isInverseDirty_ = true, true    
+end
+
 function CCSprite:draw()
     local c = self.color_
     tint(ccc3Unpack(self.color_))
@@ -23,12 +39,6 @@ function CCSprite:draw()
     local s = self.contentSize_    
     local w = self.flipX_ and -s.x or s.x
     local h = self.flipY_ and -s.y or s.y
-    
-    -- see ccConfig
-    if CC_ENABLE_CODEA_RETINA_SUPPORT then
-        w = w * ContentScaleFactor
-        h = h * ContentScaleFactor
-    end
     
     if self.sprite_ then sprite(self.sprite_, s.x/2, s.y/2, w, h) end
     
