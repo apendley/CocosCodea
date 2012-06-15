@@ -1,5 +1,7 @@
 CocosCodea: Cocos2d ported to Lua(for Codea)
 
+A special note: On retina iPads, Codea automatically double-sizes any sprites with an image that don't have an @2x version. CocosCodea undoes this double sizing by default, so non-retina sprites will draw at half size on retina devices. in ccConfig.lua, you can re-enable Codea's scaling by setting CC_ENABLE_CODEA_2X_MODE to true, but then any images that do have an  @2x version will be drawn at double size on retina devices. So, if you want everything to work the same on all devices, you either need to leave CC_ENABLE_CODEA_2X_MODE disabled, and only use art with @2x versions, or enable CC_ENABLE_CODEA_2X_MODE, and only use art without @2x versions.
+
 What's here:
 -----------------------------------------------
 General:
