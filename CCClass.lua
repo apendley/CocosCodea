@@ -131,6 +131,8 @@ end
 
 Object.static.subclassOf = _subclassOf
 Object.static.includes = _includes
+
+-- include get/set synthesization: MyClass:synth{"property"}
 Object.static.synth = ccSynth
 Object.static.synthColor = ccSynthColor
 Object.static.synthColor4 = ccSynthColor4
@@ -143,8 +145,25 @@ function Object:__tostring() return "instance of " .. tostring(self.class) end
 Object.instanceOf = _instanceOf
 Object.is_a = _instanceOf
 
---apendley: renamed from 'class' to 'Class' to avoid conflict with Codea's class function
 function CCClass(super, ...)
   super = super or Object
   return super:subclass(...)
 end
+
+------------------------------------------------------------------------
+-- mixin base class: allow mixins to use MyMixin:synth{"property"}
+------------------------------------------------------------------------
+CCMixin = {__methods = {}}
+CCMixin.__methods.__index = CCMixin.__methods
+
+setmetatable(CCMixin, 
+{
+    __index = CCMixin.__methods,
+    __newindex = CCMixin.__methods,
+    __call = function(self, ...) return setmetatable({}, CCMixin.__methods) end,
+})
+
+CCMixin.synth = ccSynth
+CCMixin.synthColor = ccSynthColor
+CCMixin.synthColor4 = ccSynthColor4
+CCMixin.synthVec2 = ccSynthVec2

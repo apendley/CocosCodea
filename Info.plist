@@ -13,8 +13,8 @@
 		<string>ccSynth</string>
 		<string>ccArray</string>
 		<string>ccRect</string>
-		<string>CCMixin</string>
 		<string>CCClass</string>
+		<string>CCMixins</string>
 		<string>CCDirector</string>
 		<string>CCTouchDispatcher</string>
 		<string>CCScheduler</string>

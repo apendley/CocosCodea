@@ -1,18 +1,4 @@
---CCMixin
-CCMixin = {__methods = {}}
-CCMixin.__methods.__index = CCMixin.__methods
-
-setmetatable(CCMixin, 
-{
-    __index = CCMixin.__methods,
-    __newindex = CCMixin.__methods,
-    __call = function(self, ...) return setmetatable({}, CCMixin.__methods) end,
-})
-
-CCMixin.synth = ccSynth
-CCMixin.synthColor = ccSynthColor
-CCMixin.synthColor4 = ccSynthColor4
-CCMixin.synthVec2 = ccSynthVec2
+--CCMixins
 
 -----------------------------------------------------------
 -- CCRGBAMixin
