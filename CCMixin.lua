@@ -157,7 +157,7 @@ function CCMenuItemLabelMixin:selected()
         end
         
         local zoomAction = CCScaleTo(0.1, self.originalScale * 1.2)
-        zoomAction.tag = kCCZoomActionTag
+        zoomAction.tag_ = kCCZoomActionTag
         self:runAction(zoomAction)
     end
 end
@@ -166,7 +166,7 @@ function CCMenuItemLabelMixin:unselected()
     if self.isEnabled_ then
         self:stopActionByTag(kCCZoomActionTag)
         local zoomAction = CCScaleTo(0.1, self.originalScale)
-        zoomAction.tag = kCCZoomActionTag
+        zoomAction.tag_ = kCCZoomActionTag
         self:runAction(zoomAction)
     end
 end

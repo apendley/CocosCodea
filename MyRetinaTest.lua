@@ -82,9 +82,9 @@ function MyRetinaTest:init()
     
     do
         local useSprites = CCMenuItemFont("Use sprites", "Georgia", 30)
-        useSprites:setUserData("sprite")        
+        useSprites:tag("sprite")        
         local useImage = CCMenuItemFont("Use image objects", "Georgia", 30)
-        useImage:setUserData("image")
+        useImage:tag("image")
         local toggle = CCMenuItemToggle(useSprites, useImage)
         toggle:setHandler(self, "imageToggled")
         toggle:setPosition(size.x/2, 30)
@@ -120,7 +120,7 @@ end
 function MyRetinaTest:toggled(toggle)
     local item = toggle:selectedItem()
     
-    if item:getTag() == "enable" then
+    if item:tag() == "enable" then
         CC_ENABLE_CODEA_RETINA_SUPPORT = true
     else
         CC_ENABLE_CODEA_RETINA_SUPPORT = false        
@@ -135,7 +135,7 @@ function MyRetinaTest:imageToggled(toggle)
     local layer = self.layer
     layer:removeAllChildren(true)
         
-    if item:userData() == "image" then
+    if item:tag() == "image" then
         self:populate(createImage)
     else
         self:populate(createSprite)

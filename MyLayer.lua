@@ -113,20 +113,20 @@ function MyLayer:init()
     -- heart toggle button
     do
         local function onSelected(i)
-            self.statusLabel:setString(i:selectedItem().tag)
+            self.statusLabel:setString(i:selectedItem().tag_)
         end
         
         local i1s1 = CCSprite("Small World:Heart")
         local i1s2 = CCSprite("Small World:Heart")
         i1s2:setColor(128, 128, 128)
         local item1 = CCMenuItemSprite(i1s1, i1s2)
-        item1.tag = "Red"
+        item1.tag_ = "Red"
         
         local i2s1 = CCSprite("Small World:Heart Gold")
         local i2s2 = CCSprite("Small World:Heart Gold")
         i2s2:setColor(128, 128, 128)        
         local item2 = CCMenuItemSprite(i2s1, i2s2)
-        item2.tag = "Gold"
+        item2.tag_ = "Gold"
                 
         local toggle = CCMenuItemToggle(item1, item2)
         toggle:setHandler(onSelected)
@@ -139,7 +139,7 @@ function MyLayer:init()
 end
 
 function MyLayer:itemSelected(item)
-    self.statusLabel:setString(item.tag or "")
+    self.statusLabel:setString(item.tag_ or "")
 end
 
 function MyLayer:cleanup()

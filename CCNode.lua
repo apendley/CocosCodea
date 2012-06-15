@@ -30,7 +30,7 @@ function CCNode:init()
     self.isRunning_ = false    
     self.visible_ = true
     
-    self.tag = -1    
+    self.tag_ = -1    
     self.children = {}
     
     local dir = CCSharedDirector()
@@ -56,39 +56,47 @@ local function insertChild(node, child, z)
     child.zOrder = z
 end
 
-function CCNode:addChild(child, z, tag)
+function CCNode:addChild(child, z, tagOrPair)
     insertChild(self, child, z or 0)
-    if tag ~= nil then child.tag = tag end
+
+    if tagOrPair then child:setTag(tagOrPair) end
     child.parent = self
 end
 
-function CCNode:setTag(tag, key)
-    if key then
-        if self.userTags_ == nil then
-            self.userTags_ = {}
-        end
-        
-        self.userTags_[key] = tag
-    else
-        self.tag = tag
-    end
+function CCNode:setTag(tagOrPair)
+	if type(tagOrPair) == "table" then
+		local key, tag = tagOrPair[1], tagOrPair[2]
+		
+		if self.userTags_ == nil then
+			self.userTags_ = {}
+		end
+		
+		self.userTags_[key] = tag
+	else
+		self.tag_ = tagOrPair
+	end
 end
 
--- todo: rename tag ivar to tag_ so we can rename this to tag(key)
-function CCNode:getTag(key)
-    return key and self.userTags_[key] or self.tag
+function CCNode:tag(keyOrNil)
+	if keyOrNil == nil then
+		return self.tag_
+	elseif self.userTags_ then
+		return self.userTags_[keyOrNil]
+	end
 end
 
-function CCNode:getChildByTag(tag, key)
-    if key then
+function CCNode:getChildByTag(tagOrPair)
+	if type(tagOrPair) == "table" then
+		local key, tag = tagOrPair[1], tagOrPair[2]
+		
         for i,child in ipairs(self.children) do
             if child.userTags_[key] == tag then return child end
-        end        
-    else
+        end        	
+	else
         for i,child in ipairs(self.children) do
-            if child.tag == tag then return child end
+            if child.tag_ == tagOrPair then return child end
         end                
-    end
+	end
 end
 
 function CCNode:reorderChild(child, z)
@@ -124,18 +132,14 @@ function CCNode:removeChild(child, cleanup)
     end
 end
 
-function CCNode:removeChildByUserTag(tag, key, cleanup)
-    child = self:getChildByTag(tag, key)
+function CCNode:removeChildByTag(tagOrPair, cleanup)
+    child = self:getChildByTag(tagOrPair)
     
     if child then
         -- default cleanup = true
         if cleanup == nil then cleanup = true end
         self:removeChild(child, cleanup)
     end
-end
-
-function CCNode:removeChildByTag(tag, cleanup)
-    self:removeChildByUserTag(tag, nil, cleanup)
 end
 
 function CCNode:removeAllChildren(cleanup_)

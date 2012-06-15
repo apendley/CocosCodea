@@ -108,7 +108,7 @@ function CCActionManager:removeActionByTag(tag, target)
     
     if entry then
         for i, action in ipairs(entry.actions) do
-            if action.tag == tag and action.originalTarget == target then
+            if action.tag_ == tag and action.originalTarget == target then
                 self:removeActionAtIndex(i, entry)
                 break
             end
@@ -124,7 +124,7 @@ function CCActionManager:getActionByTag(tag, target)
         -- ever setting actions array to nil
         --if entry.actions then
             for i, action in ipairs(entry.actions) do
-                if action.tag == tag then return action end
+                if action.tag_ == tag then return action end
             end
         --end        
     end

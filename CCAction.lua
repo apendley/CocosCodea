@@ -1,9 +1,11 @@
 CCAction = CCClass()
 
+CCAction:synth{"tag"}
+
 function CCAction:init()
     self.originalTarget = nil
     self.target = nil
-    self.tag = -1
+    self.tag_ = -1
 end
 
 function CCAction:copy()
