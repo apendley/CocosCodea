@@ -22,7 +22,7 @@ CCMixin.synthVec2 = ccSynthVec2
 CCRGBAMixin = CCMixin()
 
 CCRGBAMixin:synthColor4{"color4", ivar="color_"}
-CCRGBAMixin:synthColor{"color"}
+CCRGBAMixin:synthColor{"color", mode="r"}
 
 function CCRGBAMixin:init(...)
     self.color_ = ccc4(ccc4VA(...))
@@ -35,6 +35,12 @@ end
 function CCRGBAMixin:opacity()
     return self.color_.a
 end
+
+function CCRGBAMixin:setColor(...)
+    local c = self.color_
+    c.r, c.g, c.b = ccc3VA(ccc3VA(...))
+end
+
 
 -----------------------------------------------------------------------
 -- CCTargetedTouchMixin

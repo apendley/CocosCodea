@@ -30,7 +30,7 @@ end
 
 function CCSprite:draw()
     local c = self.color_
-    tint(ccc3Unpack(self.color_))
+    tint(ccc4Unpack(self.color_))
     
     --spriteMode(CORNER)
     --if self.sprite_ then sprite(self.sprite_, 0, 0, s.x, s.y) end
