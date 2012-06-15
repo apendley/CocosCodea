@@ -1,7 +1,15 @@
 CocosCodea: Cocos2d ported to Lua(for Codea)
 =
 
-A special note: On retina iPads, Codea automatically double-sizes any sprites with an image that don't have an @2x version. CocosCodea undoes this double sizing by default, so non-retina sprites will draw at half size on retina devices. in ccConfig.lua, you can re-enable Codea's scaling by setting CC_ENABLE_CODEA_2X_MODE to true, but then any images that do have an  @2x version will be drawn at double size on retina devices. So, if you want everything to work the same on all devices, you either need to leave CC_ENABLE_CODEA_2X_MODE disabled, and only use art with @2x versions, or enable CC_ENABLE_CODEA_2X_MODE, and only use art without @2x versions.
+Codea is a wonderful iPad app that allows game creation and rapid prototyping using the Lua programming language. Cocos2d-iphone is fully featured game "engine" for iOS. Often, while playing with Codea, I have wished for some of cocos2d's more advanced features, like actions and scheduling. So, I've decided to port as much of cocos2d to Codea as I can. It's not necessarily a straight port; I'm taking advantage of Codea and Lua features as much as I can to make it the best experience possible on the iPad, including shortening names wherever possible to reduce typing, allowing function argument "overloading" using Lua's flexible calling system where helpful, using Codea's rendering system, implementing a way to synthesize get/set methods for class properties, etc. It's not all here yet. There is still tons to do, but I have tried to get the core in so that CocosCodea can hopefully start being useful to somebody besides me.
+
+Currently Codea has some limitations that make it difficult or impossible to implement some cocos2d functionality, such as specifying (s,t) and (u,v) coordinates for indivially drawn sprites (for CCSprite's textureRect), no copy/unpack/set semantics for Codea data types (vector2, color, matrix, etc.) to aid in writing metacode, lack of file I/O for multi-file assets (sprite sheets, tile maps, particle systems), and inability to remove quads from meshes (CCSpriteBatchNode support). When/if those limitations are addressed, or as I discover workarounds, I will update CocosCodea as necessary.
+
+At the moment nothing is optimized, as I've been working feverishly to get the core in, so CocosCodea is not as fast as it probably could be.
+
+If you have a suggestion for an optimization or CocosCodea in general, or if you'd like to contribute, just let me know.
+
+**A special note:** On retina iPads, Codea automatically double-sizes any sprites with an image that don't have an @2x version. CocosCodea undoes this double sizing by default, so non-retina sprites will draw at half size on retina devices. in ccConfig.lua, you can re-enable Codea's scaling by setting CC_ENABLE_CODEA_2X_MODE to true, but then any images that do have an  @2x version will be drawn at double size on retina devices. So, if you w**a**nt everything to work the same on all devices, you either need to leave CC_ENABLE_CODEA_2X_MODE disabled, and only use art with @2x versions, or enable CC_ENABLE_CODEA_2X_MODE, and only use art without @2x versions.
 
 What's here:
 -
