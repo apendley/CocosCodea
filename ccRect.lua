@@ -63,4 +63,12 @@ function ccRect:applyTransform(m)
     return ccRect(minX, minY, maxX - minX, maxY - minY)
 end
 
+function ccRect:copy()
+	return ccRect(self.x, self.y, self.w, self.h)
+end
+
+function ccRect:unpack()
+	return self.x, self.y, self.w, self.h
+end
+
 -- todo: add other methods
