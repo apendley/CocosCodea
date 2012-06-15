@@ -15,10 +15,17 @@
 -- * CCReverseTime, CCAnimate, CCTargetedAction
 -- * CCActionCatmullRom
 -- * implement particle systems
--- * implement tile map nodes
+-- * implement tile map node
 -- * CCRenderTexture
 
 -- * write alternative version of sprite() that takes (s,t,u,v)
 -- * in backend, and try to get TLL to use it
 -- * when codea allows (s, t, u, v) to be specfied in sprite()
     -- * add textureRect to CCSprite
+    
+    
+    
+    
+  
+    
+    

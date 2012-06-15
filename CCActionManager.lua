@@ -27,7 +27,7 @@ function CCActionManager:addAction(action, target, paused)
         self.targets[target] = entry
     end
     
-    table.insert(entry.actions, action)
+    ccArrayInsert(entry.actions, action)
     action:startWithTarget(target)
 end
 
@@ -83,7 +83,7 @@ function CCActionManager:removeActionAtIndex(index, entry)
         entry.salvagedAction = entry.currentAction
     end
     
-    table.remove(entry.actions, index)
+    ccArrayRemove(entry.actions, index)
     
     -- update actionIndex in case we are in update, looping over the actions
     -- careful, may have an off by 1 issue here...
@@ -152,7 +152,7 @@ function CCActionManager:pauseAllRunningActions()
     for _, entry in pairs(self.targets) do
         if entry.paused == false then
             entry.paused = true
-            table.insert(targetsWithActions, target)
+            ccArrayInsert(targetsWithActions, target)
         end
     end
     

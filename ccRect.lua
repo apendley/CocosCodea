@@ -64,11 +64,11 @@ function ccRect:applyTransform(m)
 end
 
 function ccRect:copy()
-	return ccRect(self.x, self.y, self.w, self.h)
+    return ccRect(self.x, self.y, self.w, self.h)
 end
 
 function ccRect:unpack()
-	return self.x, self.y, self.w, self.h
+    return self.x, self.y, self.w, self.h
 end
 
 -- todo: add other methods

@@ -43,11 +43,11 @@ local function insertChild(node, child, z)
     local last = children[#children]
     
     if last == nil or last.zOrder <= z then
-        table.insert(children, child)
+        ccArrayInsert(children, child)
     else
         for i,v in ipairs(children) do
             if last.zOrder > z then
-                table.insert(children, i, child)
+                ccArrayInsert(children, i, child)
                 break
             end
         end
@@ -104,7 +104,7 @@ function CCNode:reorderChild(child, z)
     
     if idx then        
         local c = self.children[idx]
-        table.remove(self.children, idx)
+        ccArrayRemove(self.children, idx)
         insertChild(self, child, z)
     end
 end
@@ -118,7 +118,7 @@ function CCNode:detachChild(child, cleanup)
     if cleanup then child:cleanup() end
         
     child.parent = nil
-    ccArrayRemove(self.children, child)
+    ccArrayRemoveObject(self.children, child)
 end
 
 function CCNode:removeChild(child, cleanup)

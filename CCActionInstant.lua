@@ -17,7 +17,8 @@ CCCallBase = CCClass(CCActionInstant)
 
 function CCCallBase:init(...)
     CCActionInstant.init(self)
-    if #arg > 0 then self.params = ccArrayCopy(arg) end    
+    --if #arg > 0 then self.params = ccArrayCopy(arg) end
+    if #arg > 0 then self.params = arg end
 end
 
 function CCCallBase:execute(...)
@@ -74,8 +75,8 @@ function CCFuncT:execute(...)
 end
 
 ---------------------------------------------------------------------------
--- call a method
--- CCMethod(table, sel, ...) -> table.sel(table, ...)
+-- call a method on obj
+-- CCMethod(obj, sel, ...) -> obj:sel(...)
 ---------------------------------------------------------------------------
 CCMethod = CCClass(CCCallBase)
 
@@ -98,8 +99,8 @@ function CCMethod:execute(...)
 end
 
 ---------------------------------------------------------------------------
--- call a method passing the action target as the first parameter
--- CCMethodT(table, sel, ...) -> table.sel(table, actionTarget, ...)
+-- call a method on obj passing the action target as the first parameter
+-- CCMethodT(obj, sel, ...) -> obj:sel(actionTarget, ...)
 ---------------------------------------------------------------------------
 CCMethodT = CCClass(CCCallMethod)
 
@@ -109,8 +110,8 @@ function CCMethodT:execute(...)
 end
 
 ---------------------------------------------------------------------------
--- call a method on the action target, passing itself as the first parameter
--- CCCallTarget(sel, ...) -> actionTarget.sel(actionTarget, ...)
+-- call a method on the action target
+-- CCCallTarget(sel, ...) -> actionTarget:sel(...)
 ---------------------------------------------------------------------------
 CCCallTarget = CCClass(CCCallBase)
 

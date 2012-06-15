@@ -130,7 +130,7 @@ function CCScheduler:scheduleSelector(sel, target, interval, paused, times, dela
         end      
     end
 
-    table.insert(entry.timers, CCTimer(target, sel, interval, times, delay))
+    ccArrayInsert(entry.timers, CCTimer(target, sel, interval, times, delay))
 end
 
 function CCScheduler:unscheduleSelector(sel, target)
@@ -147,7 +147,7 @@ function CCScheduler:unscheduleSelector(sel, target)
                 end
                 
                 timer:invalidate()
-                table.remove(entry.timers, i)
+                ccArrayRemove(entry.timers, i)
                 
                 if entry.timerIndex >= i then
                     entry.timerIndex = entry.timerIndex - 1
@@ -219,7 +219,7 @@ function CCScheduler:pauseAllTargets()
     local pausedList = {}
     for k,entry in pairs(self.selectorEntries) do
         entry.paused = true
-        table.insert(pausedList, entry.target)
+        ccArrayInsert(pausedList, entry.target)
     end
     return pausedList
 end

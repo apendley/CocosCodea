@@ -115,7 +115,7 @@ function CCTouchDispatcher:forceAddHandler(handler, array)
         ccAssert(h.delegate ~= handler.delegate)
     end
     
-    table.insert(array, count, handler)
+    ccArrayInsert(array, count, handler)
 end
 
 function CCTouchDispatcher:addTargetedDelegate(delegate, priority, swallowsTouches)
@@ -128,7 +128,7 @@ function CCTouchDispatcher:addTargetedDelegate(delegate, priority, swallowsTouch
     if not self.locked then
         self:forceAddHandler(handler, self.targetedHandlers)
     else
-        table.insert(self.handlersToAdd, handler)
+        ccArrayInsert(self.handlersToAdd, handler)
         self.toAdd = true
     end
 end
@@ -137,7 +137,7 @@ function CCTouchDispatcher:forceRemoveDelegate(delegate)
     for i,handler in ipairs(self.targetedHandlers) do
         if handler.delegate == delegate then
             invalidateTargetedTouchHandler(handler)
-            table.remove(self.targetedHandlers, i)
+            ccArrayRemove(self.targetedHandlers, i)
             break
         end
     end
@@ -149,7 +149,7 @@ function CCTouchDispatcher:removeDelegate(delegate)
     if not self.locked then
         self:forceRemoveDelegate(delegate)
     else
-        table.insert(self.handlersToRemove, handler)
+        ccArrayInsert(self.handlersToRemove, handler)
         self.toRemove = true
     end
 end
@@ -182,7 +182,7 @@ function CCTouchDispatcher:findHandler(delegate)
 end
 
 function CCTouchDispatcher:rearrangeHandlers(array)
-    ccArrayBubbleSort(array, ccOrderAscending, "priority")
+    ccArraySort(array, ccCompareKeyLT("priority"))
 end
 
 function CCTouchDispatcher:setPriority(delegate, priority)
@@ -190,7 +190,7 @@ function CCTouchDispatcher:setPriority(delegate, priority)
     local handler = self:findHandler(delegate)    
     ccAssert(handler)
     handler.priority = priority
-    ccArrayBubbleSort(self.targetedHandlers, ccOrderAscending, "priority")
+    ccArraySort(array, ccCompareKeyLT("priority"))
 end
 
 

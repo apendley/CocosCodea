@@ -43,13 +43,13 @@ end
 function CCDirector:pushScene(scene)
     self.sendCleanupToScene_ = false
     
-    table.insert(self.sceneStack_, scene)
+    ccArrayInsert(self.sceneStack_, scene)
     self.nextScene_ = scene
 end
 
 function CCDirector:popScene(scene)
     local sceneStack = self.sceneStack_    
-    table.remove(sceneStack, #sceneStack)
+    ccArrayRemove(sceneStack, #sceneStack)
     
     local c = #sceneStack    
     if c == 0 then

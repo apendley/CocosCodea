@@ -1,8 +1,16 @@
 --ccArray
 
-ccOrderAscending = 1
-ccOrderDescending = -1
-ccOrderSame = 0
+ccArrayInsert = table.insert
+ccArrayRemove = table.remove
+
+function ccArrayCopy(array)
+	return {unpack(array)}
+--[[
+    local t = {}
+    for i,v in ipairs(array) do t[i] = v end
+    return t
+--]]
+end
 
 function ccArrayContains(array, object)
     for _,v in ipairs(array) do
@@ -18,21 +26,21 @@ function ccArrayIndexOf(array, object)
     end
 end  
 
-function ccArrayRemove(array, obj)
+function ccArrayRemoveObject(array, obj)
     local idx = ccArrayIndexOf(array, obj)
-    if idx then table.remove(array, idx) end
+    if idx then ccArrayRemove(array, idx) end
 end
 
 function ccArrayForEach(array, fnOrSelector)
-	if type(fnOrSelector) == "function" then
-	    for i,v in ipairs(array) do fnOrSelector(v) end	
-	else
-	    for i,v in ipairs(array) do v[fnOrSelector](v) end
-	end
+    if type(fnOrSelector) == "function" then
+        for i,v in ipairs(array) do fnOrSelector(v) end    
+    else
+        for i,v in ipairs(array) do v[fnOrSelector](v) end
+    end
 end
 
 function ccArrayClear(array)
-    while #array > 0 do table.remove(array, #array) end
+    while #array > 0 do ccArrayRemove(array, #array) end
 end
 
 function ccArrayShuffle(array)
@@ -42,67 +50,9 @@ function ccArrayShuffle(array)
     end
 end
 
-
-ccSort = {}
-
-ccSort.lt = function(a,b) return (a<b) end
-ccSort.gt = function(a,b) return (a>b) end
-ccSort.ltKey = function(key) return function(a, b) return (a[key] < b[key]) end end
-ccSort.gtKey = function(key) return function(a, b) return (a[key] > b[key]) end end
-
-function ccArraySort(array, comparator)
-	return table.sort(array, comparator)
-end
-
-
-function ccCompareLT(first, second)
-	if first < second then return ccOrderAscending
-	elseif first > second then return ccOrderDescending
-	end
-		
-	return ccOrderSame
-end
-
-
-function ccCompareGT(first, second)
-	if first > second then return ccOrderAscending
-	elseif first < second then return ccOrderDescending
-	end
-	
-	return ccOrderSame	
-end
-
--- a simple bubble sort
-function ccArrayBubbleSort(array, comparator, keyOrNil)
-    ccAssert(array and comparator)
-
-    local swapped = true
-    local j = 0
-    
-    while swapped do
-        swapped = false
-        j = j + 1
-        
-		local p1, p2, first, second
-        for i = 1, #array - j do
-			first, second = array[i], array[i+1]
-            
-            if keyOrNil then
-                p1, p2 = array[i][keyOrNil], array[i+1][keyOrNil]
-            else
-                p1, p2 = array[i], array[i+1]
-            end            
-            
-            if comparator(p1, p2) == ccOrderDescending then
-                array[i], array[i+1] = array[i+1], array[i]
-                swapped = true
-            end
-        end
-    end
-end
-
-function ccArrayCopy(array)
-    local t = {}
-    for i,v in ipairs(array) do t[i] = v end
-    return t
-end
+-- array sorting
+ccCompareLT = function(a,b) return (a<b) end
+ccCompareGT = function(a,b) return (b>a) end 
+ccCompareKeyLT = function(key) return function(a, b) return (a[key] < b[key]) end end
+ccCompareKeyLT = function(key) return function(a, b) return (a[key] > b[key]) end end
+ccArraySort = table.sort

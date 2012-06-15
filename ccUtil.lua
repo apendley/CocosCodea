@@ -71,11 +71,11 @@ function ccVec2VA(...)
 end
 
 function ccVec2Copy(v)
-	return ccVec2(v.x, v.y)
+    return ccVec2(v.x, v.y)
 end
 
 function ccVec2Unpack(v)
-	return v.x, v.y
+    return v.x, v.y
 end
 
 ------------------------
