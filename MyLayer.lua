@@ -137,7 +137,7 @@ function MyLayer:init()
     
     menu:setPosition(size/2)
     --menu:alignItemsVertically()
-    menu:alignItemsHorizontally()
+    menu:alignItemsHorizontally(50)
 end
 
 function MyLayer:itemSelected(item)
