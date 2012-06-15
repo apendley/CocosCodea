@@ -21,7 +21,7 @@ Nodes:
 	CCScene
 	CCLayer
 	CCSprite
-	CCLabelTTF
+	CCLabelTTF 
 	CCMenu
 	CCMenuItemSprite
 	CCMenuItemLabel
