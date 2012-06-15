@@ -5,7 +5,7 @@ Codea is a wonderful iPad app that allows game creation and rapid prototyping us
 
 Currently Codea has some limitations that make it difficult or impossible to implement some cocos2d functionality, such as specifying (s,t) and (u,v) coordinates for indivially drawn sprites (for CCSprite's textureRect), no copy/unpack/set semantics for Codea data types (vector2, color, matrix, etc.) to aid in writing metacode, lack of file I/O for multi-file assets (sprite sheets, tile maps, particle systems), and inability to remove quads from meshes (CCSpriteBatchNode support). When/if those limitations are addressed, or as I discover workarounds, I will update CocosCodea as necessary.
 
-At the moment nothing is optimized, as I've been working feverishly to get the core in, so CocosCodea is not as fast as it probably could be.
+At the moment nothing is optimized, as I've been working feverishly to get the core in, so CocosCodea is not as fast as it probably could be.  Other than this readme, there is currently no documentation. There are currently sparse examples of how to do things for the cocos2d/Codea uninitiated. Overloaded function arguments are sparsly documented. I will work to fix these things as I go. Also, this code is incredibly volatile. Right now it's here just for preview and experimental purposes, and I reserve the right to make breaking changes. I will tag stable branches soon, and keep a changelog, when the pace slows down a bit.
 
 If you have a suggestion for an optimization or CocosCodea in general, or if you'd like to contribute, just let me know.
 
