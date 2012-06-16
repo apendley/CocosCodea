@@ -71,7 +71,6 @@ CCEaseInOut = CCClass(CCEaseRateAction)
 
 function CCEaseInOut:update(t)
     t = t * 2
-    
     local rate = (t < 1) and (0.5 * pow(t,self.rate)) or (1 - 0.5 * pow(2-t, self.rate))
     self.action:update(rate)
 end
@@ -83,36 +82,36 @@ end
 ------------------------
 -- ease exponential in
 ------------------------
-CCEaseExponentialIn = CCClass(CCActionEase)
+CCEaseExponentIn = CCClass(CCActionEase)
 
-function CCEaseExponentialIn:update(t)
+function CCEaseExponentIn:update(t)
     self.action:update((t==0) and 0 or math.pow(2, 10 * (t - 1)) - 1 * 0.001)
 end
 
-function CCEaseExponentialIn:reverse()
-    return CCEaseExponentialOut(self.action:reverse()) 
+function CCEaseExponentIn:reverse()
+    return CCEaseExponentOut(self.action:reverse()) 
 end
 
 ------------------------
 -- ease exponential out
 ------------------------
-CCEaseExponentialOut = CCClass(CCActionEase)
+CCEaseExponentOut = CCClass(CCActionEase)
 
-function CCEaseExponentialOut:update(t)
+function CCEaseExponentOut:update(t)
     self.action:update((t==1) and 1 or (1 - math.pow(2, -10 * t)))
 end
 
-function CCEaseExponentialOut:reverse()
-    return CCEaseExponentialIn(self.action:reverse()) 
+function CCEaseExponentOut:reverse()
+    return CCEaseExponentIn(self.action:reverse()) 
 end
 
 
 ------------------------
 -- ease exponential in
 ------------------------
-CCEaseExponentialInOut = CCClass(CCActionEase)
+CCEaseExponentInOut = CCClass(CCActionEase)
 
-function CCEaseExponentialInOut:update(t)
+function CCEaseExponentInOut:update(t)
     t = t * 2    
     t = (t < 1) and (math.pow(2, 10*(t-1))) or (2 - math.pow(2, -10*(t-1)))
     t = t * 0.5
@@ -155,6 +154,5 @@ CCEaseSineInOut = CCClass(CCActionEase)
 function CCEaseSineInOut:update(t)
     local pret = t
     t = -0.5 * (math.cos(math.pi*t) - 1)
-    --ccPrint(tostring(self) .. " - EaseSineInOut: " .. pret .. " -> " .. t)
     self.action:update(t)
 end

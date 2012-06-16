@@ -49,7 +49,7 @@ function MyLayer:init()
         bg:setStrokeWidth(5)
                 
         local seq = CCSequence(CCScaleBy(0.3, 1.1), CCScaleBy(0.3, 1/1.1))
-        bg:runAction(CCRepeatForever(CCEaseSineInOut(seq)))
+        bg:runAction(CCLoop(CCEaseSineInOut(seq)))
     end    
     
     -- menu to contain buttons
@@ -82,7 +82,7 @@ function MyLayer:init()
         }
         
         
-        item:runAction(CCRepeatForever(CCSequence(sequence)))
+        item:runAction(CCLoop(CCSequence(sequence)))
         
         sequence =
         {
@@ -90,7 +90,7 @@ function MyLayer:init()
             CCEaseSineInOut(CCRotateBy(.10, 3))
         }
         
-        local loop = CCRepeatForever(CCSequence(sequence))
+        local loop = CCLoop(CCSequence(sequence))
         item:runAction(loop)
     end
     

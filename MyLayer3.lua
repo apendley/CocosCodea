@@ -29,7 +29,7 @@ function MyLayer3:init()
         local s = CCSprite("Planet Cute:Character Boy")
         s:setPosition(size.x/2 - 250, size.y - 100)
         local seq = CCSequence{CCFadeOut(2), CCFadeIn(2)}
-        s:runAction(CCRepeatForever(seq))
+        s:runAction(CCLoop(seq))
         self:addChild(s)
     end
       
@@ -37,7 +37,7 @@ function MyLayer3:init()
     do
         local s = CCSprite("Planet Cute:Character Cat Girl")
         s:setPosition(size.x/2 - 250, size.y - 200)
-        s:runAction(CCRepeatForever(CCRotateBy(2, 180)))
+        s:runAction(CCLoop(CCRotateBy(2, 180)))
         self:addChild(s)
     end
     
@@ -46,7 +46,7 @@ function MyLayer3:init()
         local s = CCSprite("Planet Cute:Character Horn Girl")
         s:setPosition(size.x/2 - 250, size.y - 300)
         local seq = CCSequence{CCScaleBy(.2, 1.1), CCScaleBy(.2, 1/1.1)}
-        s:runAction(CCRepeatForever(seq))
+        s:runAction(CCLoop(seq))
         self:addChild(s)        
     end
     
@@ -55,7 +55,7 @@ function MyLayer3:init()
         local s = CCSprite("Planet Cute:Character Pink Girl")
         s:setPosition(size.x/2 - 250, size.y - 400)
         local seq = CCSequence{CCTintTo(1, 255, 0, 0), CCTintTo(1, 255)}
-        s:runAction(CCRepeatForever(seq))
+        s:runAction(CCLoop(seq))
         self:addChild(s)        
     end
     
@@ -72,7 +72,7 @@ function MyLayer3:init()
             CCDelayTime(1),
         }
         
-        s:runAction(CCRepeatForever(seq))
+        s:runAction(CCLoop(seq))
         self:addChild(s)
     end
     
@@ -89,44 +89,56 @@ function MyLayer3:init()
             CCDelayTime(1),
         }
         
-        s:runAction(CCRepeatForever(seq))
+        s:runAction(CCLoop(seq))
         self:addChild(s)
-    end   
+    end  
     
---        sprite("Tyrian Remastered:Orb 1")        
+    -- change anchor point + simultaneous actions
+    do
+        local s = CCSprite("Planet Cute:Character Cat Girl")
+        s:setAnchorPoint(0.5, 0)
+        s:setPosition(size.x/2 + 250, size.y/2 - 200)
+        
+        s:runAction(CCLoop(CCRotateBy(2, 180)))
+        local seq = CCSequence{CCScaleBy(.2, 1.1), CCScaleBy(.2, 1/1.1)}        
+        s:runAction(CCLoop(seq))
+        self:addChild(s)
+    end     
+    
+    --sprite("Tyrian Remastered:Orb 1")        
     
     -- hierarchy
     do
         local mine = CCSprite("Tyrian Remastered:Mine Spiked Huge")
-        mine:setPosition(size.x/2 + 200, size.y/2)
+        mine:setPosition(size.x/2 + 250, size.y/2 + 100)
         local pos = mine:contentSize()/2
         local ofs = 100
         self:addChild(mine)
         
         local rot = CCRotateBy(3, 360)        
-        mine:runAction(CCRepeatForever(rot))        
+        mine:runAction(CCLoop(rot))        
         
         local orbSprite = "Tyrian Remastered:Orb 1"        
         local orb = CCSprite(orbSprite)
         orb:setPosition(pos.x - ofs, pos.y)
         mine:addChild(orb)
         local rot2 = CCRotateBy(1.5, -360)
-        orb:runAction(CCRepeatForever(rot2))
+        orb:runAction(CCLoop(rot2))
         
         orb = CCSprite(orbSprite)
         orb:setPosition(pos.x + ofs, pos.y)
         mine:addChild(orb)
-        orb:runAction(CCRepeatForever(rot2:copy()))        
+        orb:runAction(CCLoop(rot2:copy()))        
         
         orb = CCSprite(orbSprite)
         orb:setPosition(pos.x, pos.y - ofs)
         mine:addChild(orb)
-        orb:runAction(CCRepeatForever(rot2:copy()))                  
+        orb:runAction(CCLoop(rot2:copy()))                  
         
         orb = CCSprite(orbSprite)
         orb:setPosition(pos.x, pos.y + ofs)
         mine:addChild(orb)
-        orb:runAction(CCRepeatForever(rot2:copy()))                  
+        orb:runAction(CCLoop(rot2:copy()))                  
         
     end 
 end

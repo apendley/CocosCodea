@@ -184,3 +184,120 @@ function CCMenu:alignItemsHorizontally(padding)
         x = x + size.x * sx + padding
     end
 end
+
+function CCMenu:alignItemsInRows(...)
+    local rows = arg
+    local children = self.children
+    
+    local height = -5
+    local row, rowHeight, occupied, rowCol = 1, 0, 0, nil
+    
+    for i,item in ipairs(children) do
+        ccAssert(row <= #rows)
+        
+        rowCol = rows[row]
+        ccAssert(rowCol)    -- can't have 0 items in a row
+        
+        rowHeight = math.max(rowHeight, item:contentSize().y * item:scaleY())
+        occupied = occupied + 1
+        
+        if occupied >= rowCol then
+            height = height + rowHeight + 5
+            
+            occupied = 0
+            rowHeight = 0
+            row = row + 1
+        end
+    end
+    
+    ccAssert(occupied == 0)    -- too many rows/columns for available menu items
+     
+    local winSize = self:contentSize()
+    row, rowHeight, rowCol = 1, 0, 0
+    local y, x, w = height/2, nil, nil
+    
+    for i, item in ipairs(children) do
+        if rowCol == 0 then
+            rowCol = rows[row]
+            w = winSize.x / (1 + rowCol)
+            x = w
+        end
+
+        local size = item:contentSize()
+        rowHeight = math.max(rowHeight, size.y * item:scaleY())
+        item:setPosition(x-winSize.x/2, y-size.y/2)
+
+        x = x + w
+        occupied = occupied + 1
+        
+        if occupied >= rowCol  then
+            y = y - rowHeight + 5
+            occupied = 0
+            rowCol = 0
+            rowHeight = 0
+            row = row + 1
+        end
+    end
+end
+
+function CCMenu:alignItemsInColumns(...)
+    local columns = arg
+    local children = self.children
+    
+    local widths = {}
+    local heights = {}
+    
+    local width, colHeight = -10, -5
+    local col, colWidth, occupied, colRows = 1, 0, 0, nil
+    
+    for i, item in ipairs(children) do
+        ccAssert(col <= #columns) -- too many items for the amount of rows/columns
+            
+        colRows = columns[col]
+        ccAssert(colRows) -- can't have 0 rows
+            
+        local size = item:contentSize()
+        colWidth = math.max(colWidth, size.x * item:scaleX())
+        colHeight = colHeight + size.y + 5
+        occupied = occupied + 1
+            
+        if occupied >= colRows then
+            ccArrayInsert(widths, colWidth)
+            ccArrayInsert(heights, colHeight)
+            width = width + colWidth + 10
+            occupied = 0
+            colWidth = 0     
+            colHeight = -5
+            col = col + 1
+        end
+    end
+        
+    ccAssert(occupied == 0) -- too many rows/columns for available items
+        
+    local winSize = self:contentSize()
+        
+    col, colWidth, colRows = 1, 0, 0
+    local x, y = -width / 2, nil
+        
+    for i, item in ipairs(children) do
+        if colRows == 0 then
+            colRows = columns[col]
+            y = (heights[col] + winSize.y)/2
+        end
+        
+        local size = item:contentSize()
+        colWidth = math.max(colWidth, size.x * item:scaleX())
+        item:setPosition(x + widths[col] / 2, y - winSize.y/2)
+        
+        y = y - size.y + 10
+        occupied = occupied + 1
+            
+        if occupied >= colRows then
+            x = x + colWidth + 5
+            occupied = 0
+            colRows = 0
+            colWidth = 0
+            col = col + 1
+        end
+    end
+end

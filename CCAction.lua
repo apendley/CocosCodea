@@ -66,31 +66,31 @@ end
 ----------------------
 -- repeat forever
 ----------------------
-CCRepeatForever = CCClass(CCAction)
+CCLoop = CCClass(CCAction)
 
-function CCRepeatForever:init(action)
+function CCLoop:init(action)
     CCAction.init(self)
     self.action_ = action
 end
 
-function CCRepeatForever:copy()
-    return CCRepeatForever(self.action_:copy())
+function CCLoop:copy()
+    return CCLoop(self.action_:copy())
 end
 
-function CCRepeatForever:reverse()
+function CCLoop:reverse()
     return CCRepeatForver(self.action_:reverse())
 end
 
-function CCRepeatForever:isDone()
+function CCLoop:isDone()
     return false
 end
 
-function CCRepeatForever:startWithTarget(target)
+function CCLoop:startWithTarget(target)
     CCAction.startWithTarget(self, target)
     self.action_:startWithTarget(target)
 end
 
-function CCRepeatForever:step(dt)
+function CCLoop:step(dt)
     local action = self.action_
     action:step(dt)
     if action:isDone() then

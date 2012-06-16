@@ -53,7 +53,7 @@ What's here:
 * CCFuncT (CCCallBlockN in cocos2d-iphone)
 * CCMethod (CCCallFunc in cocos2d-iphone)
 * CCMethodT (CCCallFuncN in cocos2d-iphone)
-* CCCallTarget (new)
+* CCCallT (new)
 * CCShow
 * CCHide
 * CCToggleVisibility
@@ -63,7 +63,7 @@ What's here:
 * CCSequence
 * CCSpawn
 * CCRepeat
-* CCRepeatForever
+* CCLoop (CCRepeatForever in cocos2d-iphone)
 * CCSpeed
 * CCDelayTime
 * CCMoveTo/CCMoveBy
@@ -75,7 +75,7 @@ What's here:
 * CCFadeIn/CCFadeOut/CCFadeTo
 * CCTween
 * CCEaseIn/CCEaseOut
-* CCEaseExponentialIn/CCEaseExponentialOut/CCEaseExponentialInOut
+* CCEaseExponentIn/CCEaseExponentOut/CCEaseExponentInOut (CCEaseExponential* in cocos2d-iphone)
 * CCEaseSineIn/CCEaseSineOut/CCEaseSineInOut
 
 **Other:**
@@ -128,6 +128,8 @@ What's not here (yet):
 
 
 **Actions:**
+* CCFlipX
+* CCFlipY
 * CCActionCamera/CCOrbitCamera
 * CCFollow
 * CCSkewBy/CCSkewTo

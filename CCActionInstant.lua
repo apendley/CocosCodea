@@ -1,14 +1,8 @@
 --CCActionInstant
 CCActionInstant = CCClass(CCFiniteTimeAction)
 
-function CCActionInstant:isDone()
-    return true
-end
-
-function CCActionInstant:step(dt)
-    self:update(1)
-end
-
+function CCActionInstant:isDone() return true end
+function CCActionInstant:step(dt) self:update(1)end
 
 ---------------------------------
 -- base class for caller actions
@@ -17,12 +11,11 @@ CCCallBase = CCClass(CCActionInstant)
 
 function CCCallBase:init(...)
     CCActionInstant.init(self)
-    --if #arg > 0 then self.params = ccArrayCopy(arg) end    
     if #arg > 0 then self.params = arg end
 end
 
-function CCCallBase:execute(...)
-    ccAssert(false, "implement me!")
+function CCCallBase:execute(...) 
+	ccAssert(false, "implement me!") 
 end
 
 function CCCallBase:update(t)
@@ -47,9 +40,7 @@ function CCFunc:copy()
     return self.class(fn, params and unpack(params) or nil)
 end
 
-function CCFunc:execute(...)
-    self.func(...)
-end
+function CCFunc:execute(...) self.func(...) end
     
 function CCFunc:makeCaller(fn)
     local klass = CCClass(self)
@@ -69,10 +60,7 @@ end
 -- CCFuncT(f, ...) -> f(actionTarget, ...)
 ---------------------------------------------------------------------------
 CCFuncT = CCClass(CCFunc)
-
-function CCFuncT:execute(...)
-    self.func(self.target, ...)
-end
+function CCFuncT:execute(...) self.func(self.target, ...) end
 
 ---------------------------------------------------------------------------
 -- call a method on obj
@@ -105,28 +93,28 @@ end
 CCMethodT = CCClass(CCCallMethod)
 
 function CCMethodT:execute(...)
-    local obj = self.obj_    
+    local obj = self.obj_ 
     obj[self.selector_](obj, self.target, ...)
 end
 
 ---------------------------------------------------------------------------
 -- call a method on the action target
--- CCCallTarget(sel, ...) -> actionTarget:sel(...)
+-- CCCallT(sel, ...) -> actionTarget:sel(...)
 ---------------------------------------------------------------------------
-CCCallTarget = CCClass(CCCallBase)
+CCCallT = CCClass(CCCallBase)
 
-function CCCallTarget:init(selector, ...)
+function CCCallT:init(selector, ...)
     CCCallBase.init(self, ...)
     self.selector_ = selector
 end
 
-function CCCallTarget:copy()
+function CCCallT:copy()
     local sel = self.selector_
     local params = self.params
     return self.class(sel, params and unpack(params) or nil)
 end
 
-function CCCallTarget:execute(...)
+function CCCallT:execute(...)
     local target = self.target
     target[self.selector_](target, ...)
 end
