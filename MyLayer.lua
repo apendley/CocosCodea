@@ -79,7 +79,7 @@ function MyLayer:init()
         end
         
         item:runActions{loop = true,
-            CCDelayTime(duration), 
+            CCDelay(duration), 
             CCFuncT(randomAnchorPoint),
         }
                 

@@ -63,9 +63,9 @@ function MyLayer3:init()
         
         s:runActions{ loop = true,
             CCMoveBy(3, 200, 0), 
-            CCDelayTime(1),
+            CCDelay(1),
             CCMoveBy(3, -200, 0),
-            CCDelayTime(1),
+            CCDelay(1),
         }        
         
         self:addChild(s)
@@ -78,9 +78,9 @@ function MyLayer3:init()
         
         s:runActions{ loop = true,
             CCEaseSineInOut(CCMoveBy(3, 200, 0)), 
-            CCDelayTime(1),
+            CCDelay(1),
             CCEaseSineInOut(CCMoveBy(3, -200, 0)),
-            CCDelayTime(1),
+            CCDelay(1),
         }
         
         self:addChild(s)

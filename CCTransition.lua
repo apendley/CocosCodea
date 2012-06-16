@@ -157,7 +157,7 @@ function CCTransitionRotoZoom:onEnter()
     {
         CCSpawn(CCScaleBy(duration/2, .001), CCRotateBy(duration/2, 720)),
         --CCSpawn(CCRotateBy(duration/2, 720), CCScaleBy(duration/2, .001)),
-        CCDelayTime(duration/2),
+        CCDelay(duration/2),
     }
     
     local rotozoom = CCSequence(sequence)
@@ -190,7 +190,7 @@ function CCTransitionJumpZoom:onEnter()
     
     local sequence =
     {
-        CCDelayTime(d*.5),
+        CCDelay(d*.5),
         CCSequence(jump:copy(), CCScaleTo(d_4, 1)),
         CCMethod(self, "finish")
     }

@@ -223,9 +223,9 @@ function CCSpawnAction:init(one, two, ...)
     self.one_, self.two_ = one, two
     
     if d1 > d2 then
-       self.two_ = CCSequenceAction(two, CCDelayTime(d1-d2))
+       self.two_ = CCSequenceAction(two, CCDelay(d1-d2))
     elseif d1 < d2 then
-        self.one_ = CCSequenceAction(one, CCDelayTime(d2-d1))
+        self.one_ = CCSequenceAction(one, CCDelay(d2-d1))
     end
 end
 
@@ -608,8 +608,8 @@ end
 ----------------------
 -- DelayTime
 ----------------------
-CCDelayTime = CCClass(CCActionInterval)
-CCDelayTime.reverse = CCDelayTime.copy
+CCDelay = CCClass(CCActionInterval)
+CCDelay.reverse = CCDelay.copy
 
 
 -- TODO: ReverseTime, Animate, TargetedAction

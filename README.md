@@ -65,7 +65,7 @@ What's here:
 * CCRepeat
 * CCLoop (CCRepeatForever in cocos2d-iphone)
 * CCSpeed
-* CCDelayTime
+* CCDelay (CCDelayTime in cocos2d-iphone)
 * CCMoveTo/CCMoveBy
 * CCRotateTo/CCRotateBy
 * CCScaleTo/CCScaleBy
@@ -80,8 +80,8 @@ What's here:
 
 **Other:**
 * CocosCodea uses customized version of a class system called MiddleClass by Enrique García Cota
-* synthesize get/set methods for class properties
 * create reusable interfaces with CCMixin
+* synthesize get/set methods for class properties
 	
 	
 What's not here (yet):
