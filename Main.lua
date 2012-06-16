@@ -5,7 +5,7 @@ function setup()
 
     local director = CCSharedDirector()
     director:showFPS(true)
-    director:runWithScene(MyLayer3:scene())
+    director:runWithScene(MyLayer:scene())
 end
 
 function touched(touch)

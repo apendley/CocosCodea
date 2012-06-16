@@ -8,9 +8,11 @@ CCNode:synth{"scaleY", mode="r"}
 CCNode:synth{"scale", ivar="scaleX_", mode="r"}
 CCNode:synth{"ignoreAnchorPointForPosition", mode="r"}
 CCNode:synth{"userData"}
+CCNode:synth{"actionManager", mode="r"}
 CCNode:synthVec2{"position", mode="r"}
 CCNode:synthVec2{"anchorPoint", mode="r"}
 CCNode:synthVec2{"contentSize", mode="r"}
+
 
 function CCNode:init()
     self.position_ = ccVec2(0,0)
@@ -393,19 +395,26 @@ end
 ---------------------
 -- actions
 ---------------------
-function CCNode:actionManager(am)
-    if am == nil then
-        return self.actionManager_
-    else
-        if self.actionManager_ ~= am then
-            self:stopAllActions()
-            self.actionManager_ = am
-        end
-    end
+function CCNode:setActionManger()
+    if self.actionManager_ ~= am then
+        self:stopAllActions()
+        self.actionManager_ = am
+    end    
 end
 
-function CCNode:runAction(action)
-    return self.actionManager_:addAction(action, self, self.isRunning_ == false)
+function CCNode:runAction(action, tag)
+    ccAssert(action) -- action must not be nil
+    if tag then action:setTag(tag) end
+    self.actionManager_:addAction(action, self, self.isRunning_ == false)
+    return action
+end
+
+-- takes same parameters as ccActions()
+function CCNode:runActions(actionTable)
+    ccAssert(actionTable) -- table must not be nil
+    local action = ccActions(actionTable)
+    self.actionManager_:addAction(action, self, self.isRunning_ == false)
+    return action
 end
 
 function CCNode:stopAllActions()

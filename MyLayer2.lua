@@ -83,9 +83,7 @@ function MyLayer2:spawnDrop(dt)
         end
 
         local d = 1 + math.random() * 1.5
-        local fall = CCMoveTo(d, x, -cs.y)
-        local remove = CCFuncT(recycleDrop)
-        drop:runAction(CCSequence(fall, remove))
+        drop:runActions{CCMoveTo(d, x, -cs.y), CCFuncT(recycleDrop)}
     end
 end
 

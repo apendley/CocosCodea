@@ -40,7 +40,6 @@ function MyRetinaTest:init()
     
     -- keep these on a different layer
     local layer = CCLayer()
-    layer:setPosition(self:position())
     self:addChild(layer)
     self.layer = layer
     
@@ -48,7 +47,6 @@ function MyRetinaTest:init()
     self:populate()    
     
     local m = CCMenu(toggle)
-    m:setPosition(self:position())
     self:addChild(m)    
     
     do
@@ -85,9 +83,11 @@ function MyRetinaTest:init()
         local useSprites = CCMenuItemFont("Use sprites", "Georgia", 30)
         useSprites:setTag("sprite")        
         useSprites:setUserData(createSprite)
+        
         local useImage = CCMenuItemFont("Use image objects", "Georgia", 30)
         useImage:setTag("image")
         useImage:setUserData(createImage)
+        
         local toggle = CCMenuItemToggle(useSprites, useImage)
         toggle:setHandler(self, "imageToggled")
         toggle:setPosition(size.x/2, 30)
@@ -130,19 +130,14 @@ function MyRetinaTest:toggled(toggle)
         CC_ENABLE_CODEA_2X_MODE = false        
     end
     
-    local layer = self.layer
-    layer:removeAllChildren(true)
+    self.layer:removeAllChildren(true)
     self:populate()    
-    
     self.statusLabel:setString(item:userData())
 end
 
 function MyRetinaTest:imageToggled(toggle)
     local item = toggle:selectedItem()
-    
-    local layer = self.layer
-    layer:removeAllChildren(true)
-   
+    self.layer:removeAllChildren(true)   
     self.createFn = item:userData()
     self:populate()
 end

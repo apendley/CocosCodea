@@ -47,9 +47,11 @@ function MyLayer:init()
         bg:setStrokeEnabled(true)
         bg:setStrokeColor(255)
         bg:setStrokeWidth(5)
-                
-        local seq = CCSequence(CCScaleBy(0.3, 1.1), CCScaleBy(0.3, 1/1.1))
-        bg:runAction(CCLoop(CCEaseSineInOut(seq)))
+        
+        bg:runActions{ loop = true, ease = CCEaseSineInOut,
+            CCScaleBy(0.3, 1.1),
+            CCScaleBy(0.3, 1/1.1),
+        }
     end    
     
     -- menu to contain buttons
@@ -76,22 +78,15 @@ function MyLayer:init()
             target:runAction(tween)
         end
         
-        local sequence =
-        {
-            CCDelayTime(duration), CCFuncT(randomAnchorPoint),
+        item:runActions{loop = true,
+            CCDelayTime(duration), 
+            CCFuncT(randomAnchorPoint),
         }
-        
-        
-        item:runAction(CCLoop(CCSequence(sequence)))
-        
-        sequence =
-        {
+                
+        item:runActions{ loop = true,
             CCEaseSineInOut(CCRotateTo(.10, -1.5)),
             CCEaseSineInOut(CCRotateBy(.10, 3))
         }
-        
-        local loop = CCLoop(CCSequence(sequence))
-        item:runAction(loop)
     end
     
     -- Hello! button

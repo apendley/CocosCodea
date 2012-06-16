@@ -76,24 +76,24 @@ local function _includeMixin(klass, mixin)
   klass.__mixins[mixin] = true
 end
 
-local function _subclassOf(aClass, other)
+function ccSubclassOf(aClass, other)
   if not _classes[aClass] or not _classes[other] or aClass.super == nil then return false end
-  return aClass.super == other or _subclassOf(aClass.super, other)
+  return aClass.super == other or ccSubclassOf(aClass.super, other)
 end
 
-local function _instanceOf(obj, aClass)
+function ccInstanceOf(obj, aClass)
   if not _classes[aClass] or type(obj) ~= 'table' or not _classes[obj.class] then return false end
   if obj.class == aClass then return true end
-  return _subclassOf(obj.class, aClass)
+  return ccSubclassOf(obj.class, aClass)
 end
 
-local function _includes(aClass, mixin)
+function ccIncludes(aClass, mixin)
   if not _classes[aClass] then return false end
   if aClass.__mixins[mixin] then return true end
-  return _includes(aClass.super, mixin)
+  return ccIncludes(aClass.super, mixin)
 end
 
-Object = _createClass("Object", nil)
+Object = _createClass()
 
 Object.static.__metamethods = { '__add', '__call', '__concat', '__div', '__le', '__lt', 
                                 '__mod', '__mul', '__pow', '__sub', '__tostring', '__unm' }
@@ -129,8 +129,8 @@ function Object.static:include( ... )
   return self
 end
 
-Object.static.subclassOf = _subclassOf
-Object.static.includes = _includes
+Object.static.subclassOf = ccSubclassOf
+Object.static.includes = ccIncludes
 
 -- include get/set synthesization: MyClass:synth{"property"}
 Object.static.synth = ccSynth
@@ -142,8 +142,8 @@ function Object:init() end
 
 function Object:__tostring() return "instance of " .. tostring(self.class) end
 
-Object.instanceOf = _instanceOf
-Object.is_a = _instanceOf
+Object.instanceOf = ccInstanceOf
+Object.is_a = ccInstanceOf
 
 function CCClass(super, ...)
   super = super or Object

@@ -1,3 +1,59 @@
+--CCAction
+
+-- A Lua-fied way to run multiple actions. use like so:
+-- options are: "instant", "loop", "repeat", and "ease".
+-- "ease"'s value should be the name of the class that handles the easing, e.g. CCEaseIn
+-- priority of options is instant > loop > repeat
+-- "ease" will be ignored if "instant" is true
+-- if "repeat" is specified, it's value should be the number of additional times to run
+-- some ease functions take a rate. for those, specify the "rate".
+-- if no options are specified, a non-repeating non-eased sequenced action is used.
+-- you can also specify a tag for your actions
+--
+--    node:runActions
+--    {
+--        [instant = true][loop = true][repeat = 3],
+--        [ease = CCEaseInOut, [rate = .3]],
+--        [tag = "beefy"],
+--
+--        CCMoveBy(2, 100, 50),
+--        CCMoveBy(2, -100, 50),
+--        ...
+--    }
+function ccActions(t)
+    ccAssert(next(t))    -- table must not be empty
+    
+    local action, instant = nil, false
+    if t[2] then
+        instant = t["instant"]
+        action = instant and CCSpawn(t) or CCSequence(t)
+
+        if not instant then
+            local ease = t["ease"]
+            if ease then action = ease(action, t["rate"]) end
+        end
+    else
+        action = t[1]
+    end
+
+    if not instant then    
+        if t["loop"] == true then
+            return CCLoop(action)
+        else
+            local times = t["repeat"]
+            if times then action = CCRepeat(action, times) end
+        end
+    end
+    
+    local tag = t["tag"]
+    if tag then action:setTag(tag) end
+    
+    return action    
+end
+
+--------------------
+-- CCAction
+--------------------
 CCAction = CCClass()
 
 CCAction:synth{"tag"}
@@ -69,7 +125,7 @@ end
 CCLoop = CCClass(CCAction)
 
 function CCLoop:init(action)
-    CCAction.init(self)
+    CCAction.init(self)    
     self.action_ = action
 end
 
