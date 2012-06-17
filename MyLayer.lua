@@ -4,12 +4,12 @@ MyLayer = CCClass(CCLayer)
 function MyLayer:init()
     CCLayer.init(self)
     
-    local size = self:contentSize()    
+    local size = self:size()    
     
     -- status label
     do
         local label = CCLabelTTF("", "AmericanTypewriter", 40, CENTER)
-        label:setAnchorPoint(0.5, 1)
+        label:setAnchor(0.5, 1)
         label:setPosition(size.x/2, size.y)
         label:setHasShadow(true)
         self:addChild(label)        
@@ -39,11 +39,11 @@ function MyLayer:init()
         label:setHasShadow(true)
         label:setShadowColor(128, 128, 255, 160)
     
-        local cs = item:contentSize()
+        local cs = item:size()
         local bg = CCNodeRect(cs.x*1.5, cs.y*1.5, 0, 0, 128)
         self:addChild(bg, -1)        
         bg:setPosition(item:position())
-        bg:setAnchorPoint(item:anchorPoint())
+        bg:setAnchor(item:anchor())
         bg:setStrokeEnabled(true)
         bg:setStrokeColor(255)
         bg:setStrokeWidth(5)
@@ -69,18 +69,18 @@ function MyLayer:init()
         item:setHandler(self, "itemSelected")
         
         local duration = .2
-        local function randomAnchorPoint(target)
+        local function randomAnchor(target)
             local range = 1
             local x = math.random(50-range/2, 50+range/2) / 100
             local y = math.random(50-range/2, 50+range/2) / 100
-            local ap = target:anchorPoint()
-            local tween = CCTween(duration, "setAnchorPoint", ap, ccVec2(x,y))
+            local ap = target:anchor()
+            local tween = CCTween(duration, "setAnchor", ap, ccVec2(x,y))
             target:runAction(tween)
         end
         
         item:runActions{loop = true,
             CCDelay(duration), 
-            CCFuncT(randomAnchorPoint),
+            CCFuncT(randomAnchor),
         }
                 
         item:runActions{ loop = true,

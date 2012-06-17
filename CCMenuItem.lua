@@ -6,7 +6,7 @@ CCMenuItem:synth{"isSelected", mode="r"}
 
 function CCMenuItem:init()
     CCNode.init(self)
-    self:setAnchorPoint(0.5, 0.5)
+    self:setAnchor(0.5, 0.5)
     self.isEnabled_ = true
     self.isSelected_ = false
 end
@@ -45,8 +45,8 @@ end
 
 function CCMenuItem:rect()
     local pos = self:position()
-    local cs = self:contentSize()
-    local ap = self:anchorPoint()
+    local cs = self:size()
+    local ap = self:anchor()
     return ccRect(pos.x-cs.x*ap.x, pos.y-cs.y*ap.y, cs.x, cs.y)
 end
 
@@ -58,7 +58,7 @@ function CCMenuItem:draw()
     noFill()
     strokeWidth(2)
     stroke(255,128,128)
-    local s = self:contentSize()
+    local s = self:size()
     rect(0, 0, s.x, s.y)
 end
 --]]
@@ -155,16 +155,16 @@ function CCMenuItemBackedLabel:init(label, normal, selected, disabled)
     CCMenuItem.init(self)
     CCMenuItemSpriteMixin.init(self, normal, selected, disabled)    
     CCMenuItemLabelMixin.init(self, label)    
-    self:updateContentSize()
+    self:updateSize()
 end
 
-function CCMenuItemBackedLabel:updateContentSize()
+function CCMenuItemBackedLabel:updateSize()
     local img = self.normalImage_
     local label = self.label_
 
     local lw, lh
     if label then
-        local cs = label:contentSize()
+        local cs = label:size()
         lw, lh = cs.x, cs.y
     else
         lw, lh = 0, 0
@@ -172,7 +172,7 @@ function CCMenuItemBackedLabel:updateContentSize()
     
     local iw, ih
     if img then 
-        local cs = img:contentSize()
+        local cs = img:size()
         iw, ih = cs.x, cs.y
     else
         iw, ih = 0, 0
@@ -180,11 +180,11 @@ function CCMenuItemBackedLabel:updateContentSize()
 
     local w = math.max(iw, lw)
     local h = math.max(ih, lh)
-    self:setContentSize(w, h)
+    self:setSize(w, h)
     
     if label and img then
-        local pos = img:contentSize()/2
-        pos = pos - label:contentSize()/2
+        local pos = img:size()/2
+        pos = pos - label:size()/2
         label:setPosition(pos)
     end
 end
@@ -278,7 +278,7 @@ function CCMenuItemFont:updateLabel()
     label:setFontSize(self.fontSize_)
     label:setAlignment(self.alignment_)
     label:setWrapWidth(self.wrapWidth_)
-    self:setContentSize(label:contentSize())
+    self:setSize(label:Size())
 end
 
 function CCMenuItemFont:setFontSize(size)
@@ -341,8 +341,8 @@ function CCMenuItemToggle:setSelectedIndex(index)
         local item = self.subitems_[index]
         self:addChild(item, 0, {kToggleTagKey, kCurrentItemTag})
         
-        local s = item:contentSize()
-        self:setContentSize(s)
+        local s = item:size()
+        self:setSize(s)
         item:setPosition(s/2)
     end
 end

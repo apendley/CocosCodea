@@ -6,7 +6,7 @@ function MyLayer2:init()
     self.dropFreeList = {}
     self.nextDrop = 1
     
-    local size = self:contentSize()
+    local size = self:size()
     
     -- make a button to exit scene    
     local exitButton
@@ -70,7 +70,7 @@ function MyLayer2:spawnDrop(dt)
 
         drop:setScale(.75 + (math.random() * .25))
         
-        local cs = drop:contentSize()
+        local cs = drop:size()
         local ws = CCSharedDirector():winSize()
         
         local x = math.random(-cs.x, ws.x + cs.x)

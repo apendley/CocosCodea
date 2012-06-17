@@ -14,10 +14,10 @@ function CCMenu:init(...)
     self:setTouchEnabled(true)
     self:setEnabled(true)
     
-    self:setIgnoreAnchorPointForPosition(true)
-    self:setAnchorPoint(0.5, 0.5)
+    self:setIgnoreAnchorForPosition(true)
+    self:setAnchor(0.5, 0.5)
     -- todo: get these from the director
-    self:setContentSize(WIDTH, HEIGHT)        
+    self:setSize(WIDTH, HEIGHT)        
     self:setPosition(WIDTH/2, HEIGHT/2)
     
     if #arg > 0 then
@@ -60,7 +60,7 @@ function CCMenu:itemForTouch(touch)
     local p = ccVec2(touch.x, touch.y)
     p = CCSharedDirector():convertToGL(p)
     
-    for i,item in ipairs(self.children) do
+    for i,item in ipairs(self.children_) do
         if item:visible() and item:isEnabled() then
             local pl = item:convertToNodeSpace(p)
             local r = item:rect()
@@ -119,7 +119,7 @@ end
 function CCMenu:setOpacity(o)
     CCCRGBAMixin.setOpacity(o)
     
-    for i, item in ipairs(self.children) do
+    for i, item in ipairs(self.children_) do
         item:setOpacity(o)
     end
 end
@@ -127,7 +127,7 @@ end
 function CCMenu:setColor(c)
     CCCRGBAMixin.setColor(c)
     
-    for i, item in ipairs(self.children) do
+    for i, item in ipairs(self.children_) do
         item:setColor(c)
     end    
 end
@@ -135,7 +135,7 @@ end
 function CCMenu:setColor4(c)
     CCCRGBAMixin.setColor4(c)
     
-    for i, item in ipairs(self.children) do
+    for i, item in ipairs(self.children_) do
         item:setColor4(c)
     end        
 end
@@ -147,18 +147,18 @@ local kDefaultPadding = 5
 
 function CCMenu:alignItemsVertically(padding)
     padding = padding or kDefaultPadding
-    local children = self.children
+    local children = self.children_
     
     local height = -padding
     
     for i, item in ipairs(children) do
-        height = height + item:contentSize().y * item:scaleY() + padding
+        height = height + item:size().y * item:scaleY() + padding
     end
     
     local y = height / 2
     
     for i, item in ipairs(children) do
-        local size = item:contentSize()
+        local size = item:size()
         local sy = item:scaleY()
         item:setPosition(0, y - size.y * sy / 2)
         y = y - size.y * sy + padding
@@ -167,18 +167,18 @@ end
 
 function CCMenu:alignItemsHorizontally(padding)
     padding = padding or kDefaultPadding
-    local children = self.children
+    local children = self.children_
     
     local width = -padding
     
     for i, item in ipairs(children) do
-        width = width + item:contentSize().x * item:scaleX() + padding
+        width = width + item:size().x * item:scaleX() + padding
     end
     
     local x = -width / 2
     
     for i, item in ipairs(children) do
-        local size = item:contentSize()
+        local size = item:size()
         local sx = item:scaleX()
         item:setPosition(x + size.x * sx / 2, 0)
         x = x + size.x * sx + padding
@@ -187,7 +187,7 @@ end
 
 function CCMenu:alignItemsInRows(...)
     local rows = arg
-    local children = self.children
+    local children = self.children_
     
     local height = -5
     local row, rowHeight, occupied, rowCol = 1, 0, 0, nil
@@ -198,7 +198,7 @@ function CCMenu:alignItemsInRows(...)
         rowCol = rows[row]
         ccAssert(rowCol)    -- can't have 0 items in a row
         
-        rowHeight = math.max(rowHeight, item:contentSize().y * item:scaleY())
+        rowHeight = math.max(rowHeight, item:size().y * item:scaleY())
         occupied = occupied + 1
         
         if occupied >= rowCol then
@@ -212,7 +212,7 @@ function CCMenu:alignItemsInRows(...)
     
     ccAssert(occupied == 0)    -- too many rows/columns for available menu items
      
-    local winSize = self:contentSize()
+    local winSize = self:size()
     row, rowHeight, rowCol = 1, 0, 0
     local y, x, w = height/2, nil, nil
     
@@ -223,7 +223,7 @@ function CCMenu:alignItemsInRows(...)
             x = w
         end
 
-        local size = item:contentSize()
+        local size = item:size()
         rowHeight = math.max(rowHeight, size.y * item:scaleY())
         item:setPosition(x-winSize.x/2, y-size.y/2)
 
@@ -242,7 +242,7 @@ end
 
 function CCMenu:alignItemsInColumns(...)
     local columns = arg
-    local children = self.children
+    local children = self.children_
     
     local widths = {}
     local heights = {}
@@ -256,7 +256,7 @@ function CCMenu:alignItemsInColumns(...)
         colRows = columns[col]
         ccAssert(colRows) -- can't have 0 rows
             
-        local size = item:contentSize()
+        local size = item:size()
         colWidth = math.max(colWidth, size.x * item:scaleX())
         colHeight = colHeight + size.y + 5
         occupied = occupied + 1
@@ -274,7 +274,7 @@ function CCMenu:alignItemsInColumns(...)
         
     ccAssert(occupied == 0) -- too many rows/columns for available items
         
-    local winSize = self:contentSize()
+    local winSize = self:size()
         
     col, colWidth, colRows = 1, 0, 0
     local x, y = -width / 2, nil
@@ -285,7 +285,7 @@ function CCMenu:alignItemsInColumns(...)
             y = (heights[col] + winSize.y)/2
         end
         
-        local size = item:contentSize()
+        local size = item:size()
         colWidth = math.max(colWidth, size.x * item:scaleX())
         item:setPosition(x + widths[col] / 2, y - winSize.y/2)
         

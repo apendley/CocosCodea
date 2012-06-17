@@ -7,14 +7,14 @@ function CCSprite:init(spriteNameOrImage)
     CCNode.init(self)
     CCRGBAMixin.init(self)
     self:setSprite(spriteNameOrImage)
-    self:setAnchorPoint(0.5, 0.5)
+    self:setAnchor(0.5, 0.5)
     self.flipX_ = false
     self.flipY_ = false
 end
 
-function CCSprite:setContentSize(...)
+function CCSprite:setSize(...)
     
-    local cs = self.contentSize_
+    local cs = self.size_
     cs.x, cs.y = ccVec2VA(...)
         
     -- see ccConfig
@@ -23,7 +23,7 @@ function CCSprite:setContentSize(...)
         cs.x, cs.y = cs.x * csf, cs.y * csf
     end            
         
-    local ap, app = self.anchorPoint_, self.anchorPointInPoints_
+    local ap, app = self.anchor_, self.anchorInPoints_
     app.x, app.y = cs.x * ap.x, cs.y * ap.y
     self.isTransformDirty_, self.isInverseDirty_ = true, true    
 end
@@ -36,7 +36,7 @@ function CCSprite:draw()
     --if self.sprite_ then sprite(self.sprite_, 0, 0, s.x, s.y) end
     
     spriteMode(CENTER)
-    local s = self.contentSize_    
+    local s = self.size_    
     local w = self.flipX_ and -s.x or s.x
     local h = self.flipY_ and -s.y or s.y
     
@@ -71,5 +71,5 @@ function CCSprite:setSprite(spriteNameOrImage)
         h = h / ContentScaleFactor
     end
 
-    self:setContentSize(w, h)
+    self:setSize(w, h)
 end

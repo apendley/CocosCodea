@@ -36,7 +36,7 @@ local retina =
 function MyRetinaTest:init()
     CCLayer.init(self)
     
-    local size = self:contentSize()
+    local size = self:size()
     
     -- keep these on a different layer
     local layer = CCLayer()
@@ -51,7 +51,7 @@ function MyRetinaTest:init()
     
     do
         local label = CCLabelTTF("", "Georgia", 24, CENTER, 30)
-        label:setAnchorPoint(.5, .5)
+        label:setAnchor(.5, .5)
         label:setHasShadow(true)
         label:setShadowColor(128)
         label:setPosition(size.x/2, size.y - size.y/3)

@@ -3,7 +3,7 @@ MenuArrangeTest = CCClass(CCLayer)
 function MenuArrangeTest:init()
     CCLayer.init(self)
     
-    local size = self:contentSize()
+    local size = self:size()
     
     -- the horizontally aligned
     do
@@ -19,7 +19,7 @@ function MenuArrangeTest:init()
             menu:addChild(item, 0, i)
             
             local label = CCLabelTTF(tostring(i))
-            label:setPosition(item:contentSize()/2)
+            label:setPosition(item:size()/2)
             item:addChild(label)            
         end
     
@@ -41,7 +41,7 @@ function MenuArrangeTest:init()
             menu:setScale(.75)
             
             local label = CCLabelTTF(tostring(i))
-            label:setPosition(item:contentSize()/2)
+            label:setPosition(item:size()/2)
             item:addChild(label)                        
         end
     
@@ -65,7 +65,7 @@ function MenuArrangeTest:init()
             menu:addChild(item, 0, i)
             
             local label = CCLabelTTF(tostring(i))
-            label:setPosition(item:contentSize()/2)
+            label:setPosition(item:size()/2)
             item:addChild(label)
         end
     
@@ -88,7 +88,7 @@ function MenuArrangeTest:init()
             menu:addChild(item, 0, i)
             
             local label = CCLabelTTF(tostring(i))
-            label:setPosition(item:contentSize()/2)
+            label:setPosition(item:size()/2)
             item:addChild(label)
             item:setScale(.5)
         end

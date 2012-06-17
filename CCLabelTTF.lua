@@ -25,34 +25,34 @@ end
 
 function CCLabelTTF:setString(str)
     CCLabelMixin.setString(self, str)
-    self:updateContentSize_()
+    self:updateSize_()
 end
 
 function CCLabelTTF:setFontName(fontName)
     if self.font_ ~= fontName then
         self.font_ = fontName
-        self:updateContentSize_()
+        self:updateSize_()
     end
 end
 
 function CCLabelTTF:setFontSize(size)
     if self.fontSize_ ~= size then
         self.fontSize_ = size
-        self:updateContentSize_()
+        self:updateSize_()
     end
 end
 
 function CCLabelTTF:setAlignment(align)
     if self.alignment_ ~= align then
         self.alignment_ = align
-        self:updateContentSize_()
+        self:updateSize_()
     end
 end
 
 function CCLabelTTF:setWrapWidth(width)
     if self.wrapWidth_ ~= width then
         self.wrapWidth_ = width
-        self:updateContentSize_()
+        self:updateSize_()
     end
 end
 
@@ -63,10 +63,10 @@ function CCLabelTTF:applyStyle()
     textWrapWidth(self.wrapWidth_)    
 end
 
-function CCLabelTTF:updateContentSize_()
+function CCLabelTTF:updateSize_()
     pushStyle()
     self:applyStyle()
-    self:setContentSize(textSize(self:string()))
+    self:setSize(textSize(self:string()))
     popStyle()    
 end
 
@@ -89,7 +89,7 @@ function CCLabelTTF:draw()
     noFill()
     strokeWidth(2)
     stroke(255,128,128)
-    local s = self:contentSize()
+    local s = self:size()
     rect(0, 0, s.x, s.y)
     --]]    
 end

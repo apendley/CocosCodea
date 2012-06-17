@@ -117,18 +117,18 @@ function CCMenuItemLabelMixin:setLabel(label)
         if self.label_ then self:removeChild(self.label_, true) end
         self:addChild(label)
         self.label_ = label
-        label:setAnchorPoint(0, 0)
-        self:updateContentSize()
+        label:setAnchor(0, 0)
+        self:updateSize()
     end
 end
 
-function CCMenuItemLabelMixin:updateContentSize()
-    self:setContentSize(self.label_:contentSize())
+function CCMenuItemLabelMixin:updateSize()
+    self:setSize(self.label_:size())
 end
 
 function CCMenuItemLabelMixin:setString(str)
     self.label_:setString(str)
-    self:updateContentSize()
+    self:updateSize()
 end
 
 function CCMenuItemLabelMixin:activate()
@@ -218,7 +218,7 @@ function CCMenuItemSpriteMixin:init(normalSprite, selectedSprite, disabledSprite
     self:setNormalImage(normalSprite)
     self:setSelectedImage(selectedSprite)
     self:setDisabledImage(disabledSprite)
-    self:updateContentSize()
+    self:updateSize()
 end
                 
 function CCMenuItemSpriteMixin:cleanup()
@@ -230,11 +230,11 @@ end
 function CCMenuItemSpriteMixin:setNormalImage(img)
     if img ~= self.normalImage_ then
         ccAssert(img)        
-        img:setAnchorPoint(0, 0)
+        img:setAnchor(0, 0)
         self:removeChild(self.normalImage_, true)
         self:addChild(img)
         self.normalImage_ = img
-        self:updateContentSize()
+        self:updateSize()
         self:updateImagesVisibility()
     end
 end
@@ -244,7 +244,7 @@ function CCMenuItemSpriteMixin:setSelectedImage(img)
         if self.selectedImage_ then self:removeChild(self.selectedImage_, true) end
         
         if img then
-            img:setAnchorPoint(0, 0)
+            img:setAnchor(0, 0)
             self:addChild(img)
             self.selectedImage_ = img
         else
@@ -260,7 +260,7 @@ function CCMenuItemSpriteMixin:setDisabledImage(img)
         if self.disabledImage_ then self:removeChild(self.disabledImage_, true) end        
         
         if img then
-            img:setAnchorPoint(0, 0)
+            img:setAnchor(0, 0)
             self:addChild(img)
             self.disabledImage_ = img
         else
@@ -293,8 +293,8 @@ function CCMenuItemSpriteMixin:updateImagesVisibility()
     end
 end
 
-function CCMenuItemSpriteMixin:updateContentSize()
-    return self:setContentSize(self.normalImage_:contentSize())
+function CCMenuItemSpriteMixin:updateSize()
+    return self:setSize(self.normalImage_:size())
 end
 
 function CCMenuItemSpriteMixin:setOpacity(o)

@@ -3,7 +3,7 @@ MyLayer3 = CCClass(CCLayer)
 function MyLayer3:init()
     CCLayer.init(self)
     
-    local size = self:contentSize()
+    local size = self:size()
     
     -- make a button to exit scene    
     local exitButton
@@ -89,7 +89,7 @@ function MyLayer3:init()
     -- change anchor point + simultaneous actions
     do
         local s = CCSprite("Planet Cute:Character Cat Girl")
-        s:setAnchorPoint(0.5, 0)
+        s:setAnchor(0.5, 0)
         s:setPosition(size.x/2 + 250, size.y/2 - 200)
         s:runActions{CCRotateBy(2, 180), loop=true}
         s:runActions{CCScaleBy(.2, 1.1), CCScaleBy(.2, 1/1.1), loop=true}
@@ -108,7 +108,7 @@ function MyLayer3:init()
         local xOfs = {-ofs, ofs, 0, 0}
         local yOfs = {0, 0, -ofs, ofs}
 
-        local pos = mine:contentSize()/2          
+        local pos = mine:size()/2          
         local rot = ccActions{CCRotateBy(1.5, -360), loop=true}
     
         for i = 1, 4 do

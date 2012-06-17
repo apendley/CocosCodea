@@ -150,8 +150,8 @@ function CCTransitionRotoZoom:onEnter()
     inScene:setScale(.001)
     outScene:setScale(1)
     
-    inScene:setAnchorPoint(.5, .5)
-    outScene:setAnchorPoint(.5, .5)
+    inScene:setAnchor(.5, .5)
+    outScene:setAnchor(.5, .5)
     
     local sequence =
     {
@@ -179,8 +179,8 @@ function CCTransitionJumpZoom:onEnter()
     inScene:setScale(.5)
     inScene:setPosition(s.x,0)
     
-    inScene:setAnchorPoint(.5, .5)
-    outScene:setAnchorPoint(.5, .5)
+    inScene:setAnchor(.5, .5)
+    outScene:setAnchor(.5, .5)
        
     local d = self.duration_
     local d_4 = d *.25
@@ -367,8 +367,8 @@ function CCTransitionShrinkGrow:onEnter()
     inScene:setScale(.001)
     outScene:setScale(1)
     
-    inScene:setAnchorPoint(2/3, .5)
-    outScene:setAnchorPoint(1/3, .5)
+    inScene:setAnchor(2/3, .5)
+    outScene:setAnchor(1/3, .5)
     
     inScene:runAction(self:easeActionWithAction(CCScaleTo(self.duration_, 1)))
     

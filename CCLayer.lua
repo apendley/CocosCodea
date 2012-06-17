@@ -10,10 +10,10 @@ end
 function CCLayer:init(w, h)
     CCNode.init(self)
     CCTargetedTouchMixin.init(self)
-    self:setAnchorPoint(0.5, 0.5)
+    self:setAnchor(0.5, 0.5)
     local s = CCSharedDirector():winSize()
-    self:setContentSize(w or s.x, h or s.y)
-    self:setIgnoreAnchorPointForPosition(true)
+    self:setSize(w or s.x, h or s.y)
+    self:setIgnoreAnchorForPosition(true)
 end
 
 function CCLayer:onEnter()
@@ -43,6 +43,6 @@ function CCLayerColor:draw()
     rectMode(CORNER)
     noStroke()
 
-    local s = self.contentSize_ 
+    local s = self.size_ 
     rect(0, 0, s.x, s.y)
 end

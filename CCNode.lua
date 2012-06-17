@@ -6,20 +6,21 @@ CCNode:synth{"rotation", mode="r"}
 CCNode:synth{"scaleX", mode="r"}
 CCNode:synth{"scaleY", mode="r"}
 CCNode:synth{"scale", ivar="scaleX_", mode="r"}
-CCNode:synth{"ignoreAnchorPointForPosition", mode="r"}
+CCNode:synth{"ignoreAnchorForPosition", mode="r"}
 CCNode:synth{"userData"}
 CCNode:synth{"actionManager", mode="r"}
+CCNode:synth{"children", mode="r"}
 CCNode:synthVec2{"position", mode="r"}
-CCNode:synthVec2{"anchorPoint", mode="r"}
-CCNode:synthVec2{"contentSize", mode="r"}
+CCNode:synthVec2{"anchor", mode="r"}
+CCNode:synthVec2{"size", mode="r"}
 
 
 function CCNode:init()
     self.position_ = ccVec2(0,0)
-    self.anchorPoint_ = ccVec2(0,0)
-    self.anchorPointInPoints_ = ccVec2(0,0)
-    self.ignoreAnchorPointForPosition_ = false
-    self.contentSize_ = ccVec2(0,0)
+    self.anchor_ = ccVec2(0,0)
+    self.anchorInPoints_ = ccVec2(0,0)
+    self.ignoreAnchorForPosition_ = false
+    self.size_ = ccVec2(0,0)
     self.rotation_ = 0
     self.scaleX_ = 1
     self.scaleY_ = 1
@@ -33,7 +34,7 @@ function CCNode:init()
     self.visible_ = true
     
     self.tag_ = -1    
-    self.children = {}
+    self.children_ = {}
     
     local dir = CCSharedDirector()
     self.actionManager_ = dir:actionManager()
@@ -41,7 +42,7 @@ function CCNode:init()
 end
 
 local function insertChild(node, child, z)
-    local children = node.children
+    local children = node.children_
     local last = children[#children]
     
     if last == nil or last.zOrder <= z then
@@ -91,22 +92,22 @@ function CCNode:getChildByTag(tagOrPair)
     if type(tagOrPair) == "table" then
         local key, tag = tagOrPair[1], tagOrPair[2]
         
-        for i,child in ipairs(self.children) do
+        for i,child in ipairs(self.children_) do
             if child.userTags_[key] == tag then return child end
         end            
     else
-        for i,child in ipairs(self.children) do
+        for i,child in ipairs(self.children_) do
             if child.tag_ == tagOrPair then return child end
         end                
     end
 end
 
 function CCNode:reorderChild(child, z)
-    local idx = ccArrayIndexOf(self.children, child)
+    local idx = ccArrayIndexOf(self.children_, child)
     
     if idx then        
-        local c = self.children[idx]
-        ccArrayRemove(self.children, idx)
+        local c = self.children_[idx]
+        ccArrayRemove(self.children_, idx)
         insertChild(self, child, z)
     end
 end
@@ -120,7 +121,7 @@ function CCNode:detachChild(child, cleanup)
     if cleanup then child:cleanup() end
         
     child.parent = nil
-    ccArrayRemoveObject(self.children, child)
+    ccArrayRemoveObject(self.children_, child)
 end
 
 function CCNode:removeChild(child, cleanup)
@@ -129,7 +130,7 @@ function CCNode:removeChild(child, cleanup)
     --default cleanup = true
     if cleanup == nil then cleanup = true end
     
-    if ccArrayContains(self.children, child) then
+    if ccArrayContains(self.children_, child) then
         self:detachChild(child, cleanup)
     end
 end
@@ -148,7 +149,7 @@ function CCNode:removeAllChildren(cleanup_)
     -- default cleanup to true
     if cleanup_ == nil then cleanup_ = true end
     
-    for i, child in ipairs(self.children) do
+    for i, child in ipairs(self.children_) do
         if self.isRunning_ then
             child:onExitTransitionDidStart()
             child:onExit()
@@ -158,7 +159,7 @@ function CCNode:removeAllChildren(cleanup_)
         child.parent = nil
     end
     
-    ccArrayClear(self.children)
+    ccArrayClear(self.children_)
 end
 
 function CCNode:removeFromParent(cleanup_)
@@ -173,7 +174,7 @@ function CCNode:cleanup()
     --ccPrint("cleanup: " .. tostring(self))
     self:stopAllActions()
     self:unscheduleAllSelectors()
-    ccArrayForEach(self.children, "cleanup")
+    ccArrayForEach(self.children_, "cleanup")
     self.userData = nil
 end
 
@@ -189,7 +190,7 @@ function CCNode:visit()
     
     self:transform()
     
-    local children = self.children      
+    local children = self.children_      
     
     -- draw children with zOrder < 0
     local cidx = 1
@@ -219,7 +220,7 @@ function CCNode:nodeToParentTransform()
     local xform = self.transform_
     
     if self.isTransformDirty_ then
-        local pos, app = self.position_, self.anchorPointInPoints_
+        local pos, app = self.position_, self.anchorInPoints_
         local x, y, sx, sy = pos.x, pos.y, self.scaleX_, self.scaleY_
         local c, s, angle = 1, 0, self.rotation_
         
@@ -228,7 +229,7 @@ function CCNode:nodeToParentTransform()
             c, s = math.cos(rad), math.sin(rad)
         end
         
-        if self.ignoreAnchorPointForPosition_ then
+        if self.ignoreAnchorForPosition_ then
             x = x + app.x
             y = y + app.y
         end        
@@ -284,11 +285,11 @@ function CCNode:convertToWorldSpace(nodePt)
 end
 
 function CCNode:convertToNodeSpaceAR(worldPt)
-    return self:convertToNodeSpace(worldPt) - self.anchorPointInPoints_
+    return self:convertToNodeSpace(worldPt) - self.anchorInPoints_
 end
 
 function CCNode:convertToWorldSpaceAR(nodePt)
-    return self:convertToWorldSpace(nodePt + self.anchorPointInPoints_)
+    return self:convertToWorldSpace(nodePt + self.anchorInPoints_)
 end
 
 function CCNode:convertToWindowSpace(nodePt)
@@ -305,7 +306,7 @@ function CCNode:convertTouchToNodeSpaceAR(tp)
 end
 
 function CCNode:boundingBox()
-    local cs = self.contentSize_
+    local cs = self.size_
     local r = ccRect(0, 0, cs.x, cs.y)
     return r:applyTransform(self:nodeToParentTransform())
 end
@@ -339,27 +340,27 @@ function CCNode:setPosition(...)
     self.isTransformDirty_, self.isInverseDirty_ = true, true
 end
 
-function CCNode:setIgnoreAnchorPointForPosition(ignore)
-    if ignore ~= self.ignoreAnchorPointForPosition_ then
-        self.ignoreAnchorPointForPosition_ = ignore
+function CCNode:setIgnoreAnchorForPosition(ignore)
+    if ignore ~= self.ignoreAnchorForPosition_ then
+        self.ignoreAnchorForPosition_ = ignore
         self.isTransformDirty_, self.isInverseDirty_ = true, true
     end    
 end
 
-function CCNode:setAnchorPoint(...)
-    local ap = self.anchorPoint_
+function CCNode:setAnchor(...)
+    local ap = self.anchor_
     ap.x, ap.y = ccVec2VA(...)
         
-    local cs, app = self.contentSize_, self.anchorPointInPoints_
+    local cs, app = self.size_, self.anchorInPoints_
     app.x, app.y = cs.x * ap.x, cs.y * ap.y
     self.isTransformDirty_, self.isInverseDirty_ = true, true
 end
 
-function CCNode:setContentSize(...)
-    local cs = self.contentSize_
+function CCNode:setSize(...)
+    local cs = self.size_
     cs.x, cs.y = ccVec2VA(...)
         
-    local ap, app = self.anchorPoint_, self.anchorPointInPoints_
+    local ap, app = self.anchor_, self.anchorInPoints_
     app.x, app.y = cs.x * ap.x, cs.y * ap.y
     self.isTransformDirty_, self.isInverseDirty_ = true, true
 end
@@ -371,25 +372,25 @@ function CCNode:draw()
 end
 
 function CCNode:onEnter()
-    ccArrayForEach(self.children, "onEnter")
+    ccArrayForEach(self.children_, "onEnter")
     self:resumeSchedulerAndActions()
     
     self.isRunning_ = true
 end
 
 function CCNode:onEnterTransitionDidFinish()
-    ccArrayForEach(self.children, "onEnterTransitionDidFinish")
+    ccArrayForEach(self.children_, "onEnterTransitionDidFinish")
 end
 
 function CCNode:onExitTransitionDidStart()
-    ccArrayForEach(self.children, "onExitTransitionDidStart")
+    ccArrayForEach(self.children_, "onExitTransitionDidStart")
 end
 
 function CCNode:onExit()
     self:pauseSchedulerAndActions()
     self.isRunning_ = false
     
-    ccArrayForEach(self.children, "onExit")
+    ccArrayForEach(self.children_, "onExit")
 end
 
 ---------------------
@@ -482,8 +483,8 @@ CCNodeRect:synth{"strokeEnabled"}
 function CCNodeRect:init(w, h, ...)
     CCNode.init(self)
     CCRGBAMixin.init(self, ...)
-    self:setAnchorPoint(.5, .5)    
-    self:setContentSize(w,h)
+    self:setAnchor(.5, .5)    
+    self:setSize(w,h)
 end
 
 function CCNodeRect:strokeColor()
@@ -505,7 +506,7 @@ function CCNodeRect:draw()
         noStroke()        
     end
 
-    local s = self.contentSize_ 
+    local s = self.size_ 
     rect(0, 0, s.x, s.y)
 end
 
@@ -539,8 +540,8 @@ function CCNodeEllipse:init(...)
     CCRGBAMixin.init(self, c)
     
     
-    self:setAnchorPoint(.5, .5)
-    self:setContentSize(w,h)
+    self:setAnchor(.5, .5)
+    self:setSize(w,h)
 end
 
 function CCNodeEllipse:strokeColor()
@@ -562,7 +563,7 @@ function CCNodeEllipse:draw()
         noStroke()        
     end    
 
-    local s = self.contentSize_ 
+    local s = self.size_ 
     ellipse(0, 0, s.x, s.y)
     
     -- debug draw sprite rect
