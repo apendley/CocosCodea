@@ -7,26 +7,13 @@
 -----------------------------------------------------------
 CCRGBAMixin = CCMixin()
 
-CCRGBAMixin:synthColor4{"color4", ivar="color_"}
-CCRGBAMixin:synthColor{"color", mode="r"}
+CCRGBAMixin:synth{"color", mode="rc"}
+CCRGBAMixin:synth{"opacity"}
 
 function CCRGBAMixin:init(...)
-    self.color_ = ccc4(ccc4VA(...))
+    self.color_ = ccc3(...)
+    self.opacity_ = 255
 end
-
-function CCRGBAMixin:setOpacity(o)
-    self.color_.a = o
-end
-
-function CCRGBAMixin:opacity()
-    return self.color_.a
-end
-
-function CCRGBAMixin:setColor(...)
-    local c = self.color_
-    c.r, c.g, c.b = ccc3VA(ccc3VA(...))
-end
-
 
 -----------------------------------------------------------------------
 -- CCTargetedTouchMixin
@@ -101,7 +88,7 @@ CCMenuItemLabelMixin = CCMixin()
 local kCCZoomActionTag = 0xc0c05002
 
 CCMenuItemLabelMixin:synth{"label", mode="r"}
-CCMenuItemLabelMixin:synthColor{"disabledColor"}
+CCMenuItemLabelMixin:synth{"disabledColor", mode="rc"}
 
 function CCMenuItemLabelMixin:init(label)
     self:setLabel(label)    
@@ -189,14 +176,6 @@ end
 
 function CCMenuItemLabelMixin:color()    
     return self.label_:color()
-end
-
-function CCMenuItemLabelMixin:setColor4(...)
-    self.label_:setColor4(...)
-end
-
-function CCMenuItemLabelMixin:color4()
-    return self.label_:color4()
 end
 
 function CCMenuItemLabelMixin:cleanup()
@@ -317,26 +296,12 @@ function CCMenuItemSpriteMixin:setColor(...)
     if di then di:setColor(...) end
 end
 
-function CCMenuItemSpriteMixin:setColor4(...)
-    local ni = self.normalImage_
-    local si = self.selectedImage_
-    local di = self.disabledImage_
-    
-    if ni then ni:setColor4(...) end
-    if si then si:setColor4(...) end
-    if di then di:setColor4(...) end    
-end
-
 function CCMenuItemSpriteMixin:color()
     return self.normalImage_:color()
 end
 
 function CCMenuItemSpriteMixin:opacity()
     return self.normalImage_:opacity()
-end
-
-function CCMenuItemSpriteMixin:color4()
-    return self.normalImage_:color4()
 end
 
 function CCMenuItemSpriteMixin:selected()

@@ -10,9 +10,10 @@
 		<string>Main</string>
 		<string>ccConfig</string>
 		<string>ccUtil</string>
+		<string>ccColor</string>
+		<string>ccRect</string>
 		<string>ccSynth</string>
 		<string>ccArray</string>
-		<string>ccRect</string>
 		<string>CCClass</string>
 		<string>CCMixins</string>
 		<string>CCDirector</string>

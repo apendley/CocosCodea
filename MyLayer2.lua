@@ -18,6 +18,7 @@ function MyLayer2:init()
         
         local item = CCMenuItemFont("Next Scene", "Georgia", 30, CENTER)
         item:setHandler(nextScene)
+        -- wtf...debug this
         item:setColor(64, 64, 255)
         item:setPosition(size.x/2, size.y/2 + 200)
         exitButton = item
@@ -25,10 +26,11 @@ function MyLayer2:init()
     
     -- make an ellipse that we can drag around
     do
-        local ell = CCNodeEllipse(200, ccc4(192, 192, 192, 192))
+        local ell = CCNodeEllipse(200, ccc3(192, 192, 192))
         ell:setPosition(size.x/2, size.y/2 - 100)
+        ell:setOpacity(192)
         ell:setStrokeEnabled(true)
-        ell:setStrokeColor(255, 128, 128)
+        ell:setStrokeColor(255, 128, 128, 128)
         ell:setStrokeWidth(5)
         self:addChild(ell, 0)
         
@@ -83,7 +85,7 @@ function MyLayer2:spawnDrop(dt)
         end
 
         local d = 1 + math.random() * 1.5
-        drop:runActions{CCMoveTo(d, x, -cs.y), CCFuncT(recycleDrop)}
+        drop:runAction{CCMoveTo(d, x, -cs.y), CCCallT(recycleDrop)}
     end
 end
 
@@ -102,7 +104,7 @@ function MyLayer2:ccTouched(touch)
     elseif touch.state == MOVING then
         ell:setPosition(ell:position() + ccVec2(touch.deltaX, touch.deltaY))
     else
-        ell:setStrokeColor(255, 128, 128)
+        ell:setStrokeColor(255, 128, 128, 128)
         self:reorderChild(ell, -1)
     end
 end

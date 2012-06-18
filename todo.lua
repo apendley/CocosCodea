@@ -1,19 +1,18 @@
--- * implement scene push/pop
+-- * implements batched sprites (using mesh)
+-- * re-implement actions so that all action support callbacks and repeating/looping/easing
+-- * CCActionCatmullRom
 -- * implement remaining transitions
--- * add CCMenu alignment functions
 -- * add prioritized updates to CCScheduler and CCNode classes
 -- * add non-targeted touch handling
--- * implements batched sprites (using mesh)
 -- * implement bitmapped fonts
 -- * implement tilemaps (using mesh)
 -- * implement bitmapped font labels
--- * lazily create children table
+-- * lazily create children table(?)
 -- * do fast children sort in visit(?)
 -- * implement skew
 -- * CCEaseElastic(in/out/inout), CCBounce(in/out/inout), CCEaseBack(in/out/inout)
 -- * skewBy, skewTo, BezierBy, BezierTo
 -- * CCReverseTime, CCAnimate, CCTargetedAction
--- * CCActionCatmullRom
 -- * implement particle systems
 -- * implement tile map node
 -- * CCRenderTexture

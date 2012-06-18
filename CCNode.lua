@@ -10,10 +10,9 @@ CCNode:synth{"ignoreAnchorForPosition", mode="r"}
 CCNode:synth{"userData"}
 CCNode:synth{"actionManager", mode="r"}
 CCNode:synth{"children", mode="r"}
-CCNode:synthVec2{"position", mode="r"}
-CCNode:synthVec2{"anchor", mode="r"}
-CCNode:synthVec2{"size", mode="r"}
-
+CCNode:synth{"position", mode="#"}
+CCNode:synth{"anchor", mode="#"}
+CCNode:synth{"size", mode="#"}
 
 function CCNode:init()
     self.position_ = ccVec2(0,0)
@@ -335,8 +334,7 @@ function CCNode:setScale(s)
 end
 
 function CCNode:setPosition(...)
-    local pos = self.position_
-    pos.x, pos.y = ccVec2VA(...)
+    self.position_:set(...)
     self.isTransformDirty_, self.isInverseDirty_ = true, true
 end
 
@@ -349,7 +347,7 @@ end
 
 function CCNode:setAnchor(...)
     local ap = self.anchor_
-    ap.x, ap.y = ccVec2VA(...)
+    ap:set(...)
         
     local cs, app = self.size_, self.anchorInPoints_
     app.x, app.y = cs.x * ap.x, cs.y * ap.y
@@ -358,7 +356,7 @@ end
 
 function CCNode:setSize(...)
     local cs = self.size_
-    cs.x, cs.y = ccVec2VA(...)
+    cs:set(...)
         
     local ap, app = self.anchor_, self.anchorInPoints_
     app.x, app.y = cs.x * ap.x, cs.y * ap.y
@@ -403,19 +401,25 @@ function CCNode:setActionManger()
     end    
 end
 
-function CCNode:runAction(action, tag)
-    ccAssert(action) -- action must not be nil
-    if tag then action:setTag(tag) end
+function CCNode:runAction(actionOrTable, tag)
+	ccAssert(actionOrTable) -- you must provide a CCAction or a table readable by ccAction
+	
+	local action
+	
+	-- just checking to see if the actionOrTable has a class method
+	-- is fast, but not as safe. if you pass a non-table/non-action
+	-- object in, you will have problems
+	--if ccInstanceOf(actionOrTable, Object) then
+	if actionOrTable.class then
+		-- this better be a CCAction, or you're gonna have problems...
+		action = actionOrTable
+	else
+		-- this better be a table, or you're gonna have problems...
+		action = ccAction(actionOrTable)
+	end
+	
     self.actionManager_:addAction(action, self, self.isRunning_ == false)
-    return action
-end
-
--- takes same parameters as ccActions()
-function CCNode:runActions(actionTable)
-    ccAssert(actionTable) -- table must not be nil
-    local action = ccActions(actionTable)
-    self.actionManager_:addAction(action, self, self.isRunning_ == false)
-    return action
+    return action	
 end
 
 function CCNode:stopAllActions()
@@ -476,8 +480,8 @@ end
 ----------------------
 CCNodeRect = CCClass(CCNode):include(CCRGBAMixin)
 
-CCNodeRect:synthColor{"strokeColor", mode="w"}
-CCNodeRect:synth{"strokeWidth", mode="w"}
+CCNodeRect:synth{ccc4, "strokeColor", mode="rc"}
+CCNodeRect:synth{"strokeWidth"}
 CCNodeRect:synth{"strokeEnabled"}
 
 function CCNodeRect:init(w, h, ...)
@@ -485,10 +489,7 @@ function CCNodeRect:init(w, h, ...)
     CCRGBAMixin.init(self, ...)
     self:setAnchor(.5, .5)    
     self:setSize(w,h)
-end
-
-function CCNodeRect:strokeColor()
-    return self.strokeColor_ or ccc4()
+    self.strokeWidth_ = 2
 end
 
 function CCNodeRect:strokeWidth()
@@ -496,11 +497,12 @@ function CCNodeRect:strokeWidth()
 end
 
 function CCNodeRect:draw()
-    fill(self.color_)
+    local c = self.color_
+    fill(c.r, c.g, c.b, self.opacity_)
     rectMode(CORNER)
     
     if self.strokeEnabled_ then
-        stroke(self:strokeColor())
+        stroke(self:strokeColor():unpack())
         strokeWidth(self:strokeWidth())
     else
         noStroke()        
@@ -516,13 +518,13 @@ end
 ----------------------
 CCNodeEllipse = CCClass(CCNode):include(CCRGBAMixin)
 
-CCNodeEllipse:synthColor{"strokeColor", mode="w"}
-CCNodeEllipse:synth{"strokeWidth", mode="w"}
+CCNodeEllipse:synth{ccc4, "strokeColor", mode="rc"}
+CCNodeEllipse:synth{"strokeWidth"}
 CCNodeEllipse:synth{"strokeEnabled"}
 
 
--- args: width, height, ccc4
--- args: diameter, ccc4
+-- args: width, height, ccc3
+-- args: diameter, ccc3
 function CCNodeEllipse:init(...)
     CCNode.init(self)
     
@@ -539,25 +541,19 @@ function CCNodeEllipse:init(...)
     
     CCRGBAMixin.init(self, c)
     
-    
     self:setAnchor(.5, .5)
     self:setSize(w,h)
-end
-
-function CCNodeEllipse:strokeColor()
-    return self.strokeColor_ or ccc4()
-end
-
-function CCNodeEllipse:strokeWidth()
-    return self.strokeWidth_ or 2
+    
+    self.strokeWidth_ = 2
 end
 
 function CCNodeEllipse:draw()
-    fill(self.color_)    
+    local c = self.color_
+    fill(c.r, c.g, c.b, self.opacity_)    
     ellipseMode(CORNER)
     
     if self.strokeEnabled_ then
-        stroke(self:strokeColor())
+        stroke(self:strokeColor():unpack())
         strokeWidth(self:strokeWidth())
     else
         noStroke()        

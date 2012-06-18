@@ -32,14 +32,14 @@ end
 CCLayerColor = CCClass(CCLayer):include(CCRGBAMixin)
 
 -- can't take vararg color here, must pass a ccc4() object
-function CCLayerColor:init(color4, w, h)
+function CCLayerColor:init(c, w, h)
     CCLayer.init(self)
-    CCRGBAMixin.init(self, color4)
+    CCRGBAMixin.init(self, c)
 end
 
 function CCLayerColor:draw()
     local c = self.color_    
-    fill(c.r, c.g, c.b, c.a)    
+    fill(c.r, c.g, c.b, self.opacity_)
     rectMode(CORNER)
     noStroke()
 

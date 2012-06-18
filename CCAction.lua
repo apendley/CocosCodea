@@ -10,7 +10,7 @@
 -- if no options are specified, a non-repeating non-eased sequenced action is used.
 -- you can also specify a tag for your actions
 --
---    node:runActions
+--    local action = ccAction
 --    {
 --        [instant = true][loop = true][repeat = 3],
 --        [ease = CCEaseInOut, [rate = .3]],
@@ -20,7 +20,20 @@
 --        CCMoveBy(2, -100, 50),
 --        ...
 --    }
-function ccActions(t)
+--
+-- or even:
+--
+--    node:runAction 
+--    {
+--        [instant = true][loop = true][repeat = 3],
+--        [ease = CCEaseInOut, [rate = .3]],
+--        [tag = "beefy"],
+--
+--        CCMoveBy(2, 100, 50),
+--        CCMoveBy(2, -100, 50),
+--        ...
+--    }
+function ccAction(t)
     ccAssert(next(t))    -- table must not be empty
     
     local action, instant = nil, false

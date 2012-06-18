@@ -1,4 +1,4 @@
---ccRect = CCClass()
+--ccRect
 ccRect = {__methods = {}}
 ccRect.__methods.__index = ccRect.__methods
 
@@ -69,6 +69,14 @@ end
 
 function ccRect:unpack()
     return self.x, self.y, self.w, self.h
+end
+
+function ccRect:set(...)
+    if arg[2] then
+        self.x, self.y, self.w, self.h = x, y, w, h
+    else
+        self.x, self.y, self.w, self.h = arg[1]:unpack()
+    end
 end
 
 -- todo: add other methods

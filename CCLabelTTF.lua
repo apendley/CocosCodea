@@ -6,8 +6,9 @@ CCLabelTTF:synth{"fontSize", mode="r"}
 CCLabelTTF:synth{"alignment", mode="r"}
 CCLabelTTF:synth{"wrapWidth", mode="r"}
 CCLabelTTF:synth{"hasShadow"}
-CCLabelTTF:synthVec2{"shadowOffset"}
-CCLabelTTF:synthColor4{"shadowColor"}
+CCLabelTTF:synth{vec2, "shadowOffset", mode="rc"}
+CCLabelTTF:synth{ccc4, "shadowColor", mode="rc"}
+CCLabelTTF:synth{"shadowOpacity"}
 
 function CCLabelTTF:init(str, fnt, fntSize, alignment, wrapWidth)
     CCNode.init(self)
@@ -18,7 +19,6 @@ function CCLabelTTF:init(str, fnt, fntSize, alignment, wrapWidth)
     self.alignment_ = alignment_ or LEFT
     self.wrapWidth_ = wrapWidth_ or 0
     self.hasShadow_ = false
-    self.shadowOffset_ = ccVec2(2,-2)
         
     CCLabelMixin.init(self, str)
 end
@@ -75,13 +75,13 @@ function CCLabelTTF:draw()
     textMode(CORNER)        
     
     if self.hasShadow_ then
-        local ofs = self.shadowOffset_
-        local col = self.shadowColor_ or ccc3(0,0,0)
-        fill(col)
-        text(self:string(), ofs.x, ofs.y)
+        fill(self:shadowColor():unpack())
+		local x, y = self:shadowOffset():unpack()
+        text(self:string(), x, y)
     end
     
-    fill(self:color())
+	local r, g, b = self.color_:unpack()
+    fill(r, g, b, self.opacity_)
     text(self:string(), 0, 0)
     
     -- debug draw sprite rect

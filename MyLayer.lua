@@ -37,7 +37,8 @@ function MyLayer:init()
         
         local label = item:label()
         label:setHasShadow(true)
-        label:setShadowColor(128, 128, 255, 160)
+        label:setShadowColor(128, 128, 255)
+        label:setShadowOpacity(160)
     
         local cs = item:size()
         local bg = CCNodeRect(cs.x*1.5, cs.y*1.5, 0, 0, 128)
@@ -48,7 +49,7 @@ function MyLayer:init()
         bg:setStrokeColor(255)
         bg:setStrokeWidth(5)
         
-        bg:runActions{ loop = true, ease = CCEaseSineInOut,
+        bg:runAction{ loop = true, ease = CCEaseSineInOut,
             CCScaleBy(0.3, 1.1),
             CCScaleBy(0.3, 1/1.1),
         }
@@ -58,7 +59,7 @@ function MyLayer:init()
     local menu = CCMenu()
     self:addChild(menu)        
     
-    -- a tree
+    -- a planet
     do
         local normal = CCSprite("SpaceCute:Planet")
         local selected = CCSprite("SpaceCute:Planet")
@@ -78,12 +79,12 @@ function MyLayer:init()
             target:runAction(tween)
         end
         
-        item:runActions{loop = true,
+        item:runAction{loop = true,
             CCDelay(duration), 
-            CCFuncT(randomAnchor),
+            CCCallT(randomAnchor),
         }
                 
-        item:runActions{ loop = true,
+        item:runAction{ loop = true,
             CCEaseSineInOut(CCRotateTo(.10, -1.5)),
             CCEaseSineInOut(CCRotateBy(.10, 3))
         }

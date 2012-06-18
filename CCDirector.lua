@@ -6,7 +6,7 @@ CCDirector:synth{"touchDispatcher", mode="r"}
 CCDirector:synth{"runningScene", mode="r"}
 CCDirector:synth{"sendCleanupToScene", mode="r"}
 CCDirector:synth{"showFPS", set="showFPS", get="isShowingFPS"}
-CCDirector:synthVec2{"winSize"}
+CCDirector:synth{"winSize", mode="rc"}
 
 -- singleton
 local di_ = nil

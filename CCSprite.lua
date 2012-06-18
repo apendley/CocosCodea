@@ -1,3 +1,4 @@
+--CCSprite
 CCSprite = CCClass(CCNode):include(CCRGBAMixin)
 
 CCSprite:synth{"flipX"}
@@ -13,7 +14,6 @@ function CCSprite:init(spriteNameOrImage)
 end
 
 function CCSprite:setSize(...)
-    
     local cs = self.size_
     cs.x, cs.y = ccVec2VA(...)
         
@@ -30,7 +30,7 @@ end
 
 function CCSprite:draw()
     local c = self.color_
-    tint(ccc4Unpack(self.color_))
+    tint(c.r, c.g, c.b, self.opacity_)
     
     --spriteMode(CORNER)
     --if self.sprite_ then sprite(self.sprite_, 0, 0, s.x, s.y) end

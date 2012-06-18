@@ -24,7 +24,6 @@ ccPrint = print
 ccPrintPair = printPair_
 ccPrintArray = printArray_
 ccPrintTable = printTable_
-ccColor = color
 ccVec2 = vec2
 
 
@@ -45,4 +44,27 @@ ccVec2 = vec2
 --       be double sized on retina displays. (your sprites will work the same on
 --       all devices, but will be blurry on retina screens)
 
-CC_ENABLE_CODEA_2X_MODE = false
+CC_ENABLE_CODEA_2X_MODE = true
+
+-- patch data types with copy, unpack, and set methods
+CC_PATCH_COLOR = true
+CC_PATCH_VEC = true
+
+if CC_PATCH_COLOR then
+    local mt = getmetatable(color())
+    local oldIndex = mt.__index
+    
+    mt.__index = function(t,k) return oldIndex(t,k) or mt[k] end
+    mt.unpack = function(c) return c.r, c.g, c.b, c.a end
+    mt.copy = function(c) return color(c.r, c.g, c.b, c.a) end
+    mt.set = function(c, ...) c.r, c.g, c.b, c.a = ccc4VA(...) end
+    --mt.set = function(c, ...)c.r, c.g, c.b, c.a = unpack(arg)end    
+end
+
+if CC_PATCH_VEC then
+    local mt = getmetatable(vec2())
+    mt.copy = function(v) return vec2(v.x, v.y) end    
+    mt.unpack = function(v) return v.x, v.y end
+    mt.set = function(v, ...) v.x, v.y = ccVec2VA(...) end
+    --mt.set = function(v, x, y) v.x, v.y = x, y end    
+end

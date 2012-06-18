@@ -13,12 +13,11 @@ function CCMenu:init(...)
     
     self:setTouchEnabled(true)
     self:setEnabled(true)
-    
-    self:setIgnoreAnchorForPosition(true)
     self:setAnchor(0.5, 0.5)
-    -- todo: get these from the director
-    self:setSize(WIDTH, HEIGHT)        
-    self:setPosition(WIDTH/2, HEIGHT/2)
+    
+    local w, h = CCSharedDirector():winSize():unpack()
+    self:setSize(w, h)
+    self:setPosition(w/2, h/2)
     
     if #arg > 0 then
         local z = 0

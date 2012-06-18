@@ -36,7 +36,7 @@ local retina =
 function MyRetinaTest:init()
     CCLayer.init(self)
     
-    local size = self:size()
+    local w, h = self:size():unpack()
     
     -- keep these on a different layer
     local layer = CCLayer()
@@ -46,7 +46,8 @@ function MyRetinaTest:init()
     self.createFn = createSprite
     self:populate()    
     
-    local m = CCMenu(toggle)
+    local m = CCMenu()
+    m:setPosition(self:position():unpack())
     self:addChild(m)    
     
     do
@@ -54,7 +55,7 @@ function MyRetinaTest:init()
         label:setAnchor(.5, .5)
         label:setHasShadow(true)
         label:setShadowColor(128)
-        label:setPosition(size.x/2, size.y - size.y/3)
+        label:setPosition(w/2, h - h/3)
         self:addChild(label)
         self.statusLabel = label
     end
@@ -73,7 +74,7 @@ function MyRetinaTest:init()
         
         local toggle = CCMenuItemToggle(first, second)
         toggle:setHandler(self, "toggled")
-        toggle:setPosition(size.x/2, 80)
+        toggle:setPosition(w/2, 80)
         m:addChild(toggle)
         
         self.statusLabel:setString(toggle:selectedItem():userData())        
@@ -90,7 +91,7 @@ function MyRetinaTest:init()
         
         local toggle = CCMenuItemToggle(useSprites, useImage)
         toggle:setHandler(self, "imageToggled")
-        toggle:setPosition(size.x/2, 30)
+        toggle:setPosition(w/2, 30)
         m:addChild(toggle)
     end    
     
@@ -102,7 +103,7 @@ function MyRetinaTest:init()
         
         local item = CCMenuItemFont("Next Scene", "Georgia", 30)
         item:setHandler(nextScene)
-        item:setPosition(size.x/2, size.y-40)
+        item:setPosition(w/2, h - 40)
         m:addChild(item)
     end
     

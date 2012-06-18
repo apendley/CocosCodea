@@ -132,11 +132,8 @@ end
 Object.static.subclassOf = ccSubclassOf
 Object.static.includes = ccIncludes
 
--- include get/set synthesization: MyClass:synth{"property"}
-Object.static.synth = ccSynth
-Object.static.synthColor = ccSynthColor
-Object.static.synthColor4 = ccSynthColor4
-Object.static.synthVec2 = ccSynthVec2
+-- include get/set/unpack synthesization: MyClass:synth{"property"}
+Object.static.synth = ccSynthesize
 
 function Object:init() end
 
@@ -163,7 +160,4 @@ setmetatable(CCMixin,
     __call = function(self, ...) return setmetatable({}, CCMixin.__methods) end,
 })
 
-CCMixin.synth = ccSynth
-CCMixin.synthColor = ccSynthColor
-CCMixin.synthColor4 = ccSynthColor4
-CCMixin.synthVec2 = ccSynthVec2
+CCMixin.synth = ccSynthesize
