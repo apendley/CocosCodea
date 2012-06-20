@@ -60,9 +60,8 @@ end
 
 function CCNode:addChild(child, z, tagOrPair)
     insertChild(self, child, z or 0)
-
     if tagOrPair then child:setTag(tagOrPair) end
-    child.parent = self
+    child.parent_ = self
 end
 
 function CCNode:setTag(tagOrPair)
@@ -119,7 +118,7 @@ function CCNode:detachChild(child, cleanup)
     
     if cleanup then child:cleanup() end
         
-    child.parent = nil
+    child.parent_ = nil
     ccArrayRemoveObject(self.children_, child)
 end
 
@@ -155,17 +154,17 @@ function CCNode:removeAllChildren(cleanup_)
         end
         
         if cleanup_ then child:cleanup() end
-        child.parent = nil
+        child.parent_ = nil
     end
     
     ccArrayClear(self.children_)
 end
 
 function CCNode:removeFromParent(cleanup_)
-    if self.parent then
+    if self.parent_ then
         -- default cleanup = true
         if cleanup_ == nil then cleanup_ = true end
-        self.parent:removeChild(self, cleanup_)
+        self.parent_:removeChild(self, cleanup_)
     end
 end
 
@@ -262,10 +261,10 @@ end
 function CCNode:nodeToWorldTransform()
     local t = self:nodeToParentTransform()
     
-    local p = self.parent    
+    local p = self.parent_    
     while p do
         t = t * p:nodeToParentTransform()
-        p = p.parent 
+        p = p.parent_ 
     end
     
     return t
@@ -402,24 +401,24 @@ function CCNode:setActionManger()
 end
 
 function CCNode:runAction(actionOrTable, tag)
-	ccAssert(actionOrTable) -- you must provide a CCAction or a table readable by ccAction
-	
-	local action
-	
-	-- just checking to see if the actionOrTable has a class method
-	-- is fast, but not as safe. if you pass a non-table/non-action
-	-- object in, you will have problems
-	--if ccInstanceOf(actionOrTable, Object) then
-	if actionOrTable.class then
-		-- this better be a CCAction, or you're gonna have problems...
-		action = actionOrTable
-	else
-		-- this better be a table, or you're gonna have problems...
-		action = ccAction(actionOrTable)
-	end
-	
+    ccAssert(actionOrTable) -- you must provide a CCAction or a table readable by ccAction
+    
+    local action
+    
+    -- just checking to see if the actionOrTable has a class method
+    -- is fast, but not as safe. if you pass a non-table/non-action
+    -- object in, you will have problems
+    --if ccInstanceOf(actionOrTable, Object) then
+    if actionOrTable.class then
+        -- this better be a CCAction, or you're gonna have problems...
+        action = actionOrTable
+    else
+        -- this better be a table, or you're gonna have problems...
+        action = ccAction(actionOrTable)
+    end
+    
     self.actionManager_:addAction(action, self, self.isRunning_ == false)
-    return action	
+    return action    
 end
 
 function CCNode:stopAllActions()
@@ -484,6 +483,7 @@ CCNodeRect:synth{ccc4, "strokeColor", mode="rc"}
 CCNodeRect:synth{"strokeWidth"}
 CCNodeRect:synth{"strokeEnabled"}
 
+-- params: w, h, ccc3
 function CCNodeRect:init(w, h, ...)
     CCNode.init(self)
     CCRGBAMixin.init(self, ...)

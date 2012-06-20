@@ -1,3 +1,5 @@
+-- * play with http.request
+-- * implement a physics sprite
 -- * implements batched sprites (using mesh)
 -- * re-implement actions so that all action support callbacks and repeating/looping/easing
 -- * CCActionCatmullRom

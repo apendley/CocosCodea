@@ -26,11 +26,11 @@ function ccArrayRemoveObject(array, obj)
     if idx then table.remove(array, idx) end
 end
 
-function ccArrayForEach(array, fnOrSelector)
+function ccArrayForEach(array, fnOrSelector, ...)
     if type(fnOrSelector) == "function" then
-        for i,v in ipairs(array) do fnOrSelector(v) end    
+        for i,v in ipairs(array) do fnOrSelector(v, ...) end    
     else
-        for i,v in ipairs(array) do v[fnOrSelector](v) end
+        for i,v in ipairs(array) do v[fnOrSelector](v, ...) end
     end
 end
 

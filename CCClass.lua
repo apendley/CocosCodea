@@ -137,7 +137,8 @@ Object.static.synth = ccSynthesize
 
 function Object:init() end
 
-function Object:__tostring() return "instance of " .. tostring(self.class) end
+-- it would be cool to return my own address, but then tostring() gets called recursively
+function Object:__tostring() return "instance of "..tostring(self.class) end
 
 Object.instanceOf = ccInstanceOf
 Object.is_a = ccInstanceOf

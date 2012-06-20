@@ -75,10 +75,10 @@ function CCMenu:ccTouchBegan(touch)
         return false
     end    
             
-    local c = self.parent
+    local c = self.parent_
     while c ~= nil do
         if not c:visible() then return false end
-        c = c.parent
+        c = c.parent_
     end
     
     self.selectedItem_ = self:itemForTouch(touch)

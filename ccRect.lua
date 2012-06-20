@@ -15,30 +15,23 @@ function ccRect:new(...)
     return t
 end
 
-function ccRect:init(...)
-    if type(arg[1]) == "number" then
-        self.x = arg[1] or 0
-        self.y = arg[2] or 0
-        self.w = arg[3] or 0
-        self.h = arg[4] or 0        
+function ccRect.va(...)
+    if arg[2] then
+        local x, y, w, h = unpack(arg)
+        return x, y, w or 0, h or 0
+    elseif arg[1] then
+        return arg[1]:unpack()
     else
-        local r = arg[1]
-        self.x = r.x
-        self.y = r.y
-        self.w = r.w
-        self.h = r.y
+        return 0, 0, 0, 0
     end
 end
 
+function ccRect:init(...)
+    self.x, self.y, self.w, self.h = ccRect.va(...)
+end
+
 function ccRect:containsPoint(...)
-    local x, y
-    if #arg == 1 then
-        local p = arg[1]
-        x,y = p.x, p.y
-    else
-        x, y = arg[1], arg[2]
-    end
-    
+    local x, y = ccVec2VA(...)
     return x >= self.x and x <= self.x+self.w and y >= self.y and y <= self.y+self.h           
 end  
 
@@ -72,11 +65,7 @@ function ccRect:unpack()
 end
 
 function ccRect:set(...)
-    if arg[2] then
-        self.x, self.y, self.w, self.h = x, y, w, h
-    else
-        self.x, self.y, self.w, self.h = arg[1]:unpack()
-    end
+    self.x, self.y, self.w, self.h = ccRect.va(...)
 end
 
 -- todo: add other methods

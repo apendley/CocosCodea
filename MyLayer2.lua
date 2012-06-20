@@ -1,6 +1,9 @@
+--MyLayer2
+--MyLayer2 = CCClass(CCLayerColor)
 MyLayer2 = CCClass(CCLayer)
 
 function MyLayer2:init()
+    --CCLayerColor.init(self, ccc4(128, 128, 128))
     CCLayer.init(self)
     
     self.dropFreeList = {}
@@ -18,7 +21,6 @@ function MyLayer2:init()
         
         local item = CCMenuItemFont("Next Scene", "Georgia", 30, CENTER)
         item:setHandler(nextScene)
-        -- wtf...debug this
         item:setColor(64, 64, 255)
         item:setPosition(size.x/2, size.y/2 + 200)
         exitButton = item
@@ -42,7 +44,7 @@ function MyLayer2:init()
     -- make the menu to contain the buttons
     local menu = CCMenu(exitButton)
     menu:setPosition(self:position())
-    self:addChild(menu, 1) 
+    self:addChild(menu, 2) 
     
     -- make it rain
     self:schedule("spawnDrop", .075)
@@ -67,8 +69,10 @@ function MyLayer2:spawnDrop(dt)
             drop:setTag(self.nextDrop)
             self.nextDrop = self.nextDrop + 1
         end
-                
-        self:addChild(drop, -1)
+        
+        -- there is a bug here...the drops and ellipse's z order
+        -- isn't correct for some reason
+        self:addChild(drop, 1)
 
         drop:setScale(.75 + (math.random() * .25))
         
@@ -97,7 +101,7 @@ function MyLayer2:ccTouched(touch)
         p = CCSharedDirector():convertToGL(p)
         
         if ell:boundingBox():containsPoint(p) then
-            self:reorderChild(ell, 25)
+            self:reorderChild(ell, 3)
             ell:setStrokeColor(255, 255, 255)
             return true
         end
@@ -105,6 +109,6 @@ function MyLayer2:ccTouched(touch)
         ell:setPosition(ell:position() + ccVec2(touch.deltaX, touch.deltaY))
     else
         ell:setStrokeColor(255, 128, 128, 128)
-        self:reorderChild(ell, -1)
+        self:reorderChild(ell, 0)
     end
 end

@@ -29,11 +29,9 @@ end
 local function genGetCopy(ivarName, creator)
     return function(inst)
         --return inst[ivarName]:copy() 
-        
         local i = inst[ivarName]
         
-        if i == nil and creator ~= nil then
-            --print("genSetCopy: creating...")
+        if not i and creator then
             i = creator()
             inst[ivarName] = i
         end
@@ -52,7 +50,6 @@ local function genAssign(ivarName)
 end
 
 local function genCopy(ivarName, creator)
-    
     return function(inst, ...)
         -- don't forget to actually create your
         -- ivar, or you will see this comment.
@@ -62,11 +59,8 @@ local function genCopy(ivarName, creator)
         -- lazily create your properties. If you don't, you
         -- need to make sure to create them before the setter is called,
         -- or else you'll hit the assert below
-        if i == nil and creator ~= nil then
-            --print("genCopy creating...")
-            --ccPrintTable{...}
+        if not i and creator then
             inst[ivarName] = creator(...)
-            --print(inst[ivarName])
             return
         end
         
@@ -88,35 +82,32 @@ local function genCopy(ivarName, creator)
     end
 end
 
--- modes: read modes:[r#up], write modes:[ac]
+-- modes: read modes:[r#], write modes:[ac]
 -- r: generate "get" by value (return self[ivar])
--- #: generate copy on get (return self[ivar]:copy())
+-- #: generate "get" return copy (return self[ivar]:copy())
 -- a: generate "set", direct assignment (self[ivar] = value)
 -- c: generate "set", copy on assign (self[ivar] = value:copy())
--- u: generate "*Unpacked", only when c or # are specified
--- p: generate "*Ref" (return sef[ivar]) only when c or # are specified
-
 function ccSynthesize(klass, t)
+    ccAssert(klass)
+
     local propName = t[1]
     local createFn = t[2]
     
     -- allow property name and creator args to be interchangeable
     if type(propName) == "function" then
-    	propName, createFn = createFn, propName
+        propName, createFn = createFn, propName
     end
     
     -- must provide property name
-	ccAssert(propName and type(propName) == "string")    
+    ccAssert(propName and type(propName) == "string")    
     
     local ivarName = t["ivar"] or propName .. propIvarSuffix_
     
-    ccAssert(klass and propName)
-    
     local mode = t["mode"] or "ra"
-    local read = string.find(mode, "r")
-    local readCopy = false
     local copy = string.find(mode, "c")    
     local write = copy or string.find(mode, "a")
+    local read = string.find(mode, "r")
+    local readCopy = false    
     
     if read then
         if copy then readCopy = true end
@@ -135,20 +126,8 @@ function ccSynthesize(klass, t)
         end        
         
         if readCopy then
-            --print("genGetCopy: "..getter..", "..ivarName)
             klass[getter] = genGetCopy(ivarName, createFn)
-            
-            --[[
-            if string.find(mode, "p") then
-                klass[getter.."Ref"] = genRef(ivarName)
-            end
-            
-            if string.find(mode, "u") then
-                klass[getter.."Unpacked"] = genUnpack(ivarName)
-            end
-            --]]            
         else
-            --print("genRef:    "..getter..", "..ivarName)
             klass[getter] = genRef(ivarName)
         end
     end
@@ -157,10 +136,8 @@ function ccSynthesize(klass, t)
         local setter = t["set"] or genSetterName(propName)
 
         if copy then
-            --print("genCopy:   "..setter..", "..ivarName)
             klass[setter] = genCopy(ivarName, createFn)
         else
-            --print("genAssign: "..setter..", "..ivarName)
             klass[setter] = genAssign(ivarName)
         end
     end

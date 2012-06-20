@@ -20,6 +20,7 @@ end
 -- math utilities
 ------------------------
 ccFLT_EPSILON = 0.00000011920929
+--ccFLT_MAX = 1e+37
 
 function ccAffineTransform(pt, m)
     return ccVec2(m[1]*pt.x+m[5]*pt.y + m[13], m[2]*pt.x+m[6]*pt.y+m[14])
