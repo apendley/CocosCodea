@@ -12,6 +12,8 @@ function setup()
     local director = CCSharedDirector()
     director:showFPS(true)
     director:runWithScene(BatchNodeTest:scene())
+    --director:runWithScene(MyRetinaTest:scene())
+    --director:runWithScene(MyLayer:scene())
 end
 
 function touched(touch)

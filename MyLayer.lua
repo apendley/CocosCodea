@@ -68,6 +68,7 @@ function MyLayer:init()
         local item = CCMenuItemSprite(normal, selected)
         menu:addChild(item, 0, "A Planet!")
         item:setHandler(self, "itemSelected")
+        item:setScale(ContentScaleFactor)
         
         local duration = .2
         local function randomAnchor(target)
@@ -128,6 +129,7 @@ function MyLayer:init()
                 
         local toggle = CCMenuItemToggle(item1, item2)
         toggle:setHandler(onSelected)
+        toggle:setScale(ContentScaleFactor)
         menu:addChild(toggle)
     end
     

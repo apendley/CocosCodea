@@ -38,11 +38,6 @@ function ccQuad:vertex(vertIndex)
     return unpack(self[vertIndex])
 end
 
-function ccQuad:vertexRef(vertIndex)
-    ccAssert(vertIndex >= 1 and vertIndex <= 4)
-    return self[vertIndex]    
-end
-
 function ccQuad:setVertex(vertIndex, x, y, r, g, b, a, u, v)
     ccAssert(vertIndex >= 1 and vertIndex <= 4)
     local v = self[vertIndex]

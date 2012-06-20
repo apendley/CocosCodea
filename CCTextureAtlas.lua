@@ -3,7 +3,6 @@ CCTextureAtlas = CCClass()
 
 -- texture will either be a filename or an "image" object
 function CCTextureAtlas:init(texture)
-    -- todo: need a free list for "removed" quads
     local m = mesh()
     m.texture = texture 
     self.mesh_ = m
@@ -33,7 +32,7 @@ function CCTextureAtlas:updateQuad(quad, index, doVerts, doColor, doTexCoords)
        
     local v
     for i = 1, 6 do
-        v = quad:vertexRef(quadMap_[i])
+        v = quad[quadMap_[i]]
         
         if doVerts then
             mesh:vertex(first+(i-1), v[1], v[2])

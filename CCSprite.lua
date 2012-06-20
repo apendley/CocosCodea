@@ -17,21 +17,6 @@ function CCSprite:init(spriteNameOrImage)
     self.rect_ = ccRect(0, 0, self.size_.x, self.size_.y)
 end
 
-function CCSprite:setSize(...)
-    local cs = self.size_
-    cs.x, cs.y = ccVec2VA(...)
-        
-    -- see ccConfig
-    if CC_ENABLE_CODEA_2X_MODE then
-        local csf = ContentScaleFactor
-        cs.x, cs.y = cs.x * csf, cs.y * csf
-    end            
-        
-    local ap, app = self.anchor_, self.anchorInPoints_
-    app.x, app.y = cs.x * ap.x, cs.y * ap.y
-    self.isTransformDirty_, self.isInverseDirty_ = true, true    
-end
-
 function CCSprite:draw()
     local c = self.color_
     tint(c.r, c.g, c.b, self.opacity_)
@@ -40,14 +25,14 @@ function CCSprite:draw()
     --if self.sprite_ then sprite(self.sprite_, 0, 0, s.x, s.y) end
     
     spriteMode(CENTER)
-    local s = self.size_    
+    local s = self.size_
     local w = self.flipX_ and -s.x or s.x
     local h = self.flipY_ and -s.y or s.y
     
     if self.texture_ then sprite(self.texture_, s.x/2, s.y/2, w, h) end
     
     -- debug draw sprite rect
-    --[[ 
+    ---[[ 
     noFill()
     strokeWidth(2)
     stroke(255,128,128)
@@ -66,35 +51,35 @@ function CCSprite:addChild(child, z, tag)
 end
 
 function CCSprite:reorderChild(child, z)
-	ccAssert(child)
-	ccAssert(ccArrayContains(self.children_, child))
-	
-	if z == child.zOrder_ then return end
-	
-	if self.batchNode_ then
-		self:removeChild(child, false)
-		self:addChild(child, z)
-	else
-		CCNode.reorderChild(self, child, z)
-	end
+    ccAssert(child)
+    ccAssert(ccArrayContains(self.children_, child))
+    
+    if z == child.zOrder_ then return end
+    
+    if self.batchNode_ then
+        self:removeChild(child, false)
+        self:addChild(child, z)
+    else
+        CCNode.reorderChild(self, child, z)
+    end
 end
 
 function CCSprite:removeChild(child, cleanup)
-	if self.batchNode_ then
-		self.batchNode_:removeSpriteFromAtlas(child)
-	end
-	
-	CCNode.removeChild(self, child, cleanup)
+    if self.batchNode_ then
+        self.batchNode_:removeSpriteFromAtlas(child)
+    end
+    
+    CCNode.removeChild(self, child, cleanup)
 end
 
 function CCSprite:removeAllChildrenWithCleanup(cleanup)
-	if self.batchNode_ then
-		for i, child in ipairs(self.children_) do
-			self.batchNode_:removeSpriteFromAtlas(child)
-		end
-	end
-	
-	CCNode.removeAllChildrenWithCleanup(self, cleanup)
+    if self.batchNode_ then
+        for i, child in ipairs(self.children_) do
+            self.batchNode_:removeSpriteFromAtlas(child)
+        end
+    end
+    
+    CCNode.removeAllChildrenWithCleanup(self, cleanup)
 end
 
 --------------------
@@ -121,12 +106,14 @@ end
 
 function CCSprite:setColor(...)
     CCRGBAMixin.setColor(self, ...)
-    if self.batchNode_ then self:updateColor() end
+    --if self.batchNode_ then self:updateColor() end
+    self:updateColor()
 end
 
 function CCSprite:setOpacity(o)
     CCRGBAMixin.setOpacity(self, o)
-    if self.batchNode_ then self:updateColor() end
+    --if self.batchNode_ then self:updateColor() end
+    self:updateColor()
 end
 
 function CCSprite:setPosition(...)
@@ -171,21 +158,30 @@ function CCSprite:setVisible(v)
 end
 
 function CCSprite:setFlipX(flip)
-	if self.flipX ~= flip then
-	    self.flipX_ = flip
-	    
-		-- only need to set texture rect if batched for now	    
-		self:setTextureRect(self.rect_)
-	end
+    if self.flipX_ ~= flip then
+        self.flipX_ = flip
+        
+        -- only need to set texture rect if batched for now        
+        self:setTextureRect(self.rect_, false, self.size_)
+    end
 end
 
 function CCSprite:setFlipY(flip)
-	if self.flipY ~= flip then
-	    self.flipY_ = flip
-	    
-		-- only need to set texture rect if batched for now	    
-		self:setTextureRect(self.rect_)
-	end
+    if self.flipY_ ~= flip then
+        self.flipY_ = flip
+        
+        -- only need to set texture rect if batched for now        
+        self:setTextureRect(self.rect_, false, self.size_)
+    end
+end
+
+function CCSprite:setSize(...)
+    local cs = self.size_
+    cs.x, cs.y = ccVec2VA(...)
+        
+    local ap, app = self.anchor_, self.anchorInPoints_
+    app.x, app.y = cs.x * ap.x, cs.y * ap.y
+    self.isTransformDirty_, self.isInverseDirty_ = true, true    
 end
 
 --------------------
@@ -218,30 +214,31 @@ function CCSprite:setBatchNode(node)
     end
 end
 
-function CCSprite:updateColor()
-    local q = self:quad()
-    local r, g, b = self.color_:unpack()
-    local a = self.opacity_
+function CCSprite:updateColor()    
+    if self.quad_ then
+        local q = self.quad_
+        local r, g, b = self.color_:unpack()
+        local a = self.opacity_
     
-    --print("("..r..","..g..","..b"]")
-    self.quad_:setColor(1, r, g, b, a)
-    self.quad_:setColor(2, r, g, b, a)
-    self.quad_:setColor(3, r, g, b, a)
-    self.quad_:setColor(4, r, g, b, a)
-    
+        self.quad_:setColor(1, r, g, b, a)
+        self.quad_:setColor(2, r, g, b, a)
+        self.quad_:setColor(3, r, g, b, a)
+        self.quad_:setColor(4, r, g, b, a)        
+    end
+
     local atlasIndex = self.atlasIndex_
     if atlasIndex then
         self.textureAtlas_:updateQuad(q, atlasIndex, false, true, false)
     else
-        self.batchColorDirty = true        
+        self.batchColorDirty_ = true        
     end
 end
 
-function CCSprite:setTextureRect(...)
-    local s, t, w, h = ccRect.va(...)
+function CCSprite:setTextureRect(r, rotated, untrimmedSize)
+    local s, t, w, h = r:unpack()
     
-    self:setContentSize(w, h)
-	self.rect_:set(s, t, w, h)
+    self:setSize(untrimmedSize:unpack())
+    self.rect_:set(s, t, w, h)
     self:setTextureCoords(s, t, w, h)
     
     -- no need to do this really because setTextureCoords does it
@@ -268,37 +265,50 @@ local function _rectPointsToPixels(...)
     return ...
 end
 
--- hmm...if we don't have a quad yet, this is all bogus.
--- this should be able to be set before adding to a batch node imo
 function CCSprite:setTextureCoords(...)
     local s, t, tw, th = ccRect.va(...)
     
     -- uhh don't know how/if we should handle points to pixels stuff yet...
     s, t, tw, th = _rectPointsToPixels(s, t, tw, th)
     
-    local text = self.textureAtlas_ and self.textureAtlas_:texture() or self.texture_
+    local tex = self.textureAtlas_ and self.textureAtlas_:texture() or self.texture_
     if not tex then return end
     local aw, ah = spriteSize(tex)
-    
-    -- apparently i'm normalizing these here...
-    local l = s/aw
-    local r = l + tw/aw
-    local t = t/ah
-    local b = t + th/ah
-    
-    if self.flipX_ then l, r = r, l end
-    if self.flipY_ then t, b = b, t end
+
+    -- not sure why but, we have to transpose the top and bottom to make
+    -- them work the same as they do on cocos2d-iphone.
+    local left = s/aw
+    local right = left + tw/aw    
+    local nh = th/ah
+    --local bottom = t/ah  -- this is how cocos2d-iphone does it    
+    local bottom = 1 - (t/ah + nh)
+    local top = bottom + nh    
+
+    if self.flipX_ then left, right = right, left end
+    if self.flipY_ then top, bottom = bottom, top end
 
     local q = self:quad()
     local tl, bl, br, tr = q[1], q[2], q[3], q[4]
-    tl[7] = l
-    tl[8] = t
-    bl[7] = l
-    bl[8] = b
-    br[7] = r
-    br[8] = b
-    tr[7] = r
-    tr[8] = t
+    tl[7] = left
+    tl[8] = top
+    bl[7] = left
+    bl[8] = bottom
+    br[7] = right
+    br[8] = bottom
+    tr[7] = right
+    tr[8] = top
+    ---[[
+    tl[7] = left
+    tl[8] = top
+    bl[7] = left
+    bl[8] = bottom
+    br[7] = right
+    br[8] = bottom
+    tr[7] = right
+    tr[8] = top
+    --]]
+    
+    self.batchTexCoordDirty_ = true;
 end
 
 -- actually updates the entire quad...
@@ -393,6 +403,24 @@ function CCSprite:updateTransform()
     end
     
     ccArrayForEach(self.children_, "updateTransform")
+    
+    
+    ---[[
+        pushStyle()
+        local q = self:quad()
+        local tlx, tly = q:position(1)
+        local blx, bly = q:position(2)
+        local brx, bry = q:position(3)
+        local trx, try = q:position(4)
+        fill()
+        stroke(255, 0, 0)
+        strokeWidth(4)
+        line(tlx, tly, blx, bly)
+        line(blx, bly, brx, bry)
+        line(brx, bry, trx, try)
+        line(trx, try, tlx, tly)
+        popStyle()
+    --]]
 end
 
 function CCSprite:setDirtyRecursively(b)
