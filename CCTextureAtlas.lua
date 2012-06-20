@@ -36,15 +36,15 @@ function CCTextureAtlas:updateQuad(quad, index, doVerts, doColor, doTexCoords)
         v = quad:vertexRef(quadMap_[i])
         
         if doVerts then
-            mesh:vertex(first, v[1], v[2])
+            mesh:vertex(first+(i-1), v[1], v[2])
         end
         
         if doColor then
-            mesh:color(first, v[3], v[4], v[5], v[6])
+            mesh:color(first+(i-1), v[3], v[4], v[5], v[6])
         end
         
         if doTexCoords then
-            mesh:texCoord(first, v[7], v[8])
+            mesh:texCoord(first+(i-1), v[7], v[8])
         end
     end
 end
