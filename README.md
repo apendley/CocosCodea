@@ -9,7 +9,12 @@ At the moment nothing is optimized, as I've been working feverishly to get the c
 
 If you have a suggestion for an optimization or CocosCodea in general, or if you'd like to contribute, just let me know.
 
-**A special note:** On retina iPads, Codea automatically double-sizes any sprites with an image that don't have an @2x version. CocosCodea undoes this double sizing by default, so non-retina sprites will draw at half size on retina devices. in ccConfig.lua, you can re-enable Codea's scaling by setting CC_ENABLE_CODEA_2X_MODE to true, but then any images that do have an  @2x version will be drawn at double size on retina devices. So, if you w**a**nt everything to work the same on all devices, you either need to leave CC_ENABLE_CODEA_2X_MODE disabled, and only use art with @2x versions, or enable CC_ENABLE_CODEA_2X_MODE, and only use art without @2x versions.
+**A special note:** On retina iPads, Codea automatically double-sizes any sprites with an image that don't
+ have an @2x version. CocosCodea undoes this double sizing, so non-retina sprites will draw 
+ at half size on retina devices (this is actually the standard for iOS). If you want to use non-retina sprites, for now you
+ must scale them by ContentScaleFactor so that they display correctly on retina iPads. Or, use only sprites with retina versions.
+ I'm trying to find a way to enable a "Double size mode" flag that will reinstate the Codea scaling behavior, but so far have not been successful.
+
 
 What's here:
 -
@@ -19,6 +24,7 @@ What's here:
 * the famous cocos2d action system
 * versatile scheduler
 * prioritized touch dispatching with "touch swallowing"
+* batched sprites (no TexturePacker/Zwoptex support yet, but sprites can now be batch drawn and have their texture coordinates set)
 
 **System:**
 * CCDirector
@@ -33,6 +39,7 @@ What's here:
 * CCScene
 * CCLayer
 * CCSprite
+* CCSpriteBatchNode (partial)
 * CCLabelTTF 
 * CCMenu
 * CCMenuItemSprite
@@ -86,8 +93,8 @@ What's here:
 	
 What's not here (yet):
 -
+
 **General:**
-* batched sprites
 * animation system
 * Accelerometer handling
 * non-targeted touch delegates
@@ -95,12 +102,11 @@ What's not here (yet):
 * bitmapped fonts
 * tilemaps
 * particles and effects
-* setting UV coordinates on CCSprites (current Codea limitation)
+* setting UV coordinates on CCSprites (current Codea limitation, to be addressed in a future update)
 
 **Nodes:**
 * CCAtlasNode
 * CCLabelBMFont
-* CCSpriteBatchNode
 * CCMenuItemAtlasFont
 * CCParallaxNode
 * CCTMX*
