@@ -1,15 +1,19 @@
---MyLayer2
---MyLayer2 = CCClass(CCLayerColor)
-MyLayer2 = CCClass(CCLayer)
+RainTest = CCClass(CCLayer)
 
-function MyLayer2:init()
-    --CCLayerColor.init(self, ccc4(128, 128, 128))
+function RainTest:init()
     CCLayer.init(self)
     
-    self.dropFreeList = {}
-    self.nextDrop = 1
+    self:setTouchEnabled(true)
     
     local size = self:size()
+    
+    local bn = CCSpriteBatchNode("Small World:Raindrop Soft")
+    bn:setSize(size)
+    bn:setAnchor(self:anchor())
+    bn:setPosition(self:position())
+    bn:setIgnoreAnchorForPosition(true)
+    self:addChild(bn)
+    self.batchNode = bn
     
     -- make a button to exit scene    
     local exitButton
@@ -47,53 +51,59 @@ function MyLayer2:init()
     self:addChild(menu, 2) 
     
     -- make it rain
-    self:schedule("spawnDrop", .075)
+    self.drops = {}
+    self.freeDrops = {}
+    self:schedule("spawnDrops", 1/45)
+    self:schedule("updateDrops")
 end
 
-function MyLayer2:cleanup()
-    CCLayer.cleanup(self)
-    self.ellipse_ = nil
-end
-
-function MyLayer2:spawnDrop(dt)
-    local numDrops = math.random(1, 3)
-            
-    for i = 1, numDrops do
-        local dropFreeList = self.dropFreeList
-        local drop
-        if #dropFreeList > 0 then            
-            drop = ccArrayRemove(dropFreeList)
+function RainTest:spawnDrops(dt)
+    local drop    
+    for i = 1, math.random(1, 2) do
+        if #self.freeDrops > 0 then
+            drop = table.remove(self.freeDrops)
+            drop:setVisible(true)            
         else
-            --if self.nextDrop >= 40 then break end
             drop = CCSprite("Small World:Raindrop Soft")
-            drop:setTag(self.nextDrop)
-            self.nextDrop = self.nextDrop + 1
+            self.batchNode:addChild(drop)
+            --self:addChild(drop)
         end
         
-        -- there is a bug here...the drops and ellipse's z order
-        -- isn't correct for some reason
-        self:addChild(drop, 1)
-
         drop:setScale(.75 + (math.random() * .25))
         
         local cs = drop:size()
-        local ws = CCSharedDirector():winSize()
-        
-        local x = math.random(-cs.x, ws.x + cs.x)
-        local y = ws.y + cs.y
+        local w, h = self:size():unpack()
+        local x = math.random(-cs.x, w + cs.x)
+        local y = h + cs.y * .5 + math.random(50)
         drop:setPosition(x, y)
-
-        local function recycleDrop(d)
-            ccArrayInsert(dropFreeList, d)
-            d:removeFromParent(false)            
-        end
-
-        local d = 1 + math.random() * 1.5
-        drop:runAction{CCMoveTo(d, x, -cs.y), CCCallT(recycleDrop)}
+        
+        -- yeah, we can cheat here because we're using Lua :)
+        drop.rate_ = math.random(600, 1200)
+        table.insert(self.drops, drop)
     end
 end
 
-function MyLayer2:ccTouched(touch)
+function RainTest:updateDrops(dt)
+    local remove = {}
+    for i, drop in ipairs(self.drops) do
+        local x, y = drop:position():unpack()
+        
+        if y < -40 then
+            drop:setVisible(false)
+            table.insert(remove, drop)
+            table.insert(self.freeDrops, drop)
+        else
+            y = y - drop.rate_ * dt
+            drop:setPosition(x, y)            
+        end
+    end
+    
+    for i, drop in ipairs(remove) do
+        ccArrayRemoveObject(self.drops, drop)
+    end
+end
+
+function RainTest:ccTouched(touch)
     local ell = self.ellipse_
     
     if touch.state == BEGAN then
@@ -111,4 +121,11 @@ function MyLayer2:ccTouched(touch)
         ell:setStrokeColor(255, 128, 128, 128)
         self:reorderChild(ell, 0)
     end
+end
+
+function RainTest:cleanup()
+    CCLayer.cleanup(self)
+    self.ellipse_ = nil
+    self.drops = nil
+    self.freeDrops = nil
 end

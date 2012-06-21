@@ -20,7 +20,7 @@ function MyLayer:init()
     -- a button to exit the scene
     do    
         local function nextScene()
-            local t = CCTransitionRotoZoom(1, MyLayer2:scene())
+            local t = CCTransitionRotoZoom(1, RainTest:scene())
             CCSharedDirector():replaceScene(t)
         end
         
@@ -134,7 +134,6 @@ function MyLayer:init()
     end
     
     menu:setPosition(size/2)
-    --menu:alignItemsVertically()
     menu:alignItemsHorizontally(50)
 end
 

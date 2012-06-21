@@ -19,8 +19,19 @@ function CCLabelTTF:init(str, fnt, fntSize, alignment, wrapWidth)
     self.alignment_ = alignment_ or LEFT
     self.wrapWidth_ = wrapWidth_ or 0
     self.hasShadow_ = false
+    self.anchor_ = vec2(0.5, 0.5)
         
     CCLabelMixin.init(self, str)
+end
+
+function CCLabelTTF:setHasShadow(hasShadow)
+    self.hasShadow_ = hasShadow
+    
+    if hasShadow then
+        self.shadowColor_ = self.shadowColor_ or ccc3(0, 0, 0)
+        self.shadowOpacity_ = self.shadowOpacity_ or 255
+        self.shadowOffset_ = self.shadowOffset_ or vec2(1, -1)
+    end
 end
 
 function CCLabelTTF:setString(str)
@@ -76,11 +87,11 @@ function CCLabelTTF:draw()
     
     if self.hasShadow_ then
         fill(self:shadowColor():unpack())
-		local x, y = self:shadowOffset():unpack()
+        local x, y = self:shadowOffset():unpack()
         text(self:string(), x, y)
     end
     
-	local r, g, b = self.color_:unpack()
+    local r, g, b = self.color_:unpack()
     fill(r, g, b, self.opacity_)
     text(self:string(), 0, 0)
     

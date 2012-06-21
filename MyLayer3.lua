@@ -9,7 +9,7 @@ function MyLayer3:init()
     local exitButton
     do    
         local function nextScene()
-            local t = CCTransitionFade(0.75, MyRetinaTest:scene(), 255)
+            local t = CCTransitionFade(0.75, MenuArrangeTest:scene(), 255)
             CCSharedDirector():replaceScene(t)
         end
         
@@ -28,6 +28,7 @@ function MyLayer3:init()
     do
         local s = CCSprite("Planet Cute:Character Boy")
         s:setPosition(size.x/2 - 250, size.y - 100)
+        s:setScale(ContentScaleFactor)
         s:runAction{CCFadeOut(2), CCFadeIn(2), loop=true}
         self:addChild(s)
     end
@@ -36,6 +37,7 @@ function MyLayer3:init()
     do
         local s = CCSprite("Planet Cute:Character Cat Girl")
         s:setPosition(size.x/2 - 250, size.y - 200)
+        s:setScale(ContentScaleFactor)
         s:runAction{CCRotateBy(2, 180), loop=true}
         self:addChild(s)
     end
@@ -44,6 +46,7 @@ function MyLayer3:init()
     do
         local s = CCSprite("Planet Cute:Character Horn Girl")
         s:setPosition(size.x/2 - 250, size.y - 300)
+        s:setScale(ContentScaleFactor)
         s:runAction{CCScaleBy(.2, 1.1), CCScaleBy(.2, 1/1.1), loop = true}
         self:addChild(s)        
     end
@@ -52,6 +55,7 @@ function MyLayer3:init()
     do
         local s = CCSprite("Planet Cute:Character Pink Girl")
         s:setPosition(size.x/2 - 250, size.y - 400)
+        s:setScale(ContentScaleFactor)
         s:runAction{CCTintTo(1, 255, 0, 0), CCTintTo(1, 255), loop = true}
         self:addChild(s)        
     end
@@ -60,6 +64,7 @@ function MyLayer3:init()
     do
         local s = CCSprite("Planet Cute:Character Princess Girl")
         s:setPosition(size.x/2 - 250, size.y - 500)                
+        s:setScale(ContentScaleFactor)
         
         s:runAction{ loop = true,
             CCMoveBy(3, 200, 0), 
@@ -74,7 +79,8 @@ function MyLayer3:init()
     -- move a sprite with ease in/out
     do
         local s = CCSprite("Planet Cute:Character Princess Girl")
-        s:setPosition(size.x/2 - 250, size.y - 600)                
+        s:setPosition(size.x/2 - 250, size.y - 600)
+        s:setScale(ContentScaleFactor)
         
         s:runAction{ loop = true,
             CCEaseSineInOut(CCMoveBy(3, 200, 0)), 
@@ -91,6 +97,7 @@ function MyLayer3:init()
         local s = CCSprite("Planet Cute:Character Cat Girl")
         s:setAnchor(0.5, 0)
         s:setPosition(size.x/2 + 250, size.y/2 - 200)
+        s:setScale(ContentScaleFactor)
         s:runAction{CCRotateBy(2, 180), loop=true}
         s:runAction{CCScaleBy(.2, 1.1), CCScaleBy(.2, 1/1.1), loop=true}
         self:addChild(s)
@@ -99,12 +106,13 @@ function MyLayer3:init()
     -- hierarchy
     do
         local mine = CCSprite("Tyrian Remastered:Mine Spiked Huge")
-        mine:setPosition(size.x/2 + 250, size.y/2 + 100)
+        mine:setPosition(size.x/2 + 200, size.y/2 + 100)
+        mine:setScale(ContentScaleFactor)
         self:addChild(mine)
         
         mine:runAction{CCRotateBy(3, 360), loop=true}
         
-        local ofs = 100        
+        local ofs = 100 / mine:scale()
         local xOfs = {-ofs, ofs, 0, 0}
         local yOfs = {0, 0, -ofs, ofs}
 

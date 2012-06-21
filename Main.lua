@@ -1,19 +1,11 @@
 -- Main
 function setup()
     --displayMode(FULLSCREEN)
-
-    -- test pulling down a file from my public dropbox folder
-    local function getComplete(data, status, headers)
-        print(data)
-    end
-    --http.get("https://dl.dropbox.com/u/8445683/sprites.plist", getComplete)
-    
-    
+    --displayMode(FULLSCREEN_NO_BUTTONS)
+        
     local director = CCSharedDirector()
     director:showFPS(true)
-    director:runWithScene(BatchNodeTest:scene())
-    --director:runWithScene(MyRetinaTest:scene())
-    --director:runWithScene(MyLayer:scene())
+    director:runWithScene(MyLayer:scene())
 end
 
 function touched(touch)

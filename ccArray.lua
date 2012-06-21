@@ -4,7 +4,7 @@ ccArrayInsert = table.insert
 ccArrayRemove = table.remove
 
 function ccArrayCopy(array)
-	return { unpack(array) }
+    return { unpack(array) }
 end
 
 function ccArrayContains(array, object)

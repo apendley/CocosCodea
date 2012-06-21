@@ -257,7 +257,7 @@ function CCMenu:alignItemsInColumns(...)
             
         local size = item:size()
         colWidth = math.max(colWidth, size.x * item:scaleX())
-        colHeight = colHeight + size.y + 5
+        colHeight = colHeight + size.y * item:scaleY() + 5
         occupied = occupied + 1
             
         if occupied >= colRows then
@@ -288,7 +288,7 @@ function CCMenu:alignItemsInColumns(...)
         colWidth = math.max(colWidth, size.x * item:scaleX())
         item:setPosition(x + widths[col] / 2, y - winSize.y/2)
         
-        y = y - size.y + 10
+        y = y - size.y * item:scaleY() + 10
         occupied = occupied + 1
             
         if occupied >= colRows then

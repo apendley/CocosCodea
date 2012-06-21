@@ -61,11 +61,15 @@ function CCTextureAtlas:addQuad(quad)
     return numQuads_            
 end
 
+function CCTextureAtlas:hideQuad(index)
+    self.mesh_:setRect(index, 0, 0, 0, 0)    
+end
+
 function CCTextureAtlas:removeQuad()
     -- we can't actually remove quads, so what we'll do is assume
     -- the user will shift their indices, and we'll clear the back item    
     local last = self.numQuads_
-    self.mesh_:setRect(last, 0, 0, 0, 0)    
+    self.mesh_:setRect(last, 0, 0, 0, 0)
     
     self.numQuads_ = self.numQuads_ - 1
     self.numFree_ = self.numFree_ + 1
@@ -78,17 +82,5 @@ function CCTextureAtlas:removeAllQuads(index)
 end
 
 function CCTextureAtlas:drawQuads()
-    local s = self.mesh_.size
-    
-    --[[
-    for i = 1, s do
-        --local v = self.mesh_:vertex(i)
-        --local v = self.mesh_:color(i)
-        local v = self.mesh_:texCoord(i)
-        print(i..": "..tostring(v))
-    end
-    --]]
-    
-    
     self.mesh_:draw()
 end

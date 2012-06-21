@@ -21,9 +21,6 @@ function CCSprite:draw()
     local c = self.color_
     tint(c.r, c.g, c.b, self.opacity_)
     
-    --spriteMode(CORNER)
-    --if self.sprite_ then sprite(self.sprite_, 0, 0, s.x, s.y) end
-    
     spriteMode(CENTER)
     local s = self.size_
     local w = self.flipX_ and -s.x or s.x
@@ -32,7 +29,7 @@ function CCSprite:draw()
     if self.texture_ then sprite(self.texture_, s.x/2, s.y/2, w, h) end
     
     -- debug draw sprite rect
-    ---[[ 
+    --[[ 
     noFill()
     strokeWidth(2)
     stroke(255,128,128)
@@ -106,13 +103,11 @@ end
 
 function CCSprite:setColor(...)
     CCRGBAMixin.setColor(self, ...)
-    --if self.batchNode_ then self:updateColor() end
     self:updateColor()
 end
 
 function CCSprite:setOpacity(o)
     CCRGBAMixin.setOpacity(self, o)
-    --if self.batchNode_ then self:updateColor() end
     self:updateColor()
 end
 
@@ -161,7 +156,7 @@ function CCSprite:setFlipX(flip)
     if self.flipX_ ~= flip then
         self.flipX_ = flip
         
-        -- only need to set texture rect if batched for now        
+        -- only really need to set texture rect if batched...
         self:setTextureRect(self.rect_, false, self.size_)
     end
 end
@@ -170,7 +165,7 @@ function CCSprite:setFlipY(flip)
     if self.flipY_ ~= flip then
         self.flipY_ = flip
         
-        -- only need to set texture rect if batched for now        
+        -- only really need to set texture rect if batched...      
         self:setTextureRect(self.rect_, false, self.size_)
     end
 end
@@ -193,7 +188,6 @@ function CCSprite:setBatchNode(node)
     if node then
         self.transformToBatch_ = matrix()
         self.textureAtlas_ = node.textureAtlas_
-        --self.batchTransformDirty_ = true
         
         -- a side effect of quad() is that it lazily creates a quad
         -- let's just make sure it's created
@@ -235,6 +229,7 @@ function CCSprite:updateColor()
 end
 
 function CCSprite:setTextureRect(r, rotated, untrimmedSize)
+    ccAssert(r)
     local s, t, w, h = r:unpack()
     
     self:setSize(untrimmedSize:unpack())
@@ -261,52 +256,25 @@ function CCSprite:quad()
     return quad
 end
 
-local function _rectPointsToPixels(...)
-    return ...
-end
-
 function CCSprite:setTextureCoords(...)
     local s, t, tw, th = ccRect.va(...)
     
-    -- uhh don't know how/if we should handle points to pixels stuff yet...
-    s, t, tw, th = _rectPointsToPixels(s, t, tw, th)
-    
     local tex = self.textureAtlas_ and self.textureAtlas_:texture() or self.texture_
     if not tex then return end
-    local aw, ah = spriteSize(tex)
+    local rw, rh = spriteSize(tex)
+    rw, rh = 1/rw, 1/rh        -- get reciprocals
 
     -- not sure why but, we have to transpose the top and bottom to make
     -- them work the same as they do on cocos2d-iphone.
-    local left = s/aw
-    local right = left + tw/aw    
-    local nh = th/ah
-    --local bottom = t/ah  -- this is how cocos2d-iphone does it    
-    local bottom = 1 - (t/ah + nh)
-    local top = bottom + nh    
+    local left = s * rw
+    local right = left + tw * rw
+    local bottom = 1 - (t+th)*rh     --local bottom = t*rh --cocos2d-iphone version
+    local top = bottom + th*rh
 
     if self.flipX_ then left, right = right, left end
     if self.flipY_ then top, bottom = bottom, top end
-
-    local q = self:quad()
-    local tl, bl, br, tr = q[1], q[2], q[3], q[4]
-    tl[7] = left
-    tl[8] = top
-    bl[7] = left
-    bl[8] = bottom
-    br[7] = right
-    br[8] = bottom
-    tr[7] = right
-    tr[8] = top
-    ---[[
-    tl[7] = left
-    tl[8] = top
-    bl[7] = left
-    bl[8] = bottom
-    br[7] = right
-    br[8] = bottom
-    tr[7] = right
-    tr[8] = top
-    --]]
+    
+    self:quad():setTextureRect(left, bottom, right, top)
     
     self.batchTexCoordDirty_ = true;
 end
@@ -328,12 +296,7 @@ function CCSprite:updateTransform()
         local visible = self.visible_
         
         if not visible or (p and p ~= batchNode and p.shouldBeHidden_) then
-                local q = self:quad()
-                q:setPosition(1, 0, 0)
-                q:setPosition(2, 0, 0)
-                q:setPosition(3, 0, 0)
-                q:setPosition(4, 0, 0)
-            
+            self.textureAtlas_:hideQuad(self.atlasIndex_)
             self.shouldBeHidden_ = true
         else
             self.shouldBeHidden_ = false
@@ -385,10 +348,10 @@ function CCSprite:updateTransform()
             --]]
             
             local q = self:quad()
-            q:setPosition(1, dx, dy)
-            q:setPosition(2, ax, ay)
-            q:setPosition(3, bx, by)
-            q:setPosition(4, cx, cy)
+            q:setVertex(1, dx, dy)
+            q:setVertex(2, ax, ay)
+            q:setVertex(3, bx, by)
+            q:setVertex(4, cx, cy)
         end
         
         self.batchTransformDirty_ = false        
@@ -404,8 +367,8 @@ function CCSprite:updateTransform()
     
     ccArrayForEach(self.children_, "updateTransform")
     
-    
-    ---[[
+    -- debug draw quad
+    --[[
         pushStyle()
         local q = self:quad()
         local tlx, tly = q:position(1)
