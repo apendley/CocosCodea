@@ -39,7 +39,7 @@ What's here:
 * CCScene
 * CCLayer
 * CCSprite
-* CCSpriteBatchNode (partial)
+* CCSpriteBatchNode
 * CCLabelTTF 
 * CCMenu
 * CCMenuItemSprite
