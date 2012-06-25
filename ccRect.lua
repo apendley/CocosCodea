@@ -30,10 +30,19 @@ function ccRect:init(...)
     self.x, self.y, self.w, self.h = ccRect.va(...)
 end
 
+function ccRect:origin()
+    return vec2(self.x, self.y)
+end
+
+function ccRect:size()
+    return vec2(self.w, self.h)
+end
+
 function ccRect:containsPoint(...)
     local x, y = ccVec2VA(...)
-    return x >= self.x and x <= self.x+self.w and y >= self.y and y <= self.y+self.h           
-end  
+    return x >= self.x and x <= self.x+self.w and 
+           y >= self.y and y <= self.y+self.h           
+end
 
 function ccRect:__tostring()
     return "["..self.x..","..self.y..","..self.w..","..self.h.."]"

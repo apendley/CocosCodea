@@ -17,6 +17,34 @@ function CCSprite:init(spriteNameOrImage)
     self.rect_ = ccRect(0, 0, self.size_.x, self.size_.y)
 end
 
+-- use CCSprite:alloc():initWithFrame(frameOrFrameName) to use this initializer
+function CCSprite:initWithFrame(frameOrFrameName)
+    CCNode.init(self)
+    CCRGBAMixin.init(self)
+    
+    if type(frameOrFrameName) == "string" then
+        frameOrFrameName = CCSharedSpriteFrameCache():frameByName(frameOrFrameName)
+    end
+    
+    self:setTexture(frameOrFrameName.texture)
+    self:setTextureRect(frameOrFrameName.rect, false, frameOrFrameName.rect:size())
+    self:setAnchor(0.5, 0.5)
+    self.flipX_ = false
+    self.flipY_ = false
+    
+    return self 
+end
+
+-- use CCSprite:alloc():initWithFrameName(name) to use this initializer
+-- alias for CCSprite.initWithFrame
+CCSprite.initWithFrameName = CCSprite.initWithFrame
+
+function CCSprite:setDisplayFrame(frame)
+    -- todo: handle rotated frames, and frames with offsets
+    self:setTexture(frame.texture)
+    self:setTextureRect(frame.rect)
+end
+
 function CCSprite:draw()
     local c = self.color_
     tint(c.r, c.g, c.b, self.opacity_)
@@ -228,12 +256,25 @@ function CCSprite:updateColor()
     end
 end
 
+--function CCSprite:setTextureRect(r, rotated, untrimmedSize)
+-- params: setTextureRect(rect, [rotated], [untrimmedSize])
 function CCSprite:setTextureRect(r, rotated, untrimmedSize)
     ccAssert(r)
     local s, t, w, h = r:unpack()
+
+    if rotated == nil then rotated = false end
+    if untrimmedSize == nil then untrimmedSize = r:size() end
     
     self:setSize(untrimmedSize:unpack())
-    self.rect_:set(s, t, w, h)
+    
+    -- create rect if it has not been created yet
+    local selfRect = self.rect_
+    if selfRect then
+        selfRect:set(s, t, w, h)
+    else
+        self.rect_ = ccRect(s, t, w, h)
+    end
+    
     self:setTextureCoords(s, t, w, h)
     
     -- no need to do this really because setTextureCoords does it
@@ -268,7 +309,7 @@ function CCSprite:setTextureCoords(...)
     -- them work the same as they do on cocos2d-iphone.
     local left = s * rw
     local right = left + tw * rw
-    local bottom = 1 - (t+th)*rh     --local bottom = t*rh --cocos2d-iphone version
+    local bottom = 1 - (t+th) * rh     --local bottom = t*rh --cocos2d-iphone version
     local top = bottom + th*rh
 
     if self.flipX_ then left, right = right, left end
@@ -309,8 +350,6 @@ function CCSprite:updateTransform()
             end
             
             local bxf = self.transformToBatch_
-            
-            -- uhh..why not just transform all of these verts by the matrix?
             local x1, y1, w, h = 0, 0, self.rect_.w, self.rect_.h
             
             local x2 = x1 + w
@@ -347,6 +386,7 @@ function CCSprite:updateTransform()
             local dy = x1 * sr + y2 * cr2 + y
             --]]
             
+            -- todo: add a setRect method to ccQuad
             local q = self:quad()
             q:setVertex(1, dx, dy)
             q:setVertex(2, ax, ay)
@@ -371,10 +411,10 @@ function CCSprite:updateTransform()
     --[[
         pushStyle()
         local q = self:quad()
-        local tlx, tly = q:position(1)
-        local blx, bly = q:position(2)
-        local brx, bry = q:position(3)
-        local trx, try = q:position(4)
+        local tlx, tly = q:vertex(1)
+        local blx, bly = q:vertex(2)
+        local brx, bry = q:vertex(3)
+        local trx, try = q:vertex(4)
         fill()
         stroke(255, 0, 0)
         strokeWidth(4)

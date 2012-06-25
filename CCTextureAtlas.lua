@@ -67,7 +67,7 @@ end
 
 function CCTextureAtlas:removeQuad()
     -- we can't actually remove quads, so what we'll do is assume
-    -- the user will shift their indices, and we'll clear the back item    
+    -- the user will shift their indices, and we'll clear the back item  
     local last = self.numQuads_
     self.mesh_:setRect(last, 0, 0, 0, 0)
     

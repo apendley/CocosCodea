@@ -76,7 +76,7 @@ end
 function CCActionManager:removeActionAtIndex(index, entry)
     local action = entry.actions[index]
     
-    --ccPrint("CCActionManager:removeActionAtIndex (" .. tostring(action) .. ") [" .. index .. "]  " .. tostring(entry) .. "\n")  
+    --ccPrint("CCActionManager:removeActionAtIndex (" .. tostring(action) .. ") [" .. index .. "]  " .. tostring(entry) .. "\n") 
     
     if action == entry.currentAction and (entry.salvagedAction == nil) then
         --ccPrint("ActionManager:removeActionAtIndex salvaging action " .. tostring(entry.currentAction) .. "\n")

@@ -38,6 +38,12 @@ function ccQuad:setVertex(vertIndex, ...)
     local v= self[vertIndex]
     v[1], v[2] = ccVec2VA(...)
 end
+
+function ccQuad:vertex(vertIndex)
+    ccAssert(vertIndex >= 1 and vertIndex <= 4)
+    local v = self[vertIndex]
+    return v[1], v[2]
+end
     
 function ccQuad:setColor(vertIndex, ...)
     ccAssert(vertIndex >= 1 and vertIndex <= 4)

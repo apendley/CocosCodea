@@ -24,7 +24,7 @@ end
 --   priority or of it doesn't want to swallow touches
 --
 -- * include must implement either ccTouched or ccTouchBegan, with
---   ccTouched having precedence if implemented
+--   ccTouched having precedence if both are implemented
 -----------------------------------------------------------------------
 CCTargetedTouchMixin = CCMixin()
 
@@ -81,7 +81,8 @@ end
 
 -----------------------------------------------------------------------
 -- CCMenuItemLabelMixin
--- this class implements CCRGBAMixin, so shouldn't include both.
+-- this mixin implements CCRGBAMixin's interface,
+-- so don't include both in the same class.
 -----------------------------------------------------------------------
 CCMenuItemLabelMixin = CCMixin()
 
@@ -184,7 +185,8 @@ end
 
 -----------------------------------------------------------------------
 -- CCMenuItemSpriteMixin
--- this class implements CCRGBAMixin, so shouldn't include both.
+-- this mixin implements CCRGBAMixin's interface,
+-- so don't include both in the same class.
 -----------------------------------------------------------------------
 CCMenuItemSpriteMixin = CCMixin()
 

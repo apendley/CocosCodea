@@ -33,7 +33,7 @@ CCLayerColor = CCClass(CCLayer):include(CCRGBAMixin)
 
 -- can't take vararg color here, must pass a ccc3 object
 function CCLayerColor:init(c, w, h)
-    CCLayer.init(self)
+    CCLayer.init(self, w, h)
     CCRGBAMixin.init(self, c)
 end
 

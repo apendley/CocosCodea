@@ -267,7 +267,7 @@ function CCTransitionSlideInL:onEnter()
     
     self:initScenes()
     
-    self.inScene_:runAction(self:easeActionWithAction(self:action()))    
+    self.inScene_:runAction(self:easeActionWithAction(self:action()))   
     
     local sequence = 
     {

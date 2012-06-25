@@ -98,13 +98,13 @@ Object = _createClass()
 Object.static.__metamethods = { '__add', '__call', '__concat', '__div', '__le', '__lt', 
                                 '__mod', '__mul', '__pow', '__sub', '__tostring', '__unm' }
 
-function Object.static:allocate()
-  ccAssert(_classes[self], "Make sure that you are using 'Class:allocate' instead of 'Class.allocate'")
+function Object.static:alloc()
+  ccAssert(_classes[self], "Make sure that you are using 'Class:alloc' instead of 'Class.alloc'")
   return setmetatable({ class = self }, self.__instanceDict)
 end
 
 function Object.static:new(...)
-  local instance = self:allocate()
+  local instance = self:alloc()
   instance:init(...)
   return instance
 end

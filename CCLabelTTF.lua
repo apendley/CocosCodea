@@ -6,8 +6,8 @@ CCLabelTTF:synth{"fontSize", mode="r"}
 CCLabelTTF:synth{"alignment", mode="r"}
 CCLabelTTF:synth{"wrapWidth", mode="r"}
 CCLabelTTF:synth{"hasShadow"}
-CCLabelTTF:synth{vec2, "shadowOffset", mode="rc"}
-CCLabelTTF:synth{ccc4, "shadowColor", mode="rc"}
+CCLabelTTF:synth{"shadowOffset", vec2, mode="rc"}
+CCLabelTTF:synth{"shadowColor", ccc4, mode="rc"}
 CCLabelTTF:synth{"shadowOpacity"}
 
 function CCLabelTTF:init(str, fnt, fntSize, alignment, wrapWidth)

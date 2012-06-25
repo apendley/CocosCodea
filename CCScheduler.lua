@@ -248,7 +248,7 @@ function CCScheduler:update(dt)
                 
                 ce.currentTimer:update(self, dt)
                 
-                if ce.timerSalvaged then ce.timerSalvaged = nil end                
+                if ce.timerSalvaged then ce.timerSalvaged = nil end              
                 ce.timerIndex = ce.timerIndex + 1 
             end
 

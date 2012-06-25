@@ -484,6 +484,7 @@ CCNodeRect:synth{"strokeWidth"}
 CCNodeRect:synth{"strokeEnabled"}
 
 -- params: w, h, ccc3
+-- i may change the function signature
 function CCNodeRect:init(w, h, ...)
     CCNode.init(self)
     CCRGBAMixin.init(self, ...)
@@ -525,6 +526,7 @@ CCNodeEllipse:synth{"strokeEnabled"}
 
 -- args: width, height, ccc3
 -- args: diameter, ccc3
+-- i may change the function signature
 function CCNodeEllipse:init(...)
     CCNode.init(self)
     

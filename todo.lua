@@ -1,7 +1,7 @@
+-- * CCSpriteFrame/CCSpriteFrameCache
 -- * play with http.request
 -- * implement a physics sprite
--- * implements batched sprites (using mesh)
--- * re-implement actions so that all action support callbacks and repeating/looping/easing
+-- * re-implement actions so that all actions support callbacks and repeating/looping/easing
 -- * CCActionCatmullRom
 -- * implement remaining transitions
 -- * add prioritized updates to CCScheduler and CCNode classes
