@@ -46,7 +46,7 @@ end
 
 function CCSpriteBatchNode:removeAllChildren(cleanup)
     ccArrayForEach(self.children_, "setBatchNode", nil)
-    self:removeAllChildren(cleanup)
+    CCNode.removeAllChildren(self, cleanup)
     
     ccArrayClear(self.descendants_)
     self.textureAtlas_:removeAllQuads()
