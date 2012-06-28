@@ -1,11 +1,13 @@
 -- Main
+
 function setup()
     --displayMode(FULLSCREEN)
     --displayMode(FULLSCREEN_NO_BUTTONS)
         
     local director = CCSharedDirector()
     director:showFPS(true)
-    director:runWithScene(MyLayer:scene())
+    --director:runWithScene(MyLayer:scene())
+    director:runWithScene(TexturePackerTest:scene())
 end
 
 function touched(touch)

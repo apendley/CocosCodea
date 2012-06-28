@@ -22,12 +22,16 @@ function CCSprite:initWithFrame(frameOrFrameName)
     CCNode.init(self)
     CCRGBAMixin.init(self)
     
+    local frame
     if type(frameOrFrameName) == "string" then
-        frameOrFrameName = CCSharedSpriteFrameCache():frameByName(frameOrFrameName)
+        frame = CCSharedSpriteFrameCache():frameByName(frameOrFrameName)
+    else
+        frame = frameOrFrameName
     end
     
-    self:setTexture(frameOrFrameName.texture)
-    self:setTextureRect(frameOrFrameName.rect, false, frameOrFrameName.rect:size())
+    local r = frame:rect()
+    self:setTexture(frame:texture())
+    self:setTextureRect(r, frame:rotated(), r:size())
     self:setAnchor(0.5, 0.5)
     self.flipX_ = false
     self.flipY_ = false
@@ -35,14 +39,21 @@ function CCSprite:initWithFrame(frameOrFrameName)
     return self 
 end
 
--- use CCSprite:alloc():initWithFrameName(name) to use this initializer
 -- alias for CCSprite.initWithFrame
 CCSprite.initWithFrameName = CCSprite.initWithFrame
 
-function CCSprite:setDisplayFrame(frame)
+function CCSprite:setDisplayFrame(frameOrFrameName)
+    local frame
+    if type(frameOrFrameName) == "string" then
+        frame = CCSharedSpriteFrameCache():frameByName(frameOrFrameName)
+    else
+        frame = frameOrFrameName
+    end
+    
     -- todo: handle rotated frames, and frames with offsets
-    self:setTexture(frame.texture)
-    self:setTextureRect(frame.rect)
+    local r = frame:rect()
+    self:setTexture(frame:texture())
+    self:setTextureRect(r, frame:rotated(), r:size())
 end
 
 function CCSprite:draw()
@@ -117,7 +128,6 @@ end
 
 function CCSprite:setTexture(spriteNameOrImage)
     self.texture_ = spriteNameOrImage
-    
     local w,h = spriteSize(spriteNameOrImage)
     
     -- for some reason images have to be scaled down by the scale factor
@@ -279,7 +289,7 @@ function CCSprite:setTextureRect(r, rotated, untrimmedSize)
     
     -- no need to do this really because setTextureCoords does it
     if self.batchNode_ then
-        self.batchTexRectDirty = true
+        self.batchTexRectDirty_ = true
     else
         -- todo: set up the verts;
         -- haven't done this yet because sprite() doesn't support texture rects

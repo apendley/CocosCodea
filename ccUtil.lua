@@ -39,6 +39,29 @@ function ccShallowCopy(srcT, destT)
     for k,v in pairs(srcT) do destT[k] = v end
     return destT
 end
+
+------------------------
+-- plist helpers
+------------------------
+-- converts a string with the format "{<x>,<y>}" to a vec2
+function ccVec2FromStr(str)
+    return vec2(string.match(str, "{([%d.-]+),([%d.-]+)}"))
+end
+
+-- converts a vec2 to a string with the format "{<x>,<y>}"
+function ccStrFromVec2(v)
+    return table.concat({"{", v.x, ",", v.y, "}"})
+end
+
+-- converts a string with the format "{{<x>,<y>},{<w>,<h>}}" to a ccRect
+function ccRectFromStr(str)
+    return ccRect(string.match(str, "{([%d.-]+),([%d.-]+)},{([%d.-]+),([%d.-]+)}"))
+end
+
+-- converts a rect to a string with the format "{{<x>,<y>},{<w>,<h>}}"
+function ccStrFromRect(r)
+    return table.concat({"{{", r.x, ",", r.y, "},{", r.w, ",", r.h,"}}"})
+end
     
 ------------------------
 -- delegation
