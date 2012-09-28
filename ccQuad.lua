@@ -57,16 +57,3 @@ function ccQuad:setUV(vertIndex, ...)
     local v_ = self[vertIndex]
     v_[7], v_[8] = ccVec2VA(...)
 end
-
-function ccQuad:setTextureRect(...)
-    local tl, bl, br, tr = self[1], self[2], self[3], self[4]
-    local s, t, u, v = ccRect.va(...)    
-    tl[7] = s
-    tl[8] = v
-    bl[7] = s
-    bl[8] = t
-    br[7] = u
-    br[8] = t
-    tr[7] = u
-    tr[8] = v
-end

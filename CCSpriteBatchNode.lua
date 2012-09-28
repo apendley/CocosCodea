@@ -1,9 +1,12 @@
 --CCSpriteBatchNode
 CCSpriteBatchNode = CCClass(CCNode)
 
+CCSpriteBatchNode:synth{"smooth"}
+
 function CCSpriteBatchNode:init(texture)
     CCNode.init(self)
     
+    self.smooth_ = true
     self.textureAtlas_ = CCTextureAtlas(texture)
     self.descendants_ = {}
 end
@@ -169,7 +172,7 @@ end
 
 function CCSpriteBatchNode:visit()
     if not self.visible_ then return end
-    
+
     pushStyle()
     pushMatrix()
     
@@ -187,6 +190,12 @@ function CCSpriteBatchNode:draw()
     if atlas.numQuads_ == 0 then return end
      
     ccArrayForEach(self.children_, "updateTransform")
+    
+    if self.smooth_ then
+        smooth()
+    else
+        noSmooth()
+    end
 
     atlas:drawQuads()
 end

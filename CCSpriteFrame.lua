@@ -16,7 +16,7 @@ function CCSpriteFrame:init(texture, rect_, rotated, offset, originalSize)
     self.rect_ = rect_
     self.rotated_ = rotated or false
     self.offset_ = offset or vec2(0, 0)
-    self.originalSize_ = originalSize or rect_size():copy()
+    self.originalSize_ = originalSize or rect_:size():copy()
 end
 
 function CCSpriteFrame:copy()

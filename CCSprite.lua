@@ -3,6 +3,7 @@ CCSprite = CCClass(CCNode):include(CCRGBAMixin)
 
 CCSprite:synth{"flipX", mode="r"}
 CCSprite:synth{"flipY", mode="r"}
+CCSprite:synth{"smooth"}
 
 function CCSprite:init(spriteNameOrImage)
     CCNode.init(self)
@@ -11,6 +12,10 @@ function CCSprite:init(spriteNameOrImage)
     self:setAnchor(0.5, 0.5)
     self.flipX_ = false
     self.flipY_ = false
+    self.rectRotated_ = false
+    self.unflippedOffsetPositionFromCenter_ = vec2(0,0)
+    self.offsetPosition_ = vec2(0,0)
+    self.smooth_ = true
     
     -- currently only used for batch node;
     -- when Codea allows regular sprites to set tex rect, we'll need this all the time
@@ -22,19 +27,15 @@ function CCSprite:initWithFrame(frameOrFrameName)
     CCNode.init(self)
     CCRGBAMixin.init(self)
     
-    local frame
-    if type(frameOrFrameName) == "string" then
-        frame = CCSharedSpriteFrameCache():frameByName(frameOrFrameName)
-    else
-        frame = frameOrFrameName
-    end
+    self.unflippedOffsetPositionFromCenter_ = vec2(0,0)
+    self.offsetPosition_ = vec2(0,0)    
     
-    local r = frame:rect()
-    self:setTexture(frame:texture())
-    self:setTextureRect(r, frame:rotated(), r:size())
+    self:setDisplayFrame(frameOrFrameName)
+    
     self:setAnchor(0.5, 0.5)
     self.flipX_ = false
     self.flipY_ = false
+    self.smooth_ = true    
     
     return self 
 end
@@ -50,7 +51,8 @@ function CCSprite:setDisplayFrame(frameOrFrameName)
         frame = frameOrFrameName
     end
     
-    -- todo: handle rotated frames, and frames with offsets
+    self.unflippedOffsetPositionFromCenter_ = frame:offset()
+    
     local r = frame:rect()
     self:setTexture(frame:texture())
     self:setTextureRect(r, frame:rotated(), r:size())
@@ -59,6 +61,12 @@ end
 function CCSprite:draw()
     local c = self.color_
     tint(c.r, c.g, c.b, self.opacity_)
+    
+    if self.smooth_ then
+        smooth()
+    else
+        noSmooth()
+    end
     
     spriteMode(CENTER)
     local s = self.size_
@@ -195,7 +203,7 @@ function CCSprite:setFlipX(flip)
         self.flipX_ = flip
         
         -- only really need to set texture rect if batched...
-        self:setTextureRect(self.rect_, false, self.size_)
+        self:setTextureRect(self.rect_, self.rectRotated_, self.size_)
     end
 end
 
@@ -204,7 +212,7 @@ function CCSprite:setFlipY(flip)
         self.flipY_ = flip
         
         -- only really need to set texture rect if batched...      
-        self:setTextureRect(self.rect_, false, self.size_)
+        self:setTextureRect(self.rect_, self.rectRotated_, self.size_)
     end
 end
 
@@ -240,7 +248,7 @@ function CCSprite:setBatchNode(node)
         self.batchTexRectDirty_ = nil
     
         -- currently we only use quads for batch nodes, since Codea's sprite() command
-        -- draws our sprites otherwise
+        -- draws our sprites otherwise.
         self.quad_ = nil
         self.transformToBatch_ = nil
     end
@@ -266,7 +274,6 @@ function CCSprite:updateColor()
     end
 end
 
---function CCSprite:setTextureRect(r, rotated, untrimmedSize)
 -- params: setTextureRect(rect, [rotated], [untrimmedSize])
 function CCSprite:setTextureRect(r, rotated, untrimmedSize)
     ccAssert(r)
@@ -274,6 +281,8 @@ function CCSprite:setTextureRect(r, rotated, untrimmedSize)
 
     if rotated == nil then rotated = false end
     if untrimmedSize == nil then untrimmedSize = r:size() end
+    
+    self.rectRotated_ = rotated
     
     self:setSize(untrimmedSize:unpack())
     
@@ -286,6 +295,16 @@ function CCSprite:setTextureRect(r, rotated, untrimmedSize)
     end
     
     self:setTextureCoords(s, t, w, h)
+    
+    local rox, roy = self.unflippedOffsetPositionFromCenter_:unpack()
+    
+    if self.flipX_ then rox = -rox end
+    if self.flipY_ then roy = -roy end
+    
+    local cs = self.size_
+    local vr = self.rect_
+    self.offsetPosition_.x = rox + (cs.x - vr.w) * 0.5
+    self.offsetPosition_.y = roy + (cs.y - vr.h) * 0.5
     
     -- no need to do this really because setTextureCoords does it
     if self.batchNode_ then
@@ -313,19 +332,53 @@ function CCSprite:setTextureCoords(...)
     local tex = self.textureAtlas_ and self.textureAtlas_:texture() or self.texture_
     if not tex then return end
     local rw, rh = spriteSize(tex)
-    rw, rh = 1/rw, 1/rh        -- get reciprocals
+    rw, rh = 1/rw, 1/rh        -- get reciprocals to eliminate a couple of divides
 
     -- not sure why but, we have to transpose the top and bottom to make
     -- them work the same as they do on cocos2d-iphone.
-    local left = s * rw
-    local right = left + tw * rw
-    local bottom = 1 - (t+th) * rh     --local bottom = t*rh --cocos2d-iphone version
-    local top = bottom + th*rh
+    local left, right, bottom, top
 
-    if self.flipX_ then left, right = right, left end
-    if self.flipY_ then top, bottom = bottom, top end
-    
-    self:quad():setTextureRect(left, bottom, right, top)
+    if self.rectRotated_ then
+        left = s*rw
+        right = left + th*rw
+        bottom = 1 - (t+tw) * rh
+        top = bottom + tw*rh
+        
+        if self.flipX_ then top, bottom = bottom, top end
+        if self.flipY_ then left, right = right, left end
+        
+        local q = self:quad()
+        local tl, bl, br, tr = q[1], q[2], q[3], q[4]
+
+        bl[7] = left
+        bl[8] = top
+        br[7] = left
+        br[8] = bottom
+        tl[7] = right
+        tl[8] = top
+        tr[7] = right
+        tr[8] = bottom
+    else
+        left = s * rw
+        right = left + tw * rw
+        bottom = 1 - (t+th) * rh
+        top = bottom + th*rh
+        
+        if self.flipX_ then left, right = right, left end
+        if self.flipY_ then top, bottom = bottom, top end
+        
+        local q = self:quad()
+        local tl, bl, br, tr = q[1], q[2], q[3], q[4]
+        
+        bl[7] = left
+        bl[8] = bottom
+        br[7] = right
+        br[8] = bottom
+        tl[7] = left
+        tl[8] = top
+        tr[7] = right
+        tr[8] = top
+    end
     
     self.batchTexCoordDirty_ = true;
 end
@@ -355,12 +408,13 @@ function CCSprite:updateTransform()
             if not p or p == batchNode then
                 self.transformToBatch_ = self:nodeToParentTransform()
             else
-                -- todo: assert that parent is a CCSprite
                 self.transformToBatch_ = self:nodeToParentTransform() * p.transformToBatch_
             end
             
             local bxf = self.transformToBatch_
-            local x1, y1, w, h = 0, 0, self.rect_.w, self.rect_.h
+
+            local x1, y1 = self.offsetPosition_:unpack()
+            local w, h = self.rect_.w, self.rect_.h
             
             local x2 = x1 + w
             local y2 = y1 + h

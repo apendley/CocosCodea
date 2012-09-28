@@ -20,7 +20,13 @@ local function createTargetedTouchHandler(delegate, priority, swallowsTouches)
     t.claimedTouches = {}    -- a set of touch ids
     t.delegate = delegate
     t.priority = (priority ~= nil) and priority or 0
-    t.swallowsTouches = (swallowsTouches ~= nil) and swallowsTouches or true
+
+    if swallowsTouches ~= nil then
+        t.swallowsTouches = swallowsTouches
+    else
+        t.swallowsTouches = true
+    end
+    
     return t
 end
 
@@ -68,7 +74,10 @@ function CCTouchDispatcher:touched(touch)
             end
         end
         
-        if claimed and handler.swallowsTouches then break end
+        if claimed and handler.swallowsTouches then
+            --print("swallowed")
+            break
+        end
     end
 end
 
