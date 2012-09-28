@@ -9,13 +9,6 @@ At the moment nothing is optimized, as I've been working feverishly to get the c
 
 If you have a suggestion for an optimization or CocosCodea in general, or if you'd like to contribute, just let me know.
 
-**A special note:** On retina iPads, Codea automatically double-sizes any sprites with an image that don't
- have an @2x version. CocosCodea undoes this double sizing, so non-retina sprites will draw 
- at half size on retina devices (this is actually the standard for iOS). If you want to use non-retina sprites, for now you
- must scale them manually by ContentScaleFactor so that they display correctly on retina iPads. Or, use only sprites with retina versions.
- I'm trying to find a way to enable a "Double size mode" flag that will reinstate the Codea scaling behavior, but so far have not been successful.
-
-
 What's here:
 -
 **General:** 
