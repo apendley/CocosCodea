@@ -165,6 +165,8 @@ function CCDirector:drawScene(dt)
     
     self.touchDispatcher_:updatePostDraw()
     
+    -- turn off clipping
+    clip()
     self:drawFPS(dt)
 end
 

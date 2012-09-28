@@ -1,4 +1,4 @@
--- * CCSpriteFrame/CCSpriteFrameCache
+-- * color should not need special patching now; update it
 -- * play with http.request
 -- * implement a physics sprite
 -- * re-implement actions so that all actions support callbacks and repeating/looping/easing

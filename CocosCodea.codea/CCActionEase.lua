@@ -1,11 +1,13 @@
 CCActionEase = CCClass(CCActionInterval)
 
 function CCActionEase:init(action)
+    --ccPrint("ActionEase: duration is " .. action.duration)
     CCActionInterval.init(self, action.duration_)
     self.action = action
 end
 
 function CCActionEase:copy(action)
+    --return CCActionEase(self.action:copy())
     return self.class(self.action:copy())
 end
 
